@@ -144,11 +144,11 @@ class Command(BaseCommand):
             user.platform_admin = True
             user.save()
             
-            self.stdout.write(self.style.SUCCESS(f'\n✓ Successfully created superuser:'))
+            self.stdout.write(self.style.SUCCESS('\n✓ Successfully created superuser:'))
             self.stdout.write(f'  Username: {user.username}')
             self.stdout.write(f'  Email: {user.email}')
             self.stdout.write(f'  Tenant: {user.tenant.name}')
-            self.stdout.write(f'  Platform Admin: True')
-            self.stdout.write(f'\nYou can now login at: /admin/')
+            self.stdout.write('  Platform Admin: True')
+            self.stdout.write('\nYou can now login at: /admin/')
         except Exception as e:
             raise CommandError(f'Failed to create superuser: {str(e)}')
