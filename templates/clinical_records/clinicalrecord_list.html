@@ -1,20 +1,59 @@
 {% extends 'base/base.html' %}
 {% block title %}Clinical Records{% endblock %}
 {% block content %}
-<h2>Clinical Records</h2>
-<ul>
-  {% for record in records %}
-    <li>
-      <a href="{% url 'clinicalrecord_detail' record.pk %}">{{ record.patient }} - {{ record.created_at }}</a><br>{{ record.note|truncatewords:20 }}
-      {% if perms.clinical_records.change_clinicalrecord %}
-        <a href="{% url 'clinicalrecord_edit' record.pk %}">Edit</a>
-      {% endif %}
-      {% if perms.clinical_records.delete_clinicalrecord %}
-        <a href="{% url 'clinicalrecord_archive' record.pk %}">Archive</a>
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>No records found.</li>
-  {% endfor %}
-</ul>
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div>
+      <h2 style="margin:0; color:#0f4c81; font-size:1.75rem; font-weight:700;">Clinical Records</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">Patient records and clinical notes for your clinic.</p>
+    </div>
+    {% if perms.clinical_records.add_clinicalrecord %}
+      <a href="{% url 'clinicalrecord_create' %}" style="background:#0f4c81; color:#fff; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; font-weight:600; display:inline-block;">+ New Record</a>
+    {% endif %}
+  </div>
+
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Patient</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Note Type</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Created</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Summary</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; text-align:right; font-weight:700;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in records %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; font-weight:600;">
+              <a href="{% url 'clinicalrecord_detail' record.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ record.patient }}</a>
+            </td>
+            <td style="padding:12px;">
+              <span style="background:#e5e7eb; color:#0f172a; padding:0.25rem 0.6rem; border-radius:16px; font-size:0.85rem; font-weight:600;">
+                {{ record.note_type|default:"General" }}
+              </span>
+            </td>
+            <td style="padding:12px; color:#334155; font-size:0.9rem;">{{ record.created_at|date:'M d, Y' }}</td>
+            <td style="padding:12px; color:#475569;">{{ record.note|truncatewords:16 }}</td>
+            <td style="padding:12px; text-align:right;">
+              <a href="{% url 'clinicalrecord_detail' record.pk %}" style="color:#0f4c81; text-decoration:none; font-weight:600; margin-right:0.75rem;">View</a>
+              {% if perms.clinical_records.change_clinicalrecord %}
+                <a href="{% url 'clinicalrecord_edit' record.pk %}" style="color:#0f4c81; text-decoration:none; font-weight:600; margin-right:0.75rem;">Edit</a>
+              {% endif %}
+              {% if perms.clinical_records.delete_clinicalrecord %}
+                <a href="{% url 'clinicalrecord_archive' record.pk %}" style="color:#ef4444; text-decoration:none; font-weight:600;">Archive</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" style="padding:16px; text-align:center; color:#6b7280;">No records found. <a href="{% url 'clinicalrecord_create' %}" style="color:#0f4c81; font-weight:600;">Create one now.</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
 {% endblock %}

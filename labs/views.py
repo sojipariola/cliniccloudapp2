@@ -4,6 +4,7 @@ from .models import LabResult
 from patients.models import Patient
 from .forms import LabResultForm
 from django.contrib.auth.decorators import login_required, permission_required
+from common.tenant_scope import scope_queryset, enforce_tenant, assign_tenant
 
 
 
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 @login_required
 @permission_required('labs.change_labresult', raise_exception=True)
 def labresult_edit(request, pk):
-	result = get_object_or_404(LabResult, pk=pk)
+	result = enforce_tenant(get_object_or_404(LabResult, pk=pk), request.user)
 	if request.method == "POST":
 		form = LabResultForm(request.POST, instance=result)
 		if form.is_valid():
@@ -24,7 +25,7 @@ def labresult_edit(request, pk):
 @login_required
 @permission_required('labs.delete_labresult', raise_exception=True)
 def labresult_delete(request, pk):
-	result = get_object_or_404(LabResult, pk=pk)
+	result = enforce_tenant(get_object_or_404(LabResult, pk=pk), request.user)
 	if request.method == "POST":
 		result.delete()
 		return redirect(reverse("labresult_list"))
@@ -33,12 +34,15 @@ def labresult_delete(request, pk):
 
 @login_required
 def labresult_list(request):
-	results = LabResult.objects.select_related('patient').all()
+	results = (
+		scope_queryset(LabResult.objects.select_related("patient"), request.user)
+		.order_by("-created_at")
+	)
 	return render(request, "labs/labresult_list.html", {"results": results})
 
 @login_required
 def labresult_detail(request, pk):
-	result = get_object_or_404(LabResult, pk=pk)
+	result = enforce_tenant(get_object_or_404(LabResult, pk=pk), request.user)
 	return render(request, "labs/labresult_detail.html", {"result": result})
 
 @login_required
@@ -46,7 +50,8 @@ def labresult_create(request):
 	if request.method == "POST":
 		form = LabResultForm(request.POST)
 		if form.is_valid():
-			result = form.save()
+			result = assign_tenant(form.save(commit=False), request.user)
+			result.save()
 			return redirect(reverse("labresult_detail", args=[result.pk]))
 	else:
 		form = LabResultForm()

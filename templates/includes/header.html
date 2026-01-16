@@ -1,5 +1,59 @@
-<header>
-  <h1>ClinicCloud</h1>
-  {% include 'includes/navbar.html' %}
+<header style="background: linear-gradient(90deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(15, 76, 129, 0.08);">
+  <div style="max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <h1 style="margin: 0; color: #0f4c81; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; background: linear-gradient(135deg, #0f4c81 0%, #38b6ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          {% if user.is_authenticated %}
+            {{ user.tenant.name|default:'ClinicCloud' }}
+          {% else %}
+            ClinicCloud
+          {% endif %}
+        </h1>
+        {% if user.is_authenticated %}
+          <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: #6b7280;">powered by ClinicCloud</p>
+        {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span style="color:#0f172a; font-weight:600;">{{ user.get_full_name|default:user.username }}</span>
+          <form action="{% url 'logout' %}" method="post" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" style="background:#0f4c81; color:#fff; border:none; padding:0.55rem 0.9rem; border-radius:8px; font-weight:700; cursor:pointer;">Logout</button>
+          </form>
+        </div>
+      {% else %}
+        <div style="display:flex; gap:0.5rem;">
+          <a href="{% url 'login' %}" style="padding:0.5rem 0.85rem; border-radius:8px; border:1px solid #0f4c81; color:#0f4c81; font-weight:700; text-decoration:none;">Login</a>
+          <a href="{% url 'register' %}" style="padding:0.5rem 0.85rem; border-radius:8px; background:#0f4c81; color:#fff; font-weight:700; text-decoration:none;">Register</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- New top navbar (does not alter sidebar) -->
+    {% with path=request.path %}
+    <nav aria-label="Global" style="display:flex; align-items:center; gap:0.4rem; flex-wrap:nowrap; overflow-x:auto; padding-bottom:0.25rem;">
+      {% if user.is_authenticated %}
+        {% include 'includes/topnav_link.html' with url='/dashboard/' label='Dashboard' icon='🏠' path=path %}
+      {% else %}
+        {% include 'includes/topnav_link.html' with url='/' label='Home' icon='🏠' path=path %}
+      {% endif %}
+      {% if user.is_authenticated %}
+        {% include 'includes/topnav_link.html' with url='/patients/' label='Patients' icon='👥' path=path %}
+        {% include 'includes/topnav_link.html' with url='/appointments/' label='Appointments' icon='📅' path=path %}
+        {% include 'includes/topnav_link.html' with url='/clinical-records/' label='Clinical' icon='🩺' path=path %}
+        {% include 'includes/topnav_link.html' with url='/labs/' label='Labs' icon='🧪' path=path %}
+        {% include 'includes/topnav_link.html' with url='/referrals/' label='Referrals' icon='🔗' path=path %}
+        {% include 'includes/topnav_link.html' with url='/billing/' label='Billing' icon='💳' path=path %}
+        {% include 'includes/topnav_link.html' with url='/users/profile/' label='Profile' icon='👤' path=path %}
+        {% if user.is_staff or user.is_superuser %}
+          {% include 'includes/topnav_link.html' with url='/admin/' label='Admin' icon='🛡️' path=path %}
+        {% endif %}
+      {% else %}
+        {% include 'includes/topnav_link.html' with url='/accounts/login/' label='Login' icon='🔑' path=path %}
+        {% include 'includes/topnav_link.html' with url='/accounts/register/' label='Register' icon='📝' path=path %}
+      {% endif %}
+    </nav>
+    {% endwith %}
+  </div>
   {% block header %}{% endblock %}
 </header>

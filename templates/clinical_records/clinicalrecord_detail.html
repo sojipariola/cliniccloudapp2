@@ -1,15 +1,55 @@
 {% extends 'base/base.html' %}
 {% block title %}Clinical Record Detail{% endblock %}
 {% block content %}
-<h2>Clinical Record</h2>
-<p>Patient: {{ record.patient }}</p>
-<p>Created: {{ record.created_at }}</p>
-<p>Note: {{ record.note }}</p>
-<a href="{% url 'clinicalrecord_list' %}">Back to list</a>
-{% if perms.clinical_records.change_clinicalrecord %}
-	<a href="{% url 'clinicalrecord_edit' record.pk %}">Edit</a>
-{% endif %}
-{% if perms.clinical_records.delete_clinicalrecord %}
-	<a href="{% url 'clinicalrecord_archive' record.pk %}">Archive</a>
-{% endif %}
-{% endblock %}
+<div style="padding: 2rem 0; max-width: 900px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+    <h2 style="font-size: 2rem; color: #0f4c81; margin: 0; font-weight: 700;">Clinical Record</h2>
+    <div style="display: flex; gap: 0.75rem;">
+      {% if perms.clinical_records.change_clinicalrecord %}
+        <a href="{% url 'clinicalrecord_edit' record.pk %}" style="background: #0f4c81; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+          ✏️ Edit
+        </a>
+      {% endif %}
+      {% if perms.clinical_records.delete_clinicalrecord %}
+        <a href="{% url 'clinicalrecord_archive' record.pk %}" style="background: #ef4444; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+          🗂️ Archive
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">PATIENT</p>
+        <p style="margin: 0; color: #0f172a; font-size: 1.1rem; font-weight: 600;">{{ record.patient.get_full_name|default:record.patient }}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">NOTE TYPE</p>
+        <p style="margin: 0; color: #0f172a; font-size: 1.1rem; font-weight: 600; background: #e5e7eb; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem;">{{ record.note_type|default:"General" }}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">CREATED</p>
+        <p style="margin: 0; color: #0f172a; font-size: 0.95rem;">{{ record.created_at|date:"M d, Y H:i" }}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">LAST UPDATED</p>
+        <p style="margin: 0; color: #0f172a; font-size: 0.95rem;">{{ record.updated_at|date:"M d, Y H:i" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #f3f4f6; border-left: 4px solid #0f4c81; padding: 1.5rem; border-radius: 4px; margin-bottom: 1.5rem;">
+    <h3 style="margin: 0 0 1rem; color: #0f172a; font-size: 1rem; font-weight: 700;">CLINICAL NOTES</h3>
+    <div style="background: #fff; padding: 1.25rem; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 0.95rem; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+      {{ record.note }}
+    </div>
+  </div>
+
+  <div>
+    <a href="{% url 'clinicalrecord_list' %}" style="color: #0f4c81; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
+      ← Back to Records
+    </a>
+  </div>
+</div>
+  {% endblock %}

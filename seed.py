@@ -1,60 +1,252 @@
-from django.core.management import execute_from_command_line
 import os
 import django
 import random
 from datetime import datetime, timedelta
+from django.contrib.auth.hashers import make_password
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+django.setup()
+
+# Import models after django.setup()
 from tenants.models import Tenant
 from users.models import CustomUser
 from patients.models import Patient
 from appointments.models import Appointment
 from clinical_records.models import ClinicalRecord
 from labs.models import LabResult
-from django.contrib.auth.hashers import make_password
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-django.setup()
 
+# Clear existing data (optional - comment out if you want to keep existing data)
+print("Clearing existing data...")
+ClinicalRecord.objects.all().delete()
+LabResult.objects.all().delete()
+Appointment.objects.all().delete()
+Patient.objects.all().delete()
+CustomUser.objects.all().delete()
+Tenant.objects.all().delete()
 
+# Sample clinical notes for different specializations
+SAMPLE_NOTES = {
+    'general_practice': [
+        ("Chief Complaint", "Patient presents with persistent cough and mild fever for 3 days."),
+        ("History of Present Illness", "38-year-old female with non-productive cough, low-grade fever (99.5°F), fatigue. No chest pain or shortness of breath."),
+        ("Assessment", "Upper respiratory tract infection, likely viral etiology."),
+        ("Plan", "Supportive care, rest, fluids. Return if symptoms worsen or persist beyond 7 days.")
+    ],
+    'pediatrics': [
+        ("Chief Complaint", "6-month-old infant for routine well-child check."),
+        ("Growth & Development", "Weight: 16 lbs (50th percentile). Length: 26 inches (60th percentile). Head circumference: 43 cm (55th percentile). Meeting developmental milestones."),
+        ("Immunizations", "Administered DTaP, IPV, Hib, PCV13, and Rotavirus vaccines today."),
+        ("Assessment", "Healthy infant, appropriate growth and development."),
+        ("Plan", "Continue breastfeeding. Introduce solid foods. Next visit at 9 months.")
+    ],
+    'dental': [
+        ("Dental Complaint", "Patient reports sensitivity in lower right molar."),
+        ("Oral Exam", "Moderate plaque accumulation. Cavity noted on tooth #30 (lower right first molar). Gingival inflammation grade 2."),
+        ("Radiographs", "Periapical x-ray shows decay extending to dentin, no pulpal involvement."),
+        ("Assessment", "Dental caries tooth #30, gingivitis."),
+        ("Treatment Plan", "Composite filling for tooth #30. Professional cleaning. Oral hygiene instruction.")
+    ],
+    'cardiology': [
+        ("Cardiac Complaint", "65-year-old male with intermittent chest discomfort on exertion."),
+        ("Cardiac History", "Hypertension x 10 years, controlled on lisinopril. Family history of CAD. Non-smoker."),
+        ("Physical Exam", "BP 138/82, HR 76 regular. Heart sounds normal, no murmurs. Lungs clear."),
+        ("ECG/Echo", "ECG shows normal sinus rhythm, no ST changes. Echo pending."),
+        ("Assessment", "Stable angina, likely coronary artery disease."),
+        ("Plan", "Stress test scheduled. Start aspirin 81mg daily. Optimize BP control. Lipid panel.")
+    ],
+    'dermatology': [
+        ("Skin Complaint", "New pigmented lesion on back, changing appearance over 2 months."),
+        ("Dermatologic History", "Fair skin, multiple sunburns in childhood. No family history of melanoma."),
+        ("Skin Exam", "8mm asymmetric, irregular bordered pigmented lesion left scapular region. Multiple benign nevi elsewhere."),
+        ("Assessment", "Suspicious pigmented lesion, rule out melanoma."),
+        ("Plan", "Excisional biopsy with 2mm margins scheduled. Dermoscopy performed. Full body skin exam in 6 months.")
+    ],
+    'mental_health': [
+        ("Presenting Problem", "32-year-old patient with persistent low mood and anxiety for 6 weeks."),
+        ("Psychiatric History", "First episode. No prior psychiatric treatment. No suicidal ideation. Family history of depression."),
+        ("Mental Status Exam", "Appears anxious, good eye contact. Speech normal rate. Mood depressed, affect congruent. Thought process linear. No SI/HI."),
+        ("Assessment", "Major depressive disorder, moderate severity. Generalized anxiety disorder."),
+        ("Plan", "Start sertraline 50mg daily. Cognitive behavioral therapy referral. Follow-up in 2 weeks.")
+    ],
+    'orthopedic': [
+        ("Musculoskeletal Complaint", "42-year-old male with right knee pain after twisting injury while playing basketball."),
+        ("Ortho History", "Acute onset 3 days ago. Pain with weight-bearing and twisting. Swelling noted. No prior knee injuries."),
+        ("Physical Exam", "Right knee: moderate effusion, joint line tenderness, positive McMurray test, stable ligaments."),
+        ("Imaging", "X-ray: no fracture. MRI ordered to evaluate meniscus."),
+        ("Assessment", "Suspected medial meniscus tear, right knee."),
+        ("Plan", "RICE protocol. NSAIDs. Crutches. Await MRI. Consider arthroscopy if torn.")
+    ]
+}
 
-# Tenants
-tenant1 = Tenant.objects.create(name="Alpha Clinic", subdomain="alpha")
-tenant2 = Tenant.objects.create(name="Beta Health", subdomain="beta")
+# Tenants with different specializations
+print("Creating tenants...")
+tenant1 = Tenant.objects.create(
+    name="Central Medical Clinic",
+    subdomain="central",
+    specialization="general_practice",
+    plan="professional"
+)
+tenant2 = Tenant.objects.create(
+    name="Children's Health Pediatrics",
+    subdomain="childrens",
+    specialization="pediatrics",
+    plan="professional"
+)
+tenant3 = Tenant.objects.create(
+    name="Bright Smile Dental",
+    subdomain="brightsmile",
+    specialization="dental",
+    plan="starter"
+)
+tenant4 = Tenant.objects.create(
+    name="HeartCare Cardiology",
+    subdomain="heartcare",
+    specialization="cardiology",
+    plan="professional"
+)
+tenant5 = Tenant.objects.create(
+    name="SkinHealth Dermatology",
+    subdomain="skinhealth",
+    specialization="dermatology",
+    plan="professional"
+)
+tenant6 = Tenant.objects.create(
+    name="MindWell Mental Health",
+    subdomain="mindwell",
+    specialization="mental_health",
+    plan="starter"
+)
+tenant7 = Tenant.objects.create(
+    name="OrthoSport Clinic",
+    subdomain="orthosport",
+    specialization="orthopedic",
+    plan="professional"
+)
 
-# Users
-user1 = CustomUser.objects.create(username="admin1", email="admin1@alpha.com", tenant=tenant1, role="admin", password=make_password("password"))
-user2 = CustomUser.objects.create(username="user2", email="user2@beta.com", tenant=tenant2, role="user", password=make_password("password"))
+tenants = [tenant1, tenant2, tenant3, tenant4, tenant5, tenant6, tenant7]
 
-# Patients
-patients = []
-for i in range(1, 6):
-    p = Patient.objects.create(
-        first_name=f"John{i}",
-        last_name=f"Doe{i}",
-        date_of_birth=datetime(1980+i, 1, 1).date(),
-        email=f"john{i}@example.com",
-        phone=f"555-000{i}"
+# Users for each tenant
+print("Creating users...")
+users = []
+for idx, tenant in enumerate(tenants, 1):
+    admin = CustomUser.objects.create(
+        username=f"admin{idx}",
+        email=f"admin{idx}@{tenant.subdomain}.com",
+        first_name=f"Admin",
+        last_name=f"{tenant.name.split()[0]}",
+        tenant=tenant,
+        role="admin",
+        is_staff=True,
+        is_active=True,
+        password=make_password("admin123")
     )
-    patients.append(p)
-
-# Appointments
-for i, patient in enumerate(patients):
-    Appointment.objects.create(
-        patient=patient,
-        scheduled_for=datetime.now() + timedelta(days=i),
-        status="scheduled"
+    users.append(admin)
+    
+    # Add a regular user for each tenant
+    user = CustomUser.objects.create(
+        username=f"doctor{idx}",
+        email=f"doctor{idx}@{tenant.subdomain}.com",
+        first_name=f"Doctor",
+        last_name=f"{tenant.name.split()[0]}",
+        tenant=tenant,
+        role="user",
+        is_active=True,
+        password=make_password("doctor123")
     )
+    users.append(user)
 
-# Clinical Records
-for patient in patients:
-    ClinicalRecord.objects.create(
-        patient=patient,
-        note=f"Initial consultation for {patient.first_name} {patient.last_name}."
-    )
+# Sample patient names
+first_names = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth",
+               "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"]
+last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
+              "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"]
 
-# Lab Results
-for patient in patients:
-    LabResult.objects.create(
-        patient=patient,
-        result=f"Lab result for {patient.first_name} {patient.last_name}: Normal."
-    )
+# Patients for each tenant
+print("Creating patients...")
+all_patients = []
+for tenant in tenants:
+    tenant_patients = []
+    for i in range(10):  # 10 patients per tenant
+        patient = Patient.objects.create(
+            tenant=tenant,
+            first_name=random.choice(first_names),
+            last_name=random.choice(last_names),
+            date_of_birth=(datetime.now() - timedelta(days=random.randint(365*5, 365*80))).date(),
+            email=f"patient{len(all_patients)+1}@example.com",
+            phone=f"555-{random.randint(1000, 9999)}"
+        )
+        tenant_patients.append(patient)
+        all_patients.append(patient)
+    
+    # Create clinical notes for patients
+    print(f"Creating clinical notes for {tenant.name}...")
+    note_templates = SAMPLE_NOTES.get(tenant.specialization, SAMPLE_NOTES['general_practice'])
+    
+    for patient in tenant_patients[:7]:  # Add notes for first 7 patients
+        # Randomly select number of notes (1-3 per patient)
+        num_notes = random.randint(1, 3)
+        for _ in range(num_notes):
+            note_type = random.choice([template[0] for template in note_templates])
+            # Build note content from template
+            note_content = "\n\n".join([f"{section}:\n{content}" for section, content in note_templates])
+            
+            ClinicalRecord.objects.create(
+                tenant=tenant,
+                patient=patient,
+                note_type=note_type,
+                note=note_content,
+                created_at=datetime.now() - timedelta(days=random.randint(1, 180))
+            )
+    
+    # Create appointments
+    print(f"Creating appointments for {tenant.name}...")
+    for patient in tenant_patients[:8]:  # Appointments for first 8 patients
+        # Create 1-2 appointments per patient
+        for j in range(random.randint(1, 2)):
+            days_offset = random.randint(-30, 60)  # Past or future appointments
+            status = random.choice(['scheduled', 'completed', 'cancelled']) if days_offset < 0 else 'scheduled'
+            
+            Appointment.objects.create(
+                tenant=tenant,
+                patient=patient,
+                scheduled_for=datetime.now() + timedelta(days=days_offset),
+                status=status
+            )
+    
+    # Create lab results
+    print(f"Creating lab results for {tenant.name}...")
+    for patient in tenant_patients[:6]:  # Lab results for first 6 patients
+        lab_types = ["Complete Blood Count", "Metabolic Panel", "Lipid Panel", "Urinalysis", "HbA1c"]
+        result_texts = [
+            "WBC: 7.2 K/uL, RBC: 4.8 M/uL, Hemoglobin: 14.5 g/dL, Platelets: 250 K/uL - All values within normal limits.",
+            "Glucose: 92 mg/dL, BUN: 15 mg/dL, Creatinine: 0.9 mg/dL, Sodium: 140 mEq/L, Potassium: 4.2 mEq/L - Normal.",
+            "Total Cholesterol: 185 mg/dL, LDL: 110 mg/dL, HDL: 55 mg/dL, Triglycerides: 100 mg/dL - Optimal levels.",
+            "Color: Yellow, Clarity: Clear, pH: 6.5, Glucose: Negative, Protein: Negative - Normal urinalysis.",
+            "HbA1c: 5.6% - Normal glucose control, no evidence of diabetes."
+        ]
+        
+        lab_result = random.choice(list(zip(lab_types, result_texts)))
+        LabResult.objects.create(
+            tenant=tenant,
+            patient=patient,
+            result=f"{lab_result[0]}:\n{lab_result[1]}",
+            created_at=datetime.now() - timedelta(days=random.randint(1, 90))
+        )
 
-print("Database seeded successfully.")
+print("\n" + "="*60)
+print("Database seeded successfully!")
+print("="*60)
+print(f"\nCreated:")
+print(f"  - {Tenant.objects.count()} tenants")
+print(f"  - {CustomUser.objects.count()} users")
+print(f"  - {Patient.objects.count()} patients")
+print(f"  - {ClinicalRecord.objects.count()} clinical records")
+print(f"  - {Appointment.objects.count()} appointments")
+print(f"  - {LabResult.objects.count()} lab results")
+print("\nLogin credentials:")
+print("  Admin users: admin1-admin7 / admin123")
+print("  Doctor users: doctor1-doctor7 / doctor123")
+print("\nTenants and specializations:")
+for tenant in Tenant.objects.all():
+    print(f"  - {tenant.name}: {tenant.get_specialization_display()} ({tenant.subdomain}.localhost)")
+print("="*60)

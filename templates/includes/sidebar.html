@@ -13,6 +13,7 @@
         <li><a href="/analytics/dashboard/">Analytics</a></li>
         <li><a href="/dashboard/">Dashboard</a></li>
         <li><a href="/billing/">Billing</a></li>
+        <li><a href="{% url 'fhir_info' %}">FHIR API</a></li>
       {% if user.is_staff or user.is_superuser %}
         <li><a href="/audit_logs/">Audit Logs</a></li>
         <li><a href="/admin/">Admin</a></li>
@@ -23,6 +24,5 @@
   </ul>
   <script src="/static/js/sidebar_accordion.js"></script>
 </aside>
-
 
 

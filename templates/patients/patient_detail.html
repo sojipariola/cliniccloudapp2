@@ -5,11 +5,73 @@
 <p>Date of Birth: {{ patient.date_of_birth }}</p>
 <p>Email: {{ patient.email }}</p>
 <p>Phone: {{ patient.phone }}</p>
-<a href="{% url 'patient_list' %}">Back to list</a>
-{% if perms.patients.change_patient %}
-	<a href="{% url 'patient_edit' patient.pk %}">Edit</a>
-{% endif %}
-{% if perms.patients.delete_patient %}
-	<a href="{% url 'patient_delete' patient.pk %}">Delete</a>
-{% endif %}
+
+<div style="margin-top:1.5rem; padding:1rem; background:#f0f8ff; border-left:4px solid #007bff;">
+  <h3 style="margin-top:0;">FHIR Resource Access</h3>
+  <p>Access this patient's data in FHIR format:</p>
+  <code style="background:#fff; padding:0.5rem; display:block; margin:0.5rem 0;">
+    GET /fhir/Patient/{{ patient.pk }}/?tenant_id={{ patient.tenant_id }}
+  </code>
+  <a href="{% url 'fhir_patient_read' patient.pk %}?tenant_id={{ patient.tenant_id }}" 
+     target="_blank" 
+     style="display:inline-block; margin-top:0.5rem; padding:0.5rem 1rem; background:#007bff; color:white; text-decoration:none; border-radius:4px;">
+    View FHIR JSON
+  </a>
+</div>
+
+<div style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Clinical Records</h3>
+    <a href="{% url 'clinic_note_create' %}?patient={{ patient.pk }}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      ➕ New Clinical Note
+    </a>
+  </div>
+  
+  {% if clinical_records %}
+    <div style="display:grid; gap:1rem;">
+      {% for record in clinical_records %}
+        <div style="background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:1rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+            <div>
+              <span style="background:#e5e7eb; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600; color:#0f172a;">
+                {{ record.note_type|default:"General" }}
+              </span>
+              <span style="color:#6b7280; font-size:0.85rem; margin-left:0.75rem;">
+                {{ record.created_at|date:"M d, Y H:i" }}
+              </span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'clinicalrecord_detail' record.pk %}" 
+                 style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                View
+              </a>
+              {% if perms.clinical_records.change_clinicalrecord %}
+                <a href="{% url 'clinicalrecord_edit' record.pk %}" 
+                   style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                  Edit
+                </a>
+              {% endif %}
+            </div>
+          </div>
+          <div style="color:#4b5563; font-size:0.9rem; line-height:1.5; max-height:4.5rem; overflow:hidden; text-overflow:ellipsis;">
+            {{ record.note|truncatewords:30 }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color:#6b7280; font-style:italic;">No clinical records yet. Create one to get started.</p>
+  {% endif %}
+</div>
+
+<div style="margin-top:2rem;">
+  <a href="{% url 'patient_list' %}" style="color:#0f4c81; text-decoration:none; font-weight:600;">← Back to list</a>
+  {% if perms.patients.change_patient %}
+    <a href="{% url 'patient_edit' patient.pk %}" style="color:#0f4c81; text-decoration:none; font-weight:600; margin-left:1rem;">Edit Patient</a>
+  {% endif %}
+  {% if perms.patients.delete_patient %}
+    <a href="{% url 'patient_delete' patient.pk %}" style="color:#ef4444; text-decoration:none; font-weight:600; margin-left:1rem;">Delete Patient</a>
+  {% endif %}
+</div>
 {% endblock %}

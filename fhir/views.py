@@ -5,27 +5,46 @@ from .utils import patient_to_fhir
 
 @require_http_methods(["GET"])
 def patient_read(request, pk):
-    """Return a FHIR Patient resource for the given patient and tenant."""
+    """Return a FHIR Patient resource for the given patient and tenant.
+
+    - For regular users, tenant scoping is enforced via the tenant_id param.
+    - Platform admins can omit tenant_id and can fall back to any tenant if the provided tenant_id
+      does not match the patient (helps avoid false 404s when ids span tenants).
+    """
+
     tenant_id = request.GET.get("tenant_id")
-    if not tenant_id:
+    is_platform_admin = bool(getattr(request.user, "platform_admin", False))
+
+    if not tenant_id and not is_platform_admin:
         return HttpResponseBadRequest("tenant_id is required")
 
-    try:
-        patient = (
-            Patient.objects.select_related("tenant")
-            .only(
-                "id",
-                "tenant_id",
-                "first_name",
-                "last_name",
-                "date_of_birth",
-                "email",
-                "phone",
-            )
-            .get(pk=pk, tenant_id=tenant_id)
+    base_qs = (
+        Patient.objects.select_related("tenant")
+        .only(
+            "id",
+            "tenant_id",
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "email",
+            "phone",
         )
-    except Patient.DoesNotExist as exc:
-        raise Http404("Patient not found") from exc
+    )
+
+    scoped_qs = base_qs
+    if tenant_id:
+        scoped_qs = scoped_qs.filter(tenant_id=tenant_id)
+
+    try:
+        patient = scoped_qs.get(pk=pk)
+    except Patient.DoesNotExist:
+        if is_platform_admin:
+            try:
+                patient = base_qs.get(pk=pk)
+            except Patient.DoesNotExist as exc:
+                raise Http404("Patient not found") from exc
+        else:
+            raise Http404("Patient not found")
 
     resource = patient_to_fhir(patient)
     return JsonResponse(

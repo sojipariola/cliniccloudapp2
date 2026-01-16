@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% block title %}Create Organization{% endblock %}
+{% block content %}
+<div class="form-container" style="max-width:700px;">
+  <h2>Create Your Healthcare Organization</h2>
+  <p>Start your free 14-day trial. No credit card required.</p>
+  
+  <form method="post" class="form-group">
+    {% csrf_token %}
+    
+    <div class="form-field">
+      {{ form.name }}
+      {% if form.name.help_text %}
+        <small>{{ form.name.help_text }}</small>
+      {% endif %}
+      {% if form.name.errors %}
+        <div class="error">{{ form.name.errors.0 }}</div>
+      {% endif %}
+    </div>
+    
+    <div class="form-field">
+      {{ form.subdomain }}
+      {% if form.subdomain.help_text %}
+        <small>{{ form.subdomain.help_text }}</small>
+      {% endif %}
+      {% if form.subdomain.errors %}
+        <div class="error">{{ form.subdomain.errors.0 }}</div>
+      {% endif %}
+    </div>
+    
+    <div style="background:#e8f5e9; padding:1rem; border-radius:4px; margin:1rem 0;">
+      <h4>Free Trial Includes:</h4>
+      <ul style="margin:0; padding-left:1.5rem;">
+        {% for feature in plan_details.features %}
+          <li>{{ feature }}</li>
+        {% endfor %}
+        <li>{{ trial_days }} days of full access</li>
+        <li>No credit card required</li>
+      </ul>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create Organization & Start Trial</button>
+    <a href="{% url 'landing' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

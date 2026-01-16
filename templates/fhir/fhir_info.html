@@ -1,0 +1,107 @@
+{% extends 'base/base.html' %}
+{% block title %}FHIR API Information{% endblock %}
+{% block content %}
+<div class="form-container" style="max-width:900px;">
+  <h2>FHIR Interoperability API</h2>
+  <p>Access patient data in FHIR R4 format for healthcare interoperability.</p>
+
+  <h3>Available Endpoints</h3>
+  <div style="background:#f5f5f5; padding:1rem; margin:1rem 0; border-left:4px solid #007bff;">
+    <h4>Patient Resource</h4>
+    <p><code>GET /fhir/Patient/{id}/?tenant_id={tenant_id}</code></p>
+    <p><strong>Description:</strong> Retrieve a single patient resource in FHIR format</p>
+    <p><strong>Content-Type:</strong> <code>application/fhir+json</code></p>
+    <p><strong>Parameters:</strong></p>
+    <ul>
+      <li><code>id</code> (path): Patient ID</li>
+      <li><code>tenant_id</code> (query): Tenant/Organization ID</li>
+    </ul>
+  </div>
+
+  <h3>Example Usage</h3>
+  <pre style="background:#282c34; color:#abb2bf; padding:1rem; overflow-x:auto;">
+# Using curl
+curl -X GET "https://{{ request.get_host }}/fhir/Patient/1/?tenant_id=1" \
+  -H "Accept: application/fhir+json"
+
+# Using Python requests
+import requests
+response = requests.get(
+    "https://{{ request.get_host }}/fhir/Patient/1/",
+    params={"tenant_id": 1},
+    headers={"Accept": "application/fhir+json"}
+)
+fhir_patient = response.json()
+  </pre>
+
+  <h3>Sample Response</h3>
+  <pre style="background:#f5f5f5; padding:1rem; overflow-x:auto; border:1px solid #ddd;">
+{
+  "resourceType": "Patient",
+  "id": "1",
+  "meta": {
+    "profile": ["http://hl7.org/fhir/StructureDefinition/Patient"]
+  },
+  "identifier": [
+    {
+      "system": "urn:healthcare-saas:tenant",
+      "value": "1"
+    },
+    {
+      "system": "urn:healthcare-saas:patient-id",
+      "value": "1"
+    }
+  ],
+  "name": [
+    {
+      "family": "Lovelace",
+      "given": ["Ada"]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "555-1234",
+      "use": "mobile"
+    },
+    {
+      "system": "email",
+      "value": "ada@example.com"
+    }
+  ],
+  "birthDate": "1815-12-10",
+  "managingOrganization": {
+    "identifier": {
+      "system": "urn:healthcare-saas:tenant",
+      "value": "1"
+    }
+  }
+}
+  </pre>
+
+  <h3>FHIR Compliance</h3>
+  <ul>
+    <li>✓ FHIR R4 (4.0.1) compatible</li>
+    <li>✓ Supports <code>application/fhir+json</code> content type</li>
+    <li>✓ Patient resource with core elements</li>
+    <li>✓ Tenant-aware data isolation</li>
+    <li>✓ Standard HTTP status codes</li>
+  </ul>
+
+  <h3>Security & Authentication</h3>
+  <p><strong>Note:</strong> Production deployments should implement:</p>
+  <ul>
+    <li>OAuth 2.0 / SMART on FHIR authentication</li>
+    <li>TLS/HTTPS encryption</li>
+    <li>Rate limiting and API throttling</li>
+    <li>Audit logging for all FHIR access</li>
+  </ul>
+
+  <div style="margin-top:2rem;">
+    <a href="{% url 'dashboard' %}" class="btn">← Back to Dashboard</a>
+    {% if user.is_staff %}
+      <a href="https://www.hl7.org/fhir/patient.html" target="_blank" class="btn">FHIR Patient Spec</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

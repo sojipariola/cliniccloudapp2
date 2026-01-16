@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% block title %}Welcome to {{ tenant.name }}{% endblock %}
+{% block content %}
+<div class="form-container" style="max-width:800px;">
+  <h2>Welcome to {{ tenant.name }}! 🎉</h2>
+  <p>Your free trial has started. You have {{ trial_days }} days to explore all features.</p>
+  
+  <div style="background:#fff3e0; padding:1.5rem; border-radius:4px; margin:2rem 0; border-left:4px solid #ff9800;">
+    <h3 style="margin-top:0;">Your Free Trial Includes:</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div>
+        <strong>📋 Patient Management</strong>
+        <p>Up to {{ free_plan.max_patients }} patients</p>
+      </div>
+      <div>
+        <strong>👥 Team</strong>
+        <p>Up to {{ free_plan.max_users }} users</p>
+      </div>
+      <div>
+        <strong>📅 Appointments</strong>
+        <p>Up to {{ free_plan.max_appointments }} appointments</p>
+      </div>
+      <div>
+        <strong>🔬 Lab Management</strong>
+        <p>Basic lab ordering & tracking</p>
+      </div>
+    </div>
+  </div>
+  
+  <h3>What's Next?</h3>
+  <ol>
+    <li><a href="{% url 'user_profile' %}">Complete your profile</a></li>
+    <li><a href="{% url 'patient_list' %}">Add your first patient</a></li>
+    <li><a href="{% url 'view_plans' %}">Explore upgrade options (anytime)</a></li>
+    <li>Invite team members to your organization</li>
+  </ol>
+  
+  <div style="margin-top:2rem;">
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+    <a href="{% url 'view_plans' %}" class="btn btn-secondary">View Plans</a>
+  </div>
+</div>
+{% endblock %}

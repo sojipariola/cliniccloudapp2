@@ -9,9 +9,6 @@ Function views
     2. Add a URL to urlpatterns:  path('', views.home, name='home')
 Class-based views
     1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
@@ -37,6 +34,11 @@ from labs.views import labresult_list, labresult_detail, labresult_create, labre
 from documents.views import upload_document
 from analytics.views import analytics_dashboard
 from fhir.views import patient_read
+from fhir.info_views import fhir_info
+from tenants.views import create_tenant, tenant_onboarding, view_plans
+from billing.upgrade_views import upgrade_plan, upgrade_success
+from billing.checkout_views import create_checkout_session, create_portal_session
+from billing.webhook_views import stripe_webhook
 
 def landing(request):
     return render(request, "landing.html")
@@ -48,9 +50,10 @@ def dashboard(request):
 urlpatterns = [
     path("", landing, name="landing"),
     path("dashboard/", dashboard, name="dashboard"),
-    path("admin/", admin.site.urls),
+    # Custom admin views should precede the default admin include so they are not shadowed
     path("admin/pending-users/", pending_users, name="pending_users"),
     path("admin/approve-user/<int:user_id>/", approve_user, name="approve_user"),
+    path("admin/", admin.site.urls),
     
     path("accounts/login/", TenantLoginView.as_view(), name="login"),
     path("accounts/register/", register, name="register"),
@@ -94,5 +97,18 @@ urlpatterns = [
     path("referrals/create/", create_referral, name="create_referral"),
     path("documents/upload/", upload_document, name="upload_document"),
     path("analytics/dashboard/", analytics_dashboard, name="analytics_dashboard"),
+
     path("fhir/Patient/<int:pk>/", patient_read, name="fhir_patient_read"),
+    path("fhir/", fhir_info, name="fhir_info"),
+
+
+    # Add to urlpatterns:
+    path("register-organization/", create_tenant, name="create_tenant"),
+    path("organizations/<int:tenant_id>/onboarding/", tenant_onboarding, name="tenant_onboarding"),
+    path("billing/plans/", view_plans, name="view_plans"),
+    path("billing/upgrade/<str:plan>/", upgrade_plan, name="upgrade_plan"),
+    path("billing/upgrade-success/", upgrade_success, name="upgrade_success"),
+    path("billing/create-checkout-session/", create_checkout_session, name="create_checkout_session"),
+    path("billing/create-portal-session/", create_portal_session, name="create_portal_session"),
+    path("billing/webhook/", stripe_webhook, name="stripe_webhook"),
 ]

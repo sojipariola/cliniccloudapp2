@@ -1,34 +1,56 @@
 {% extends 'base/base.html' %}
 {% block title %}Referrals{% endblock %}
 {% block content %}
-<div class="form-container" style="max-width:900px;">
-  <h2>Referrals</h2>
-  <a href="/referrals/create/" class="cta-btn" style="float:right;margin-bottom:1em;">New Referral</a>
-  <table style="width:100%;margin-top:1.5rem;border-collapse:collapse;">
-    <thead>
-      <tr style="background:#f0f4f8;">
-        <th>Patient</th>
-        <th>From Clinic</th>
-        <th>To Clinic</th>
-        <th>Referred By</th>
-        <th>Created</th>
-        <th>Accepted</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for ref in referrals %}
-      <tr style="border-bottom:1px solid #e0e0e0;">
-          <td>{{ ref.patient }}</td>
-          <td>{{ ref.from_clinic }}<br><span style="font-size:0.9em;color:#888;">{{ ref.from_clinic.get_clinic_type_display }}</span></td>
-          <td>{{ ref.to_clinic }}<br><span style="font-size:0.9em;color:#888;">{{ ref.to_clinic.get_clinic_type_display }}</span></td>
-        <td>{{ ref.referred_by }}</td>
-        <td>{{ ref.created_at|date:'Y-m-d H:i' }}</td>
-        <td>{% if ref.accepted %}Yes{% else %}No{% endif %}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="6" style="padding:1rem;text-align:center;">No referrals found.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div>
+      <h2 style="margin:0;">Referrals</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">Inbound and outbound referrals for your tenant.</p>
+    </div>
+    <a href="{% url 'create_referral' %}" class="btn btn-primary">+ New Referral</a>
+  </div>
+
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Patient</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">From Clinic</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">To Clinic</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Referred By</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Created</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ref in referrals %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; font-weight:600;">{{ ref.patient }}</td>
+            <td style="padding:12px;">
+              {{ ref.from_clinic }}<br>
+              <span style="font-size:0.9em; color:#888;">{{ ref.from_clinic.get_clinic_type_display }}</span>
+            </td>
+            <td style="padding:12px;">
+              {{ ref.to_clinic }}<br>
+              <span style="font-size:0.9em; color:#888;">{{ ref.to_clinic.get_clinic_type_display }}</span>
+            </td>
+            <td style="padding:12px; color:#334155;">{{ ref.referred_by }}</td>
+            <td style="padding:12px; color:#475569;">{{ ref.created_at|date:'Y-m-d H:i' }}</td>
+            <td style="padding:12px;">
+              {% if ref.accepted %}
+                <span style="display:inline-block; padding:4px 10px; border-radius:12px; background:#dcfce7; color:#166534; font-weight:600;">Accepted</span>
+              {% else %}
+                <span style="display:inline-block; padding:4px 10px; border-radius:12px; background:#fff1f2; color:#b91c1c; font-weight:600;">Pending</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding:16px; text-align:center; color:#6b7280;">No referrals found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

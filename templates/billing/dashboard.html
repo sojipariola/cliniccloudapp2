@@ -1,9 +1,65 @@
 {% extends 'base/base.html' %}
 {% block title %}Billing Dashboard{% endblock %}
 {% block content %}
-<div class="form-container" style="max-width:700px;">
-  <h2>Billing & Subscriptions</h2>
-  <p>Welcome to the billing dashboard. Here you can view your subscription status, payment history, and manage your plan.</p>
-  <!-- Add billing summary, payment history, and actions here -->
+<div style="max-width:1200px; margin:0 auto; padding:2rem;">
+  <h2 style="margin-bottom:0.5rem;">Billing & Subscriptions</h2>
+  <p style="color:#555;">View subscription status, billing identifiers, and tenant contacts.</p>
+
+  {% if is_platform_admin %}
+    <div style="margin:1.5rem 0; padding:1rem; background:#f5f7fb; border:1px solid #e2e8f0; border-radius:8px;">
+      <strong>Platform admin view:</strong> All tenants with their primary admin/contact, plan, and Stripe identifiers.
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="table" style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Tenant</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Plan</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Primary Admin</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Contact</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Stripe Customer</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Subscription</th>
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Trial</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in tenant_rows %}
+            <tr style="border-bottom:1px solid #f0f4f8;">
+              <td style="padding:10px; font-weight:600;">{{ row.tenant.name }} ({{ row.tenant.subdomain }})</td>
+              <td style="padding:10px; text-transform:capitalize;">{{ row.plan|default:'-' }}</td>
+              <td style="padding:10px;">{% if row.primary_admin %}{{ row.primary_admin.username }}{% else %}-{% endif %}</td>
+              <td style="padding:10px; color:#2b6cb0;">{{ row.contact_email|default:'-' }}</td>
+              <td style="padding:10px; font-family:monospace;">{{ row.stripe_customer_id|default:'-' }}</td>
+              <td style="padding:10px; font-family:monospace;">{{ row.stripe_subscription_id|default:'-' }}</td>
+              <td style="padding:10px;">{% if row.trial.is_free_trial %}{{ row.trial.trial_days_remaining|default:'?' }} days left{% else %}—{% endif %}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" style="padding:12px; text-align:center; color:#666;">No tenants found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="form-container" style="max-width:800px;">
+      <div style="border:1px solid #e2e8f0; border-radius:8px; padding:1.5rem; background:#f8fafc;">
+        <h3 style="margin-top:0;">Current Plan</h3>
+        <p style="font-size:1.25rem; font-weight:700; margin:0.25rem 0;">{{ plan_info.name|default:'Plan' }}</p>
+        <p style="margin:0.25rem 0; color:#444;">${{ plan_info.price|default:'0' }}/{{ plan_info.interval|default:'month' }}</p>
+        <p style="margin:0.25rem 0; color:#666;">Stripe Customer: <span style="font-family:monospace;">{{ stripe_customer_id|default:'-' }}</span></p>
+        <p style="margin:0.25rem 0; color:#666;">Subscription: <span style="font-family:monospace;">{{ stripe_subscription_id|default:'-' }}</span></p>
+        {% if trial.is_free_trial %}
+          <div style="margin-top:0.75rem; padding:0.75rem; background:#fffbea; border:1px solid #f6e05e; border-radius:6px;">
+            <strong>Trial active:</strong> {{ trial.trial_days_remaining|default:'?' }} days remaining.
+          </div>
+        {% endif %}
+        <div style="margin-top:1rem;">
+          <a class="btn btn-primary" href="{% url 'view_plans' %}">View plans</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -1,20 +1,57 @@
 {% extends 'base/base.html' %}
 {% block title %}Patients{% endblock %}
 {% block content %}
-<h2>Patients</h2>
-<ul>
-  {% for patient in patients %}
-    <li>
-      <a href="{% url 'patient_detail' patient.pk %}">{{ patient.first_name }} {{ patient.last_name }}</a> ({{ patient.date_of_birth }})
-      {% if perms.patients.change_patient %}
-        <a href="{% url 'patient_edit' patient.pk %}">Edit</a>
-      {% endif %}
-      {% if perms.patients.delete_patient %}
-        <a href="{% url 'patient_delete' patient.pk %}">Delete</a>
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>No patients found.</li>
-  {% endfor %}
-</ul>
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div>
+      <h2 style="margin:0;">Patients</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">All patients for your tenant.</p>
+    </div>
+    {% if perms.patients.add_patient %}
+      <a href="{% url 'patient_create' %}" class="btn btn-primary">+ New Patient</a>
+    {% endif %}
+  </div>
+
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Name</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Date of Birth</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Email</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Phone</th>
+          {% if perms.patients.change_patient or perms.patients.delete_patient %}
+            <th style="padding:12px; border-bottom:2px solid #cbd5e1; text-align:right; font-weight:700;">Actions</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in patients %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; font-weight:600;">
+              <a href="{% url 'patient_detail' patient.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ patient.first_name }} {{ patient.last_name }}</a>
+            </td>
+            <td style="padding:12px; color:#334155;">{{ patient.date_of_birth }}</td>
+            <td style="padding:12px; color:#475569;">{{ patient.email|default:'—' }}</td>
+            <td style="padding:12px; color:#475569;">{{ patient.phone|default:'—' }}</td>
+            {% if perms.patients.change_patient or perms.patients.delete_patient %}
+              <td style="padding:12px; text-align:right;">
+                {% if perms.patients.change_patient %}
+                  <a href="{% url 'patient_edit' patient.pk %}" class="btn btn-secondary" style="margin-right:6px;">Edit</a>
+                {% endif %}
+                {% if perms.patients.delete_patient %}
+                  <a href="{% url 'patient_delete' patient.pk %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" style="padding:16px; text-align:center; color:#6b7280;">No patients found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

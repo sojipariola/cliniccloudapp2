@@ -1,28 +1,71 @@
 {% extends 'base/base.html' %}
-{% load get_item %}
-{% block title %}Clinic-Specific Note{% endblock %}
+{% block title %}Create Clinic-Specific Note{% endblock %}
 {% block content %}
-<div class="form-container" style="max-width:700px;">
-  <h2>Clinic-Specific Note</h2>
-  <form method="post">
+<div style="max-width:800px; margin:0 auto; padding:2rem 0;">
+  <div style="background:#e0f2fe; padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+    <h2 style="margin:0 0 0.5rem 0; color:#0f4c81; font-size:1.75rem; font-weight:700;">📋 Clinic-Specific Note</h2>
+    <p style="margin:0; color:#0369a1;"><strong>Your Clinic Specialization:</strong> {{ tenant_specialization|default:"General Practice" }}</p>
+  </div>
+  
+  <form method="post" id="noteForm" style="background:#f9fafb; padding:2rem; border-radius:8px; border:1px solid #e5e7eb;">
     {% csrf_token %}
-    <label for="patient">Patient</label>
-    <select name="patient" id="patient" required>
-      {% for p in patients %}
-        <option value="{{ p.id }}" {% if p.id == patient_id %}selected{% endif %}>{{ p }}</option>
-      {% endfor %}
-    </select>
-    <label for="clinic_type">Clinic Type</label>
-    <select name="clinic_type" id="clinic_type" required>
-      {% for key, label in clinic_types %}
-        <option value="{{ key }}" {% if key == clinic_type %}selected{% endif %}>{{ label }}</option>
-      {% endfor %}
-    </select>
-    {% for section in template %}
-      <label for="section_{{ forloop.counter }}">{{ section }}</label>
-      <textarea name="section_{{ forloop.counter }}" id="section_{{ forloop.counter }}" rows="2">{{ values|get_item:section }}</textarea>
-    {% endfor %}
-    <button type="submit">Save Note</button>
+    
+    <div style="margin-bottom:1.5rem;">
+      <label for="patient" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Patient</label>
+      <select name="patient" id="patient" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;">
+        <option value="">-- Select Patient --</option>
+        {% for p in patients %}
+          <option value="{{ p.id }}" {% if p.id|stringformat:"s" == patient_id|stringformat:"s" %}selected{% endif %}>{{ p.get_full_name|default:p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div style="margin-bottom:1.5rem;">
+      <label for="specialization" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Specialization</label>
+      <select name="specialization" id="specialization" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;" onchange="updateNoteTypes()">
+        {% for value, label in specialization_choices %}
+          <option value="{{ value }}" {% if value == specialization %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <small style="color:#6b7280; display:block; margin-top:0.25rem;">Select the specialization (defaults to your clinic type)</small>
+    </div>
+    
+    <div style="margin-bottom:1.5rem;">
+      <label for="note_type" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Note Type</label>
+      <select name="note_type" id="note_type" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;">
+        <option value="">-- Select Note Type --</option>
+        {% for note in template %}
+          <option value="{{ note }}" {% if note == note_type %}selected{% endif %}>{{ note }}</option>
+        {% endfor %}
+      </select>
+      <small style="color:#6b7280; display:block; margin-top:0.25rem;">Available note types for this specialization</small>
+    </div>
+    
+    <div style="margin-bottom:1.5rem;">
+      <label for="note_content" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Note Content</label>
+      <textarea name="note_content" id="note_content" rows="12" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-family:'Fira Code', monospace; font-size:0.95rem;" placeholder="Enter clinical note details..."></textarea>
+      <small style="color:#6b7280; display:block; margin-top:0.25rem;">Enter detailed clinical notes for the selected note type</small>
+    </div>
+    
+    <div style="display:flex; gap:1rem;">
+      <button type="submit" style="background:#0f4c81; color:#fff; padding:0.75rem 1.5rem; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:1rem;">
+        💾 Save Note
+      </button>
+      <a href="{% url 'clinicalrecord_list' %}" style="padding:0.75rem 1.5rem; border-radius:6px; border:1px solid #d1d5db; color:#0f4c81; text-decoration:none; font-weight:600; display:inline-flex; align-items:center;">
+        Cancel
+      </a>
+    </div>
   </form>
 </div>
+
+<script>
+function updateNoteTypes() {
+  const specialization = document.getElementById('specialization').value;
+  if (specialization) {
+    // Reload page with new specialization to get updated note types
+    window.location.href = `?specialization=${specialization}`;
+  }
+}
+</script>
+
 {% endblock %}

@@ -1,20 +1,56 @@
 {% extends 'base/base.html' %}
 {% block title %}Appointments{% endblock %}
 {% block content %}
-<h2>Appointments</h2>
-<ul>
-  {% for appointment in appointments %}
-    <li>
-      <a href="{% url 'appointment_detail' appointment.pk %}">{{ appointment.patient }} - {{ appointment.scheduled_for }} ({{ appointment.status }})</a>
-      {% if perms.appointments.change_appointment %}
-        <a href="{% url 'appointment_edit' appointment.pk %}">Edit</a>
-      {% endif %}
-      {% if perms.appointments.delete_appointment %}
-        <a href="{% url 'appointment_delete' appointment.pk %}">Delete</a>
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>No appointments found.</li>
-  {% endfor %}
-</ul>
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div>
+      <h2 style="margin:0;">Appointments</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">Upcoming and past appointments for your tenant.</p>
+    </div>
+    {% if perms.appointments.add_appointment %}
+      <a href="{% url 'appointment_create' %}" class="btn btn-primary">+ New Appointment</a>
+    {% endif %}
+  </div>
+
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Patient</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Date/Time</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Status</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; text-align:right; font-weight:700;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; font-weight:600;">
+              <a href="{% url 'appointment_detail' appointment.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ appointment.patient }}</a>
+            </td>
+            <td style="padding:12px; color:#334155;">{{ appointment.scheduled_for|date:'Y-m-d H:i' }}</td>
+            <td style="padding:12px;">
+              <span style="display:inline-block; padding:4px 10px; border-radius:12px; background:#eef2ff; color:#3730a3; font-weight:600; text-transform:capitalize;">
+                {{ appointment.status|default:'scheduled' }}
+              </span>
+            </td>
+            <td style="padding:12px; text-align:right;">
+              <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-secondary" style="margin-right:6px;">View</a>
+              {% if perms.appointments.change_appointment %}
+                <a href="{% url 'appointment_edit' appointment.pk %}" class="btn btn-secondary" style="margin-right:6px;">Edit</a>
+              {% endif %}
+              {% if perms.appointments.delete_appointment %}
+                <a href="{% url 'appointment_delete' appointment.pk %}" class="btn btn-danger">Delete</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" style="padding:16px; text-align:center; color:#6b7280;">No appointments found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

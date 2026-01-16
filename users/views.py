@@ -1,5 +1,6 @@
 from common.audit import log_audit
 from .notifications import notify_admins_of_new_user
+from .models import CustomUser
 
 from django.contrib.auth import views as auth_views
 from .registration_forms import TenantUserRegistrationForm
@@ -11,6 +12,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.utils.safestring import mark_safe
 
 import logging
 # Set up logger
@@ -26,10 +28,16 @@ def register(request):
 			# Free trial logic
 			if is_tenant_in_free_trial(tenant):
 				if is_free_user_limit_reached(tenant):
-					messages.error(request, "Free trial limit: max 2 users. Upgrade to add more.")
+					upgrade_message = mark_safe(
+						'Free trial limit: max 2 users. <a href="/billing/" class="alert-link">Upgrade to add more</a>.'
+					)
+					messages.error(request, upgrade_message)
 					return render(request, "registration/register.html", {"form": form})
 				if is_free_patient_limit_reached(tenant):
-					messages.error(request, "Free trial limit: max 5 patients. Upgrade to add more.")
+					upgrade_message = mark_safe(
+						'Free trial limit: max 5 patients. <a href="/billing/" class="alert-link">Upgrade to add more</a>.'
+					)
+					messages.error(request, upgrade_message)
 					return render(request, "registration/register.html", {"form": form})
 				notify_admins_of_new_user(user)
 				log_audit("user_registered", user=user, tenant=tenant, details=f"User {user.username} registered for tenant {tenant}.")
@@ -95,6 +103,21 @@ class TenantLoginView(LoginView):
 				return redirect(next_url)
 			return redirect('dashboard')
 		else:
+			# Check if user exists but is inactive (awaiting admin approval)
+			try:
+				inactive_user = CustomUser.objects.get(username=username, tenant=tenant)
+				if not inactive_user.is_active and inactive_user.check_password(password):
+					contact_admin_link = mark_safe(
+						'Your account is pending admin approval. '
+						'<a href="mailto:admin@cliniccloud.com?subject=Account%20Approval%20Request&body=I%20would%20like%20to%20request%20approval%20for%20my%20ClinicCloud%20account.%20Username:%20' + username + '" '
+						'class="alert-link">Contact admin for approval</a>.'
+					)
+					messages.error(self.request, contact_admin_link)
+					logger.info(f"Inactive user '{username}' attempted login for tenant '{tenant}'.")
+					return self.form_invalid(form)
+			except CustomUser.DoesNotExist:
+				pass
+			
 			logger.error(f"Login error for user '{username}' and tenant '{tenant}': Invalid credentials or tenant.")
 			messages.error(self.request, "Invalid login credentials or tenant.")
 			return self.form_invalid(form)

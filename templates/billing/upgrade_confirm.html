@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% block title %}Confirm Upgrade to {{ plan_info.name }}{% endblock %}
+{% block content %}
+<div class="form-container" style="max-width:600px;">
+  <h2>Confirm Upgrade</h2>
+  
+  <div style="background:#f5f5f5; padding:1.5rem; border-radius:4px; margin:1.5rem 0;">
+    <h3 style="margin-top:0;">{{ plan_info.name }}</h3>
+    <p style="font-size:1.5rem; color:#007bff; font-weight:bold;">
+      ${{ plan_info.price }}/{{ plan_info.interval }}
+    </p>
+    
+    <h4>What's Included:</h4>
+    <ul>
+      {% for feature in plan_info.features %}
+        <li>{{ feature }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  
+  <div style="background:#fff3cd; padding:1rem; border-radius:4px; margin:1rem 0;">
+    <strong>⚠️ Note:</strong> Your free trial will end immediately upon upgrade. Your subscription will begin on the Starter plan and you'll be charged ${{ plan_info.price }} per {{ plan_info.interval }}.
+  </div>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin:1rem 0;">
+      Proceed to Payment
+    </button>
+    <a href="{% url 'view_plans' %}" class="btn btn-secondary" style="width:100%; text-align:center;">Cancel</a>
+  </form>
+</div>
+{% endblock %}

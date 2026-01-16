@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% block title %}Plans & Pricing{% endblock %}
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; padding:2rem;">
+  <h2>Plans & Pricing</h2>
+  <p>Upgrade anytime. Cancel anytime. No long-term contracts.</p>
+  
+  {% if tenant.plan == 'free_trial' and tenant.is_free_trial %}
+    <div style="background:#d4edda; padding:1rem; border-radius:4px; margin-bottom:2rem; border-left:4px solid #28a745;">
+      <strong>⏰ Free Trial Active</strong>
+      <p>{{ tenant.trial_days_remaining }} days remaining. Upgrade now to continue after trial ends.</p>
+    </div>
+  {% endif %}
+  
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem; margin-top:2rem;">
+    {% for plan_key, plan_info in plans.items %}
+      <div style="border:2px solid #ddd; border-radius:8px; padding:1.5rem; {% if tenant.plan == plan_key %}border-color:#007bff; background:#f0f8ff;{% endif %}">
+        <h3>{{ plan_info.name }}</h3>
+        
+        {% if plan_info.price == 0 %}
+          <div style="font-size:2rem; font-weight:bold; margin:1rem 0;">Free</div>
+          <p style="color:#666; margin-bottom:1rem;">14-day trial</p>
+        {% else %}
+          <div style="font-size:2rem; font-weight:bold; margin:1rem 0;">
+            ${{ plan_info.price }}/month
+          </div>
+          <p style="color:#666; margin-bottom:1rem;">Billed monthly</p>
+        {% endif %}
+        
+        <h4>Limits:</h4>
+        <ul style="margin:0.5rem 0; padding-left:1.5rem;">
+          <li>Users: {% if plan_info.max_users %}{{ plan_info.max_users }}{% else %}Unlimited{% endif %}</li>
+          <li>Patients: {% if plan_info.max_patients %}{{ plan_info.max_patients }}{% else %}Unlimited{% endif %}</li>
+          <li>Appointments: {% if plan_info.max_appointments %}{{ plan_info.max_appointments }}{% else %}Unlimited{% endif %}</li>
+        </ul>
+        
+        <h4>Features:</h4>
+        <ul style="margin:0.5rem 0; padding-left:1.5rem;">
+          {% for feature in plan_info.features %}
+            <li>{{ feature }}</li>
+          {% endfor %}
+        </ul>
+        
+        {% if tenant.plan == plan_key %}
+          <button class="btn btn-secondary" disabled>Current Plan</button>
+        {% elif plan_key == 'free_trial' %}
+          <button class="btn btn-secondary" disabled>Free Trial</button>
+        {% else %}
+          <form method="post" action="{% url 'upgrade_plan' plan_key %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Upgrade Now</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  
+  <div style="margin-top:3rem; padding:1.5rem; background:#f5f5f5; border-radius:4px;">
+    <h3>Questions?</h3>
+    <p>Contact our sales team at sales@cliniccloud.com or call +1-800-CLINIC</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,3 +1,31 @@
-<footer>
-  <p>&copy; 2026 ClinicCloud</p>
+<footer style="background: linear-gradient(90deg, #0a2a4a 0%, #0f4c81 50%, #38b6ff 100%); color: white; padding: 3rem 2rem 2rem 2rem; text-align: center; margin-top: 4rem; box-shadow: 0 -4px 12px rgba(15, 76, 129, 0.1);">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; text-align: left;">
+      <div>
+        <h4 style="color: #fff; margin-bottom: 1rem;">ClinicCloud</h4>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6;">World-class, secure, multi-tenant healthcare SaaS platform for modern clinics.</p>
+      </div>
+      <div>
+        <h4 style="color: #fff; margin-bottom: 1rem;">Product</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="/patients/" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Patients</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="/appointments/" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Appointments</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="/billing/" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Billing</a></li>
+          <li><a href="{% url 'fhir_info' %}" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">FHIR API</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #fff; margin-bottom: 1rem;">Legal</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Privacy Policy</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Terms of Service</a></li>
+          <li><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; text-align: center;">
+      <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem;">&copy; 2026 ClinicCloud. All rights reserved. Built with ❤️ for healthcare professionals.</p>
+      <p style="color: rgba(255, 255, 255, 0.6); margin: 0.5rem 0 0 0; font-size: 0.85rem;">PHI-Compliant | HIPAA Ready | Multi-Tenant | Secure</p>
+    </div>
+  </div>
 </footer>
