@@ -9,7 +9,19 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'billing.tasks.weekly_trial_expiry_notifications',
         'schedule': crontab(minute=0, hour=9, day_of_week='monday'),
     },
+    'daily-trial-reminders': {
+        'task': 'billing.tasks.daily_trial_expiry_soft_reminder',
+        'schedule': crontab(minute=15, hour=8),  # 08:15 UTC daily
+    },
+    'nightly-subscription-health-check': {
+        'task': 'billing.tasks.nightly_subscription_health_check',
+        'schedule': crontab(minute=45, hour=1),  # 01:45 UTC daily
+    },
 }
+
+# Celery broker/result backend (use Redis or other broker in production)
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
