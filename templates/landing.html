@@ -17,7 +17,7 @@
 {% include 'includes/flashmessages.html' %}
 <section class="hero">
   <div class="hero-content">
-    <img src="/static/img/landing_graphic.svg" alt="ClinicCloud Graphic" style="max-width:100%;height:auto;margin-bottom:2rem;">
+    <img src="/static/img/landing_graphic.png" alt="ClinicCloud Graphic" style="max-width:100%;height:auto;margin-bottom:2rem;">
     <h2>Transform Your Healthcare Practice</h2>
     <p>World-class, secure, and modular SaaS for modern healthcare teams. Multi-tenant, PHI-compliant, and ready for scale.</p>
     <p>Join thousands of healthcare professionals revolutionizing patient care.</p>
@@ -56,32 +56,32 @@
 
 <section class="testimonials">
   <h3>What Our Clients Say</h3>
-  <div class="testimonial-grid">
-    <div class="testimonial">
+  <div class="feature-grid">
+    <div class="feature">
       <p class="quote">"ClinicCloud transformed our clinic's workflow. Secure, fast, and easy to use!"</p>
       <span class="author">— Dr. A. Smith, Family Practice</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"The multi-tenant features let us manage multiple locations effortlessly."</p>
       <span class="author">— J. Patel, Clinic Administrator</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"Audit logging and PHI compliance give us peace of mind for patient data."</p>
       <span class="author">— M. Chen, Compliance Officer</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"AI-powered notes and analytics save our team hours every week."</p>
       <span class="author">— Dr. L. Garcia, Telemedicine Lead</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"ClinicCloud's support team is responsive and knowledgeable. Highly recommended!"</p>
       <span class="author">— S. Okafor, Practice Manager</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"Billing and Stripe integration made our transition seamless."</p>
       <span class="author">— R. Kim, Finance Director</span>
     </div>
-    <div class="testimonial">
+    <div class="feature">
       <p class="quote">"Our patients love the secure portal and appointment reminders."</p>
       <span class="author">— T. Williams, Pediatric Clinic</span>
     </div>
@@ -135,30 +135,30 @@
     </div>
   </div>
 </section>
-<section class="centralized-objects">
+<section class="features">
   <h3>Centralized Healthcare Objects</h3>
-  <div class="object-grid">
-    <div class="object-card">
+  <div class="feature-grid">
+    <div class="feature">
       <h4>Patients</h4>
       <p>Manage PHI, demographics, and care history securely.</p>
     </div>
-    <div class="object-card">
+    <div class="feature">
       <h4>Appointments</h4>
       <p>Schedule, track, and notify with conflict detection.</p>
     </div>
-    <div class="object-card">
+    <div class="feature">
       <h4>Clinical Records</h4>
       <p>SOAP notes, record locking, and immutable audit trails.</p>
     </div>
-    <div class="object-card">
+    <div class="feature">
       <h4>Labs</h4>
       <p>Order, track, and view encrypted lab results.</p>
     </div>
-    <div class="object-card">
+    <div class="feature">
       <h4>Billing</h4>
       <p>Plans, subscriptions, and Stripe integration.</p>
     </div>
-    <div class="object-card">
+    <div class="feature">
       <h4>AI & Analytics</h4>
       <p>Telemedicine AI, automated notes, document upload, and actionable analytics for staff and researchers.</p>
     </div>
@@ -294,7 +294,7 @@
 
 /* Testimonials Section */
 .testimonials {
-  background: linear-gradient(180deg, #fff 0%, #f9fafb 100%);
+  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
   padding: 5rem 2rem;
   text-align: center;
 }
@@ -305,56 +305,15 @@
   color: #0f4c81;
 }
 
-.testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 3rem auto 0 auto;
+.testimonials .feature {
+  border-top: 4px solid #38b6ff;
 }
 
-.testimonial {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  box-shadow: 
-    0 4px 6px rgba(15, 76, 129, 0.05),
-    0 8px 20px rgba(15, 76, 129, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #e5e7eb;
-  border-left: 5px solid #38b6ff;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
+.testimonials .feature:hover {
+  border-top-color: #0f4c81;
 }
 
-.testimonial::before {
-  content: '"';
-  position: absolute;
-  top: 10px;
-  left: 15px;
-  font-size: 4rem;
-  color: rgba(56, 182, 255, 0.1);
-  font-family: Georgia, serif;
-  line-height: 1;
-  pointer-events: none;
-}
-
-.testimonial:hover {
-  box-shadow: 
-    0 8px 12px rgba(15, 76, 129, 0.1),
-    0 16px 40px rgba(15, 76, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  transform: translateY(-6px);
-  border-color: #38b6ff;
-  border-left-width: 6px;
-}
-
-.testimonial .quote {
+.testimonials .feature .quote {
   font-style: italic;
   color: #1f2937;
   margin-bottom: 1.5rem;
@@ -365,7 +324,7 @@
   font-weight: 500;
 }
 
-.testimonial .author {
+.testimonials .feature .author {
   font-size: 0.95rem;
   color: #0f4c81;
   font-weight: 700;
@@ -373,6 +332,7 @@
   padding-top: 1rem;
   border-top: 2px solid #e5e7eb;
   display: block;
+  margin: 1rem 0 0 0;
 }
 
 /* Subscription Plans Section */
@@ -504,84 +464,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Centralized Objects Section */
-.centralized-objects {
-  background: linear-gradient(180deg, #f3f4f6 0%, #f9fafb 100%);
-  padding: 5rem 2rem;
-  text-align: center;
-}
-
-.centralized-objects h3 {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  color: #0f4c81;
-}
-
-.object-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 3rem auto 0 auto;
-}
-
-.object-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  box-shadow: 
-    0 4px 6px rgba(15, 76, 129, 0.05),
-    0 8px 20px rgba(15, 76, 129, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #e5e7eb;
-  border-bottom: 5px solid #38b6ff;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.object-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(56, 182, 255, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.object-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 
-    0 8px 12px rgba(15, 76, 129, 0.1),
-    0 16px 40px rgba(15, 76, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  border-color: #38b6ff;
-  border-bottom-width: 6px;
-}
-
-.object-card h4 {
-  color: #0f4c81;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
-}
-
-.object-card p {
-  color: #374151;
-  line-height: 1.7;
-  font-weight: 500;
-  position: relative;
-  z-index: 1;
-}
-
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -608,11 +490,11 @@
     font-size: 1.1rem;
   }
 
-  .features, .testimonials, .subscription, .centralized-objects {
+  .features, .testimonials, .subscription {
     padding: 3rem 1.5rem;
   }
 
-  .feature-grid, .testimonial-grid, .plans, .object-grid {
+  .feature-grid, .plans {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
@@ -629,7 +511,7 @@
     font-size: 1.75rem;
   }
 
-  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
+  .testimonials h3, .features h3, .subscription h3 {
     font-size: 1.75rem;
   }
 }
@@ -649,11 +531,11 @@
     margin-bottom: 1.5rem;
   }
 
-  .features, .testimonials, .subscription, .centralized-objects {
+  .features, .testimonials, .subscription {
     padding: 2rem 1rem;
   }
 
-  .feature, .testimonial, .object-card {
+  .feature {
     padding: 1.5rem 1rem;
     min-height: auto;
   }
@@ -667,7 +549,7 @@
     font-size: 2rem;
   }
 
-  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
+  .testimonials h3, .features h3, .subscription h3 {
     font-size: 1.5rem;
   }
 }
