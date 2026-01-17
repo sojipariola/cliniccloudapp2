@@ -3,52 +3,239 @@
 {% block content %}
 <div class="form-container">
   <h2>Login</h2>
-  <form method="post">
+  
+  <form method="post" class="login-form">
     <input type="hidden" name="next" value="{{ next }}">
     {% csrf_token %}
-    {# DEBUG: Show all non-field errors #}
+    
+    {# Display non-field errors #}
     {% if form.non_field_errors %}
-      <div class="error" style="margin-bottom:1em;">
+      <div class="error" style="margin-bottom:1em; color: #d32f2f;">
         {% for error in form.non_field_errors %}
           <div>{{ error }}</div>
         {% endfor %}
       </div>
     {% endif %}
-    {# Render Tenant field first #}
-    <p>
-      {{ form.tenant.label_tag }} {{ form.tenant }}
+    
+    {# Tenant field #}
+    {% if form.tenant %}
+    <div class="form-group">
+      <label for="{{ form.tenant.id_for_label }}">Clinic</label>
+      {{ form.tenant }}
       {% if form.tenant.errors %}<span class="error">{{ form.tenant.errors }}</span>{% endif %}
-    </p>
-    {# Render the rest of the fields except tenant #}
-    {% for field in form.visible_fields %}
-      {% if field.name != 'tenant' %}
-        <p>
-          {{ field.label_tag }}
-          {% if field.field.widget.input_type == 'password' %}
-            <span style="position:relative;display:block;">
-              {{ field }}
-              <button type="button" onclick="togglePassword(this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95em;color:#1976d2;">Show</button>
-            </span>
-          {% else %}
-            {{ field }}
-          {% endif %}
-          {% if field.errors %}<span class="error">{{ field.errors }}</span>{% endif %}
-        </p>
-      {% endif %}
-    {% endfor %}
-    <button type="submit">Login</button>
+    </div>
+    {% endif %}
+    
+    {# Username field #}
+    <div class="form-group">
+      <label for="{{ form.username.id_for_label }}">Username:</label>
+      {{ form.username }}
+      {% if form.username.errors %}<span class="error">{{ form.username.errors }}</span>{% endif %}
+    </div>
+    
+    {# Password field #}
+    <div class="form-group password-field">
+      <label for="{{ form.password.id_for_label }}">Password:</label>
+      <div class="password-wrapper">
+        {{ form.password }}
+        <button type="button" class="toggle-password" onclick="togglePassword(this)">Show</button>
+      </div>
+      {% if form.password.errors %}<span class="error">{{ form.password.errors }}</span>{% endif %}
+    </div>
+    
+    <div class="form-options">
+      <a href="#" class="manage-link">[Manage passwords...]</a>
+    </div>
+    
+    <button type="submit" class="login-btn">Login</button>
+    
+    <div class="divider">
+      <hr>
+    </div>
   </form>
-  <script>
-    function togglePassword(btn) {
-      const input = btn.parentElement.querySelector('input');
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = 'Hide';
-      } else {
-        input.type = 'password';
-        btn.textContent = 'Show';
-      }
-    }
-  </script>
+  
+  {# Product and Legal Info (matches image) #}
+  <div class="footer-info">
+    <div class="brand-section">
+      <h3>ClinicoCloud</h3>
+      <p>World-class, secure, multi-tenant healthcare SaaS platform for modern clinics.</p>
+    </div>
+    
+    <div class="info-columns">
+      <div class="column">
+        <h4>Product</h4>
+        <ul>
+          <li>Patients</li>
+          <li>Appointments</li>
+          <li>Billing</li>
+          <li>FHIR API</li>
+        </ul>
+      </div>
+      
+      <div class="column">
+        <h4>Legal</h4>
+        <ul>
+          <li>Privacy Policy</li>
+          <li>Terms of Service</li>
+          <li>Security</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>© 2026 ClinicCloud. All rights reserved. Built with ❤️ for healthcare professionals.</p>
+      <p class="badges">
+        <span>PHI-Compliant</span> | 
+        <span>HIPAA Ready</span> | 
+        <span>Multi-Tenant</span> | 
+        <span>Secure</span>
+      </p>
+    </div>
+  </div>
 </div>
+
+<style>
+  .form-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .login-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1976d2;
+  }
+  
+  .form-options {
+    text-align: right;
+    margin-bottom: 1.5rem;
+  }
+  
+  .manage-link {
+    color: #1976d2;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .login-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .login-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  .divider {
+    margin: 2rem 0;
+  }
+  
+  .footer-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .brand-section h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .brand-section p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-columns {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .column h4 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .column li {
+    margin-bottom: 0.25rem;
+    color: #666;
+  }
+  
+  .copyright {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .badges {
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .error {
+    color: #d32f2f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+</style>
+
+<script>
+  function togglePassword(btn) {
+    const input = btn.parentElement.querySelector('input');
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = 'Hide';
+    } else {
+      input.type = 'password';
+      btn.textContent = 'Show';
+    }
+  }
+</script>
 {% endblock %}

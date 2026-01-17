@@ -2,156 +2,520 @@
 {% block title %}Register{% endblock %}
 {% block content %}
 <div class="form-container">
+  <h1>ClinicCloud</h1>
   <h2>Register for ClinicCloud</h2>
-  <p class="info" id="registration-info">Choose whether to create a new organization or join an existing one.</p>
-  <form method="post">
+  <p class="subtitle" id="registration-info">Create a new organization and start your 14-day free trial. You will be the administrator.</p>
+  
+  <form method="post" class="registration-form">
     {% csrf_token %}
     
-    {# Registration Type Selection #}
-    <div class="form-group">
-      {{ form.registration_type.label_tag }}
-      {{ form.registration_type }}
-      {% if form.registration_type.errors %}<span class="error">{{ form.registration_type.errors }}</span>{% endif %}
+    <div class="registration-type-section">
+      <h3>Registration Type:</h3>
+      <div class="radio-options">
+        <label class="radio-option">
+          <input type="radio" name="registration_type" value="join">
+          <span class="radio-custom"></span>
+          <span class="radio-label">Join Existing Company</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="registration_type" value="create" checked>
+          <span class="radio-custom"></span>
+          <span class="radio-label">Create New Company</span>
+        </label>
+      </div>
     </div>
     
-    {# Username Field #}
+    {# Username Field - matches image #}
     <div class="form-group">
-      {{ form.username.label_tag }} {{ form.username }}
-      {% if form.username.errors %}<span class="error">{{ form.username.errors }}</span>{% endif %}
+      <label for="id_username">Username:</label>
+      <input type="text" id="id_username" name="username" required>
     </div>
     
-    {# Email Field #}
+    {# Email Field - matches image #}
     <div class="form-group">
-      {{ form.email.label_tag }} {{ form.email }}
-      {% if form.email.errors %}<span class="error">{{ form.email.errors }}</span>{% endif %}
+      <label for="id_email">Mail:</label>
+      <input type="email" id="id_email" name="email" required>
     </div>
     
-    {# Fields for Creating New Company (show when 'create' is selected) #}
-    <div id="create-company-fields" style="display:none;">
+    {# Company Name Field - shown when creating new company #}
+    <div id="create-company-fields">
       <div class="form-group">
-        {{ form.company_name.label_tag }} {{ form.company_name }}
-        {% if form.company_name.errors %}<span class="error">{{ form.company_name.errors }}</span>{% endif %}
-        <small style="display:block;margin-top:4px;color:#666;">This will be your organization's name</small>
+        <label for="id_company_name">Company Name:</label>
+        <input type="text" id="id_company_name" name="company_name">
+        <div class="field-help">This will be your organization's name</div>
       </div>
       
+      {# Specialization Field #}
       <div class="form-group">
-        {{ form.specialization.label_tag }} {{ form.specialization }}
-        {% if form.specialization.errors %}<span class="error">{{ form.specialization.errors }}</span>{% endif %}
-        <small style="display:block;margin-top:4px;color:#666;">Select your primary medical specialization</small>
+        <label for="id_specialization">Specialization:</label>
+        <select id="id_specialization" name="specialization">
+          <option value="general_practice">General Practice</option>
+          <option value="pediatrics">Pediatrics</option>
+          <option value="dental">Dental</option>
+          <option value="ophthalmology">Ophthalmology</option>
+          <option value="gynecology">Gynecology</option>
+          <option value="womens_health">Women's Health</option>
+          <option value="dermatology">Dermatology</option>
+          <option value="psychiatry">Psychiatry</option>
+          <option value="urology">Urology</option>
+          <option value="ent">Ear Nose & Throat</option>
+          <option value="neurology">Neurology</option>
+          <option value="oncology">Oncology</option>
+          <option value="endocrinology">Endocrinology</option>
+          <option value="gastroenterology">Gastroenterology</option>
+          <option value="pulmonology">Pulmonology</option>
+          <option value="cardiology">Cardiology</option>
+          <option value="rheumatology">Rheumatology</option>
+          <option value="nephrology">Nephrology</option>
+          <option value="infectious_disease">Infectious Disease</option>
+          <option value="emergency_medicine">Emergency Medicine</option>
+          <option value="anesthesiology">Anesthesiology</option>
+          <option value="physical_therapy">Physical Therapy</option>
+          <option value="chiropractic">Chiropractic</option>
+          <option value="nutrition">Nutrition</option>
+          <option value="mental_health">Mental Health</option>
+          <option value="speech_therapy">Speech Therapy</option>
+          <option value="occupational_therapy">Occupational Therapy</option>
+          <option value="podiatry">Podiatry</option>
+          <option value="audiology">Audiology</option>
+          <option value="optometry">Optometry</option>
+          <option value="obstetrics">Obstetrics</option>
+          <option value="geriatrics">Geriatrics</option>
+          <option value="pain_management">Pain Management</option>          
+          <option value="allergy_immunology">Allergy and Immunology</option>
+          <option value="general_surgery">General Surgery</option>
+          <option value="orthopedics">Orthopedics</option>
+        </select>
+        <div class="field-help">Select your primary medical specialization</div>
       </div>
     </div>
     
-    {# Fields for Joining Existing Company (show when 'join' is selected) #}
+    {# Fields for Joining Existing Company with autocomplete #}
     <div id="join-company-fields" style="display:none;">
       <div class="form-group">
-        {{ form.tenant.label_tag }} {{ form.tenant }}
-        {% if form.tenant.errors %}<span class="error">{{ form.tenant.errors }}</span>{% endif %}
-        <small style="display:block;margin-top:4px;color:#666;">Select the organization you want to join</small>
+      <label for="id_tenant_autocomplete">Company:</label>
+      <input type="text" id="id_tenant_autocomplete" name="tenant_name" autocomplete="off" placeholder="Start typing company name...">
+      <input type="hidden" id="id_tenant" name="tenant">
+      <div id="tenant-suggestions" class="autocomplete-suggestions"></div>
+      <div class="field-help">Select the organization you want to join</div>
       </div>
     </div>
+
+    <style>
+      .autocomplete-suggestions {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0 0 4px 4px;
+      max-height: 180px;
+      overflow-y: auto;
+      z-index: 10;
+      width: 100%;
+      box-sizing: border-box;
+      display: none;
+      }
+      .autocomplete-suggestion {
+      padding: 0.5rem;
+      cursor: pointer;
+      }
+      .autocomplete-suggestion:hover,
+      .autocomplete-suggestion.active {
+      background: #f0f4fa;
+      }
+      .form-group {
+      position: relative;
+      }
+    </style>
+
+    <script>
+      // Autocomplete for company name
+      const tenantInput = document.getElementById('id_tenant_autocomplete');
+      const tenantHidden = document.getElementById('id_tenant');
+      const suggestionsBox = document.getElementById('tenant-suggestions');
+      let tenants = [{% for tenant in tenants %}{"id": "{{ tenant.id }}", "name": "{{ tenant.name|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}];
+
+      function filterTenants(query) {
+      query = query.trim().toLowerCase();
+      if (!query) return [];
+      return tenants.filter(t => t.name.toLowerCase().includes(query));
+      }
+
+      function showSuggestions(items) {
+      suggestionsBox.innerHTML = '';
+      if (!items.length) {
+        suggestionsBox.style.display = 'none';
+        return;
+      }
+      items.forEach((t, idx) => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-suggestion';
+        div.textContent = t.name;
+        div.dataset.id = t.id;
+        div.tabIndex = 0;
+        div.addEventListener('mousedown', function(e) {
+        tenantInput.value = t.name;
+        tenantHidden.value = t.id;
+        suggestionsBox.style.display = 'none';
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = 'block';
+      }
+
+      tenantInput.addEventListener('input', function() {
+      tenantHidden.value = '';
+      const val = tenantInput.value;
+      const matches = filterTenants(val);
+      showSuggestions(matches);
+      });
+
+      tenantInput.addEventListener('blur', function() {
+      setTimeout(() => { suggestionsBox.style.display = 'none'; }, 150);
+      });
+
+      tenantInput.addEventListener('focus', function() {
+      const val = tenantInput.value;
+      const matches = filterTenants(val);
+      showSuggestions(matches);
+      });
+
+      // Keyboard navigation for suggestions
+      tenantInput.addEventListener('keydown', function(e) {
+      const items = suggestionsBox.querySelectorAll('.autocomplete-suggestion');
+      let idx = Array.from(items).findIndex(item => item.classList.contains('active'));
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (items.length) {
+        if (idx >= 0) items[idx].classList.remove('active');
+        idx = (idx + 1) % items.length;
+        items[idx].classList.add('active');
+        items[idx].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (items.length) {
+        if (idx >= 0) items[idx].classList.remove('active');
+        idx = (idx - 1 + items.length) % items.length;
+        items[idx].classList.add('active');
+        items[idx].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'Enter') {
+        if (idx >= 0 && items.length) {
+        e.preventDefault();
+        items[idx].dispatchEvent(new Event('mousedown'));
+        }
+      }
+      });
+    </script>
     
     {# Password Fields #}
     <div class="form-group">
-      {{ form.password1.label_tag }} {{ form.password1 }}
-      {% if form.password1.errors %}<span class="error">{{ form.password1.errors }}</span>{% endif %}
+      <label for="id_password1">Password:</label>
+      <div class="password-wrapper">
+        <input type="password" id="id_password1" name="password1" required>
+      </div>
+      
+      <div class="password-rules">
+        <div id="pw-length" class="rule-item">✗ At least 8 characters</div>
+        <div id="pw-common" class="rule-item">✗ Not a common password</div>
+        <div id="pw-match" class="rule-item">✗ Passwords match</div>
+      </div>
     </div>
-    
-    <ul id="password-rules" style="margin-bottom:0.5em;list-style:none;padding-left:0;">
-      <li id="pw-length" style="color:#e53935;">&#10007; At least 8 characters</li>
-      <li id="pw-common" style="color:#e53935;">&#10007; Not a common password</li>
-      <li id="pw-match" style="color:#e53935;">&#10007; Passwords match</li>
-    </ul>
     
     <div class="form-group">
-      {{ form.password2.label_tag }} {{ form.password2 }}
-      {% if form.password2.errors %}<span class="error">{{ form.password2.errors }}</span>{% endif %}
+      <label for="id_password2">Password confirmation:</label>
+      <div class="password-wrapper">
+        <input type="password" id="id_password2" name="password2" required>
+      </div>
     </div>
     
-    {# Non-field errors #}
-    {% if form.non_field_errors %}
-      <div class="error-box" style="background:#ffebee;border:1px solid #e53935;padding:10px;margin-bottom:15px;border-radius:4px;">
-        {{ form.non_field_errors }}
-      </div>
-    {% endif %}
-    
-    <button type="submit">Register</button>
+    <button type="submit" class="register-btn">Register</button>
   </form>
   
-  <script>
-    // Password validation logic
-    const pw1 = document.getElementById('id_password1');
-    const pw2 = document.getElementById('id_password2');
-    const ruleLength = document.getElementById('pw-length');
-    const ruleCommon = document.getElementById('pw-common');
-    const ruleMatch = document.getElementById('pw-match');
+  <div class="divider">
+    <hr>
+  </div>
+  
+  {# Footer Content matching image #}
+  <div class="footer-info">
+    <div class="brand-section">
+      <h3>ClinicCloud</h3>
+      <p>World-class, secure, multi-tenant healthcare SaaS platform for modern clinics.</p>
+    </div>
     
-    function checkPasswordRules() {
-      const val1 = pw1.value;
-      const val2 = pw2.value;
-      
-      // Length check
-      if (val1.length >= 8) {
-        ruleLength.style.color = '#388e3c';
-        ruleLength.innerHTML = '&#10003; At least 8 characters';
-      } else {
-        ruleLength.style.color = '#e53935';
-        ruleLength.innerHTML = '&#10007; At least 8 characters';
-      }
-      
-      // Common password check
-      const common = ['password', '123456', 'qwerty', 'letmein'];
-      if (val1 && !common.includes(val1.toLowerCase())) {
-        ruleCommon.style.color = '#388e3c';
-        ruleCommon.innerHTML = '&#10003; Not a common password';
-      } else {
-        ruleCommon.style.color = '#e53935';
-        ruleCommon.innerHTML = '&#10007; Not a common password';
-      }
-      
-      // Match check
-      if (val1 && val2 && val1 === val2) {
-        ruleMatch.style.color = '#388e3c';
-        ruleMatch.innerHTML = '&#10003; Passwords match';
-      } else {
-        ruleMatch.style.color = '#e53935';
-        ruleMatch.innerHTML = '&#10007; Passwords match';
-      }
-    }
+    <div class="info-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Legal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Patients</td>
+            <td>Privacy Policy</td>
+          </tr>
+          <tr>
+            <td>Appointments</td>
+            <td>Terms of Service</td>
+          </tr>
+          <tr>
+            <td>Billing</td>
+            <td>Security</td>
+          </tr>
+          <tr>
+            <td>FHIR API</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     
-    if (pw1 && pw2) {
-      pw1.addEventListener('input', checkPasswordRules);
-      pw2.addEventListener('input', checkPasswordRules);
-    }
-    
-    // Registration type toggle logic
-    const registrationTypeInputs = document.querySelectorAll('input[name="registration_type"]');
-    const createFields = document.getElementById('create-company-fields');
-    const joinFields = document.getElementById('join-company-fields');
-    const infoText = document.getElementById('registration-info');
-    
-    function updateVisibility() {
-      const selectedType = document.querySelector('input[name="registration_type"]:checked');
-      
-      if (!selectedType) return;
-      
-      if (selectedType.value === 'create') {
-        createFields.style.display = 'block';
-        joinFields.style.display = 'none';
-        infoText.textContent = 'Create a new organization and start your 14-day free trial. You will be the administrator.';
-      } else if (selectedType.value === 'join') {
-        createFields.style.display = 'none';
-        joinFields.style.display = 'block';
-        infoText.textContent = 'Join an existing organization. Your account will require admin approval before you can log in.';
-      }
-    }
-    
-    // Add event listeners to radio buttons
-    registrationTypeInputs.forEach(input => {
-      input.addEventListener('change', updateVisibility);
-    });
-    
-    // Initial visibility on page load
-    updateVisibility();
-  </script>
+    <div class="copyright">
+      <p>© 2026 ClinicCloud. All rights reserved. Built with ❤️ for healthcare professionals.</p>
+      <p class="badges">
+        <span>PHI-Compliant</span> | 
+        <span>HIPAA Ready</span> | 
+        <span>Multi-Tenant</span> | 
+        <span>Secure</span>
+      </p>
+    </div>
+  </div>
 </div>
+
+<style>
+  .form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  .registration-type-section {
+    margin-bottom: 2rem;
+  }
+  
+  .registration-type-section h3 {
+    margin-bottom: 1rem;
+  }
+  
+  .radio-options {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .radio-option input[type="radio"] {
+    margin-right: 0.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .field-help {
+    margin-top: 0.25rem;
+    color: #666;
+    font-size: 0.875rem;
+  }
+  
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .password-rules {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .rule-item {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s;
+  }
+  
+  .rule-item.valid {
+    color: #388e3c;
+  }
+  
+  .register-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .register-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  .divider {
+    margin: 2rem 0;
+  }
+  
+  .footer-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .brand-section h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .brand-section p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-table th {
+    text-align: left;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .info-table td {
+    padding: 0.5rem 0;
+    color: #666;
+  }
+  
+  .copyright {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .badges {
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  // Password validation logic
+  const pw1 = document.getElementById('id_password1');
+  const pw2 = document.getElementById('id_password2');
+  
+  function checkPasswordRules() {
+    const val1 = pw1.value;
+    const val2 = pw2.value;
+    
+    // Length check
+    const lengthRule = document.getElementById('pw-length');
+    if (val1.length >= 8) {
+      lengthRule.textContent = '✓ At least 8 characters';
+      lengthRule.classList.add('valid');
+    } else {
+      lengthRule.textContent = '✗ At least 8 characters';
+      lengthRule.classList.remove('valid');
+    }
+    
+    // Common password check
+    const commonRule = document.getElementById('pw-common');
+    const common = ['password', '123456', 'qwerty', 'letmein', 'admin', 'welcome'];
+    if (val1 && !common.includes(val1.toLowerCase())) {
+      commonRule.textContent = '✓ Not a common password';
+      commonRule.classList.add('valid');
+    } else {
+      commonRule.textContent = '✗ Not a common password';
+      commonRule.classList.remove('valid');
+    }
+    
+    // Match check
+    const matchRule = document.getElementById('pw-match');
+    if (val1 && val2 && val1 === val2) {
+      matchRule.textContent = '✓ Passwords match';
+      matchRule.classList.add('valid');
+    } else {
+      matchRule.textContent = '✗ Passwords match';
+      matchRule.classList.remove('valid');
+    }
+  }
+  
+  if (pw1 && pw2) {
+    pw1.addEventListener('input', checkPasswordRules);
+    pw2.addEventListener('input', checkPasswordRules);
+  }
+  
+  // Registration type toggle logic
+  const registrationTypeInputs = document.querySelectorAll('input[name="registration_type"]');
+  const createFields = document.getElementById('create-company-fields');
+  const joinFields = document.getElementById('join-company-fields');
+  const infoText = document.getElementById('registration-info');
+  
+  function updateVisibility() {
+    const selectedType = document.querySelector('input[name="registration_type"]:checked');
+    
+    if (!selectedType) return;
+    
+    if (selectedType.value === 'create') {
+      createFields.style.display = 'block';
+      joinFields.style.display = 'none';
+      infoText.textContent = 'Create a new organization and start your 14-day free trial. You will be the administrator.';
+    } else if (selectedType.value === 'join') {
+      createFields.style.display = 'none';
+      joinFields.style.display = 'block';
+      infoText.textContent = 'Join an existing company. You will need approval from the company administrator.';
+    }
+  }
+  
+  // Add event listeners to radio buttons
+  registrationTypeInputs.forEach(input => {
+    input.addEventListener('change', updateVisibility);
+  });
+  
+  // Initial visibility on page load
+  updateVisibility();
+</script>
 {% endblock %}

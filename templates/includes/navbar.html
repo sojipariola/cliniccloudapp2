@@ -1,171 +1,585 @@
 {% load custom_filters %}
-<nav class="accordion-nav">
-  <ul class="accordion-menu">
-    <li>
-      <a href="{% if user.is_authenticated %}/dashboard/{% else %}/{% endif %}"
-         class="nav-item {% if user.is_authenticated %}{% if request.path|startswith:'/dashboard/' %}active{% endif %}{% else %}{% if request.path == '/' %}active{% endif %}{% endif %}">
-         <span class="icon">🏠</span>Home
+<nav class="top-navbar" aria-label="Main navigation">
+  <div class="navbar-container">
+    <!-- Brand -->
+    <div class="navbar-brand">
+      <a href="{% if user.is_authenticated %}/dashboard/{% else %}/{% endif %}" class="brand-link">
+        <span class="brand-icon" aria-hidden="true">🏥</span>
+        <span class="brand-text">Healthcare SaaS</span>
       </a>
-    </li>
+    </div>
     
-    <li class="accordion-item {% if request.path|startswith:'/patients/' %}active-section{% endif %}">
-      <button class="accordion-toggle {% if request.path|startswith:'/patients/' %}active{% endif %}" type="button">
-        <span class="icon">👥</span>Patients<span class="arrow">▼</span>
-      </button>
-      <ul class="accordion-content {% if request.path|startswith:'/patients/' %}active{% endif %}">
-        <li><a href="/patients/" class="accordion-link {% if request.path|startswith:'/patients/' %}active{% endif %}"><span class="icon">🧑‍🤝‍🧑</span>Patients</a></li>
-        {% if recent_patients_sidebar %}
-          {% for p in recent_patients_sidebar %}
-            <li><a href="/patients/{{ p.id }}/" class="accordion-link"><span class="icon">⏱</span>{{ p.first_name }} {{ p.last_name }}</a></li>
-          {% endfor %}
-        {% endif %}
-      </ul>
-    </li>
+    <!-- Mobile Menu Toggle -->
+    <button class="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span class="toggle-icon"></span>
+    </button>
     
-    <li class="accordion-item {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active-section{% endif %}">
-      <button class="accordion-toggle {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}" type="button">
-        <span class="icon">🩺</span>Clinical<span class="arrow">▼</span>
-      </button>
-      <ul class="accordion-content {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}">
-        <li><a href="/clinical-records/" class="accordion-link {% if request.path|startswith:'/clinical-records/' and not request.path|startswith:'/clinical-records/ai-note' and not request.path|startswith:'/clinical-records/clinic-note' %}active{% endif %}"><span class="icon">📄</span>Clinical Records</a></li>
-        <li><a href="/clinical-records/notes/" class="accordion-link {% if request.path|startswith:'/clinical-records/ai-note' or request.path|startswith:'/clinical-records/clinic-note' %}active{% endif %}"><span class="icon">📝</span>Notes</a></li>
-        <li><a href="/labs/" class="accordion-link {% if request.path|startswith:'/labs/' %}active{% endif %}"><span class="icon">🧪</span>Lab Results</a></li>
-        <li><a href="/documents/upload/" class="accordion-link {% if request.path|startswith:'/documents/' %}active{% endif %}"><span class="icon">📤</span>Upload Document</a></li>
-        <li><a href="/appointments/" class="accordion-link {% if request.path|startswith:'/appointments/' %}active{% endif %}"><span class="icon">📅</span>Appointments</a></li>
-        <li><a href="/referrals/" class="accordion-link {% if request.path|startswith:'/referrals/' %}active{% endif %}"><span class="icon">🔗</span>Referrals</a></li>
-      </ul>
-    </li>
-    
-    <li class="accordion-item {% if request.path|startswith:'/clinical-records/ai-note' %}active-section{% endif %}">
-      <button class="accordion-toggle {% if request.path|startswith:'/clinical-records/ai-note' %}active{% endif %}" type="button">
-        <span class="icon">🤖</span>AI Features<span class="arrow">▼</span>
-      </button>
-      <ul class="accordion-content {% if request.path|startswith:'/clinical-records/ai-note' %}active{% endif %}">
-        <li><a href="/clinical-records/ai-note/" class="accordion-link {% if request.path == '/clinical-records/ai-note/' %}active{% endif %}"><span class="icon">📝</span>AI Note-Taking</a></li>
-      </ul>
-    </li>
-    
-    {% if user.is_authenticated %}
-      <li><a href="/billing/" class="nav-item {% if request.path|startswith:'/billing/' %}active{% endif %}"><span class="icon">💳</span>Billing</a></li>
-      
-      {% if user.is_staff or user.is_superuser %}
-        <li class="accordion-item admin-section {% if request.path|startswith:'/audit_logs/' or request.path|startswith:'/analytics/' or request.path|startswith:'/admin/' %}active-section{% endif %}">
-          <button class="accordion-toggle admin-toggle {% if request.path|startswith:'/audit_logs/' or request.path|startswith:'/analytics/' or request.path|startswith:'/admin/' %}active{% endif %}" type="button">
-            <span class="icon">🩺</span><span style="font-weight:bold;color:#1976d2;">Admin</span><span class="arrow">▼</span>
-          </button>
-          <ul class="accordion-content admin-content {% if request.path|startswith:'/audit_logs/' or request.path|startswith:'/analytics/' or request.path|startswith:'/admin/' %}active{% endif %}">
-            <li><a href="/audit_logs/" class="accordion-link {% if request.path|startswith:'/audit_logs/' %}active{% endif %}"><span class="icon">🩻</span><span style="color:#1976d2;">Audit Logs</span></a></li>
-            <li><a href="/analytics/dashboard/" class="accordion-link {% if request.path|startswith:'/analytics/' %}active{% endif %}"><span class="icon">📊</span><span style="color:#388e3c;">Analytics</span></a></li>
-            <li><a href="/admin/" class="accordion-link {% if request.path|startswith:'/admin/' %}active{% endif %}"><span class="icon">🧬</span><span style="color:#d32f2f;">Django Admin</span></a></li>
-          </ul>
-        </li>
-      {% endif %}
-      
-      <li class="accordion-item user-section {% if request.path|startswith:'/users/profile' %}active-section{% endif %}">
-        <button class="accordion-toggle user-toggle {% if request.path|startswith:'/users/profile' %}active{% endif %}" type="button">
-          <span class="icon">👤</span>{{ user.get_full_name|default:user.username }}<span class="arrow">▼</span>
+    <!-- Menu Items -->
+    <div class="navbar-menu" id="navbarMenu">
+      <!-- Home -->
+      <div class="nav-item dropdown">
+        <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+          <span class="nav-icon" aria-hidden="true">🏠</span>
+          <span class="nav-text">{% if user.is_authenticated %}Dashboard{% else %}Home{% endif %}</span>
+          <span class="dropdown-arrow" aria-hidden="true">▼</span>
         </button>
-        <ul class="accordion-content user-content {% if request.path|startswith:'/users/profile' %}active{% endif %}">
-          <li><a href="/users/profile/" class="accordion-link {% if request.path|startswith:'/users/profile' %}active{% endif %}"><span class="icon">🧑</span>Profile</a></li>
-          <li>
-            <form action="{% url 'logout' %}" method="post" class="logout-form">
+        <div class="dropdown-menu">
+          <a href="{% if user.is_authenticated %}/dashboard/{% else %}/{% endif %}" class="dropdown-item">
+            <span class="item-icon" aria-hidden="true">🏠</span>
+            Home
+          </a>
+        </div>
+      </div>
+      
+      {% if user.is_authenticated %}
+        <!-- Patients -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">👥</span>
+            <span class="nav-text">Patients</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/patients/" class="dropdown-item">
+              <span class="item-icon" aria-hidden="true">📋</span>
+              All Patients
+            </a>
+            {% if recent_patients_sidebar %}
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-header">Recent Patients</div>
+              {% for p in recent_patients_sidebar %}
+                <a href="/patients/{{ p.id }}/" class="dropdown-item recent-patient">
+                  <span class="item-icon" aria-hidden="true">⏱</span>
+                  <span class="patient-name">{{ p.first_name }} {{ p.last_name }}</span>
+                </a>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Clinical -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">🩺</span>
+            <span class="nav-text">Clinical</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/clinical-records/" class="dropdown-item">Clinical Records</a>
+            <a href="/clinical-records/notes/" class="dropdown-item">Notes</a>
+            <a href="/labs/" class="dropdown-item">Lab Results</a>
+            <a href="/documents/upload/" class="dropdown-item">Upload Document</a>
+            <a href="/appointments/" class="dropdown-item">Appointments</a>
+            <a href="/referrals/" class="dropdown-item">Referrals</a>
+          </div>
+        </div>
+        
+        <!-- AI Features -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">🤖</span>
+            <span class="nav-text">AI Features</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/clinical-records/ai-note/" class="dropdown-item">AI Note-Taking</a>
+          </div>
+        </div>
+        
+        <!-- Billing -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">💳</span>
+            <span class="nav-text">Billing</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/billing/" class="dropdown-item">Billing Dashboard</a>
+          </div>
+        </div>
+        
+        <!-- Admin (if staff) -->
+        {% if user.is_staff or user.is_superuser %}
+          <div class="nav-item dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              <span class="nav-icon" aria-hidden="true">🛡️</span>
+              <span class="nav-text">Admin</span>
+              <span class="dropdown-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="/audit_logs/" class="dropdown-item">Audit Logs</a>
+              <a href="/analytics/dashboard/" class="dropdown-item">Analytics</a>
+              <a href="/admin/" class="dropdown-item">Django Admin</a>
+            </div>
+          </div>
+        {% endif %}
+        
+        <!-- User Profile -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">👤</span>
+            <span class="nav-text">{{ user.get_full_name|default:user.username|truncatechars:15 }}</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/users/profile/" class="dropdown-item">Profile</a>
+            <form action="{% url 'logout' %}" method="post" class="logout-dropdown-form">
               {% csrf_token %}
-              <button type="submit" class="logout-button"><span class="icon">🚪</span>Logout</button>
+              <button type="submit" class="dropdown-item logout-item">
+                <span class="item-icon" aria-hidden="true">🚪</span>
+                Logout
+              </button>
             </form>
-          </li>
-        </ul>
-      </li>
-    {% else %}
-      <li><a href="{% url 'login' %}" class="nav-item {% if request.path == '/accounts/login/' %}active{% endif %}"><span class="icon">🔑</span>Login</a></li>
-      <li><a href="{% url 'register' %}" class="nav-item {% if request.path == '/accounts/register/' %}active{% endif %}"><span class="icon">📝</span>Register</a></li>
-    {% endif %}
-  </ul>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const accordionToggles = document.querySelectorAll('.accordion-toggle');
-      const accordionNav = document.querySelector('.accordion-nav');
-      const accordionItems = document.querySelectorAll('.accordion-item');
+          </div>
+        </div>
+        
+      {% else %}
+        <!-- Login/Register for non-authenticated users -->
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">🔑</span>
+            <span class="nav-text">Login</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="{% url 'login' %}" class="dropdown-item">Login</a>
+          </div>
+        </div>
+        
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-icon" aria-hidden="true">📝</span>
+            <span class="nav-text">Register</span>
+            <span class="dropdown-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="{% url 'register' %}" class="dropdown-item">Register</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>
 
-      // Assign ARIA attributes and IDs for accessibility
-      accordionItems.forEach((item, idx) => {
-        const toggle = item.querySelector('.accordion-toggle');
-        const content = item.querySelector('.accordion-content');
-        const contentId = `accordion-content-${idx}`;
-        content.id = contentId;
-        toggle.setAttribute('aria-controls', contentId);
-        toggle.setAttribute('aria-expanded', content.classList.contains('active') ? 'true' : 'false');
-        toggle.setAttribute('role', 'button');
+<style>
+  :root {
+    --primary-blue: #1976d2;
+  }
+  .top-navbar {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    position: relative;
+    z-index: 999;
+  }
+  
+  .navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: relative;
+  }
+  
+  .navbar-brand {
+    flex-shrink: 0;
+  }
+  
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    padding: 1rem 0;
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: opacity 0.2s;
+  }
+  
+  .brand-link:hover {
+    opacity: 0.8;
+  }
+  
+  .brand-icon {
+    font-size: 1.3rem;
+  }
+  
+  .brand-text {
+    white-space: nowrap;
+  }
+  
+  .navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+  }
+  
+  .toggle-icon,
+  .toggle-icon::before,
+  .toggle-icon::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-blue);
+    left: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .toggle-icon {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .toggle-icon::before {
+    top: -8px;
+  }
+  
+  .toggle-icon::after {
+    top: 8px;
+  }
+  
+  .navbar-toggle[aria-expanded="true"] .toggle-icon {
+    background: transparent;
+  }
+  
+  .navbar-toggle[aria-expanded="true"] .toggle-icon::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+  
+  .navbar-toggle[aria-expanded="true"] .toggle-icon::after {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+  
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .nav-item {
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    font: inherit;
+    padding: 1rem 1rem;
+    cursor: pointer;
+    color: #374151;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  
+  .dropdown-toggle:hover,
+  .dropdown-toggle:focus {
+    background: #f3f4f6;
+    color: var(--primary-blue);
+    outline: none;
+  }
+  
+  .dropdown-toggle[aria-expanded="true"] {
+    background: #e5e7eb;
+    color: var(--primary-blue);
+  }
+  
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+  
+  .dropdown-arrow {
+    font-size: 0.6rem;
+    transition: transform 0.2s;
+  }
+  
+  .dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    animation: dropdownFade 0.2s ease-out;
+  }
+  
+  .nav-item.open .dropdown-menu {
+    display: flex;
+  }
+  
+  .dropdown-item {
+    padding: 0.75rem 1.5rem;
+    color: #374151;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background: #f3f4f6;
+    color: var(--primary-blue);
+    outline: none;
+  }
+  
+  .item-icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0.5rem 0;
+  }
+  
+  .dropdown-header {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .recent-patient {
+    font-size: 0.9rem;
+  }
+  
+  .patient-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+  }
+  
+  .logout-dropdown-form {
+    margin: 0;
+  }
+  
+  .logout-item {
+    color: #dc2626;
+  }
+  
+  .logout-item:hover {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .navbar-container {
+      padding: 0 1rem;
+    }
+    
+    .dropdown-menu {
+      min-width: 200px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-container {
+      flex-wrap: wrap;
+      padding: 0.5rem 1rem;
+    }
+    
+    .navbar-toggle {
+      display: block;
+    }
+    
+    .navbar-menu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem;
+      gap: 0.25rem;
+    }
+    
+    .navbar-menu.active {
+      display: flex;
+    }
+    
+    .nav-item {
+      width: 100%;
+    }
+    
+    .dropdown-toggle {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+    }
+    
+    .dropdown-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      border-left: 2px solid var(--primary-blue);
+      margin: 0.5rem 0 0.5rem 1rem;
+      width: calc(100% - 1rem);
+      animation: none;
+    }
+    
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+    }
+    
+    .brand-link {
+      padding: 0.5rem 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarToggle = document.querySelector('.navbar-toggle');
+    const navbarMenu = document.getElementById('navbarMenu');
+    const dropdowns = document.querySelectorAll('.nav-item');
+    
+    // Mobile menu toggle
+    if (navbarToggle && navbarMenu) {
+      navbarToggle.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        navbarMenu.classList.toggle('active');
       });
       
-      accordionToggles.forEach(toggle => {
+      // Close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+          navbarToggle.setAttribute('aria-expanded', 'false');
+          navbarMenu.classList.remove('active');
+        }
+      });
+    }
+    
+    // Dropdown functionality
+    dropdowns.forEach(dropdown => {
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const menu = dropdown.querySelector('.dropdown-menu');
+      
+      if (toggle && menu) {
+        // Click handler
         toggle.addEventListener('click', function(e) {
-          e.preventDefault();
+          e.stopPropagation();
           
-          const parent = this.closest('.accordion-item');
-          const content = parent.querySelector('.accordion-content');
-          const arrow = this.querySelector('.arrow');
-          
-          // Close other accordion items (except if they have active-section class)
-          accordionItems.forEach(item => {
-            if (item !== parent && !item.classList.contains('active-section')) {
-              const otherContent = item.querySelector('.accordion-content');
-              const otherArrow = item.querySelector('.arrow');
-              otherContent.classList.remove('active');
-              otherArrow.style.transform = 'rotateZ(0deg)';
-              const otherToggle = item.querySelector('.accordion-toggle');
+          // Close other dropdowns
+          dropdowns.forEach(d => {
+            if (d !== dropdown) {
+              d.classList.remove('open');
+              const otherToggle = d.querySelector('.dropdown-toggle');
               if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
             }
           });
           
-          // Toggle current item
-          content.classList.toggle('active');
-          if (content.classList.contains('active')) {
-            arrow.style.transform = 'rotateZ(180deg)';
-            this.setAttribute('aria-expanded', 'true');
-          } else {
-            arrow.style.transform = 'rotateZ(0deg)';
-            this.setAttribute('aria-expanded', 'false');
-          }
+          // Toggle current dropdown
+          const isOpen = dropdown.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', isOpen);
         });
-
-        // Keyboard accessibility: Enter/Space triggers toggle
+        
+        // Keyboard navigation
         toggle.addEventListener('keydown', function(e) {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             this.click();
           }
+          if (e.key === 'Escape' && dropdown.classList.contains('open')) {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.focus();
+          }
         });
-      });
-      
-      // Auto-expand active sections on page load
-      const activeSections = document.querySelectorAll('.accordion-item.active-section');
-      activeSections.forEach(section => {
-        const content = section.querySelector('.accordion-content');
-        const arrow = section.querySelector('.arrow');
-        content.classList.add('active');
-        arrow.style.transform = 'rotateZ(180deg)';
-        const toggle = section.querySelector('.accordion-toggle');
-        if (toggle) toggle.setAttribute('aria-expanded', 'true');
-      });
-
-      // Close open accordions when clicking outside the nav
-      document.addEventListener('click', function(e) {
-        if (!accordionNav.contains(e.target)) {
-          accordionItems.forEach(item => {
-            if (!item.classList.contains('active-section')) {
-              const content = item.querySelector('.accordion-content');
-              const arrow = item.querySelector('.arrow');
-              const toggle = item.querySelector('.accordion-toggle');
-              content.classList.remove('active');
-              if (arrow) arrow.style.transform = 'rotateZ(0deg)';
-              if (toggle) toggle.setAttribute('aria-expanded', 'false');
-            }
-          });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+        
+        // Close dropdown on escape key
+        menu.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.focus();
+          }
+        });
+      }
+    });
+    
+    // Logout confirmation for dropdown
+    document.querySelectorAll('.logout-dropdown-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        if (!confirm('Are you sure you want to logout?')) {
+          e.preventDefault();
         }
       });
     });
-  </script>
-  
-  <link rel="stylesheet" href="/static/css/navbar_worldclass.css">
-</nav>
+    
+    // Close mobile menu when clicking a link
+    navbarMenu?.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A' && window.innerWidth <= 768) {
+        navbarToggle.setAttribute('aria-expanded', 'false');
+        this.classList.remove('active');
+      }
+    });
+  });
+</script>

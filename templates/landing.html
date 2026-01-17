@@ -1,697 +1,1144 @@
 {% extends 'base/base.html' %}
-<<<<<<< HEAD
 {% load static %}
-{% block title %}Welcome to ClinicCloud{% endblock %}
+{% block title %}Welcome to ClinicCloud - Modern Healthcare SaaS{% endblock %}
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/landing.css' %}">
-<script src="{% static 'js/landing.js' %}" defer></script>
-=======
-{% block title %}Welcome to ClinicCloud{% endblock %}
-{% block extra_head %}
-<link rel="stylesheet" href="/static/css/landing.css">
-<script src="/static/js/landing.js" defer></script>
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 <meta name="description" content="ClinicCloud: World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready.">
-<meta property="og:title" content="ClinicCloud - Modern Healthcare SaaS" />
-<meta property="og:description" content="World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.cliniccloud.com/" />
-<meta property="og:site_name" content="ClinicCloud" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="ClinicCloud - Modern Healthcare SaaS" />
-<meta name="twitter:description" content="World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready." />
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
+
 {% block content %}
-{% include 'includes/flashmessages.html' %}
-<section class="hero">
-  <div class="hero-content">
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1f4517e (Make landing page fully responsive for mobile, tablet, and desktop)
-    <picture>
-      <source media="(max-width: 768px)" srcset="{% static 'img/landing_graphic_mobile.jpg' %}">
-      <img src="{% static 'img/landing_graphic.jpg' %}" alt="ClinicCloud Graphic - Transform Your Healthcare Practice" class="hero-image">
-    </picture>
-    <div class="hero-text">
-      <h1>Transform Your Healthcare Practice</h1>
-      <p class="hero-subtitle">World-class, secure, and modular SaaS for modern healthcare teams.</p>
-      <p class="hero-description">Multi-tenant, PHI-compliant, and ready for scale. Join thousands of healthcare professionals revolutionizing patient care.</p>
-      <a href="/accounts/register/" class="cta-btn">Get Started</a>
-    </div>
-<<<<<<< HEAD
-=======
-    <img src="/static/img/landing_graphic.svg" alt="ClinicCloud Graphic" style="max-width:100%;height:auto;margin-bottom:2rem;">
-    <h2>Transform Your Healthcare Practice</h2>
-    <p>World-class, secure, and modular SaaS for modern healthcare teams. Multi-tenant, PHI-compliant, and ready for scale.</p>
-    <p>Join thousands of healthcare professionals revolutionizing patient care.</p>
-    <a href="/accounts/register/" class="cta-btn">Get Started</a>
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-=======
->>>>>>> 1f4517e (Make landing page fully responsive for mobile, tablet, and desktop)
-  </div>
-</section>
-<section class="features">
-  <h3>Why Choose Us?</h3>
-  <div class="feature-grid">
-    <div class="feature">
-      <h4>Multi-Tenant</h4>
-      <p>Serve multiple clinics or organizations with strict data isolation.</p>
-    </div>
-    <div class="feature">
-      <h4>PHI & HIPAA Compliance</h4>
-      <p>End-to-end encryption, audit logging, and regulatory compliance built-in.</p>
-    </div>
-    <div class="feature">
-      <h4>Modular & Extensible</h4>
-      <p>Plug in new features as your needs grow—appointments, labs, billing, and more.</p>
-    </div>
-    <div class="feature">
-      <h4>AI for Telemedicine</h4>
-      <p>Automated note-taking, document upload, and smart triage for virtual visits.</p>
-    </div>
-    <div class="feature">
-      <h4>Analytics & Insights</h4>
-      <p>Dashboards for admin staff, researchers, and intelligent decision-making.</p>
-    </div>
-    <div class="feature">
-      <h4>User Profiles</h4>
-      <p>Personalized profile pages with pictures for every user. <a href="/users/profile/">View your profile</a></p>
-    </div>
-  </div>
-</section>
+{% include 'includes/flash_messages.html' %}
 
-<section class="testimonials">
-  <h3>What Our Clients Say</h3>
-<<<<<<< HEAD
-  <div class="feature-grid">
-    <div class="feature">
-      <p class="quote">"ClinicCloud transformed our clinic's workflow. Secure, fast, and easy to use!"</p>
-      <span class="author">— Dr. A. Smith, Family Practice</span>
+<div class="landing-main">
+  <!-- Hero Section -->
+  <section class="landing-hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span><i class="fas fa-shield-alt"></i> HIPAA Compliant</span>
+          <span><i class="fas fa-cloud"></i> Multi-Tenant</span>
+        </div>
+        <h1 class="hero-title">Transform Healthcare with <span class="highlight">ClinicCloud</span></h1>
+        <p class="hero-subtitle">World-class, secure, multi-tenant healthcare SaaS platform designed for modern clinics and healthcare teams.</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">Clinics</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a href="/accounts/register/" class="hero-cta primary">
+            <i class="fas fa-rocket"></i> Start Free Trial
+          </a>
+          <a href="#features" class="hero-cta secondary">
+            <i class="fas fa-play-circle"></i> Watch Demo
+          </a>
+        </div>
+        <p class="hero-note"><i class="fas fa-check-circle"></i> No credit card required • 14-day free trial</p>
+      </div>
+      <div class="hero-visual">
+        <div class="dashboard-preview">
+          <div class="dashboard-header">
+            <div class="dashboard-tabs">
+              <span class="tab active"><i class="fas fa-user-injured"></i> Patients</span>
+              <span class="tab"><i class="fas fa-calendar-check"></i> Appointments</span>
+              <span class="tab"><i class="fas fa-chart-line"></i> Analytics</span>
+            </div>
+          </div>
+          <div class="dashboard-content">
+            <div class="dashboard-stats">
+              <div class="stat-card">
+                <i class="fas fa-user-plus"></i>
+                <span>42 New Patients</span>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-calendar-alt"></i>
+                <span>18 Appointments Today</span>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-bell"></i>
+                <span>3 Pending Tasks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="feature">
-      <p class="quote">"The multi-tenant features let us manage multiple locations effortlessly."</p>
-      <span class="author">— J. Patel, Clinic Administrator</span>
-    </div>
-    <div class="feature">
-      <p class="quote">"Audit logging and PHI compliance give us peace of mind for patient data."</p>
-      <span class="author">— M. Chen, Compliance Officer</span>
-    </div>
-    <div class="feature">
-      <p class="quote">"AI-powered notes and analytics save our team hours every week."</p>
-      <span class="author">— Dr. L. Garcia, Telemedicine Lead</span>
-    </div>
-    <div class="feature">
-      <p class="quote">"ClinicCloud's support team is responsive and knowledgeable. Highly recommended!"</p>
-      <span class="author">— S. Okafor, Practice Manager</span>
-    </div>
-    <div class="feature">
-      <p class="quote">"Billing and Stripe integration made our transition seamless."</p>
-      <span class="author">— R. Kim, Finance Director</span>
-    </div>
-    <div class="feature">
-=======
-  <div class="testimonial-grid">
-    <div class="testimonial">
-      <p class="quote">"ClinicCloud transformed our clinic's workflow. Secure, fast, and easy to use!"</p>
-      <span class="author">— Dr. A. Smith, Family Practice</span>
-    </div>
-    <div class="testimonial">
-      <p class="quote">"The multi-tenant features let us manage multiple locations effortlessly."</p>
-      <span class="author">— J. Patel, Clinic Administrator</span>
-    </div>
-    <div class="testimonial">
-      <p class="quote">"Audit logging and PHI compliance give us peace of mind for patient data."</p>
-      <span class="author">— M. Chen, Compliance Officer</span>
-    </div>
-    <div class="testimonial">
-      <p class="quote">"AI-powered notes and analytics save our team hours every week."</p>
-      <span class="author">— Dr. L. Garcia, Telemedicine Lead</span>
-    </div>
-    <div class="testimonial">
-      <p class="quote">"ClinicCloud's support team is responsive and knowledgeable. Highly recommended!"</p>
-      <span class="author">— S. Okafor, Practice Manager</span>
-    </div>
-    <div class="testimonial">
-      <p class="quote">"Billing and Stripe integration made our transition seamless."</p>
-      <span class="author">— R. Kim, Finance Director</span>
-    </div>
-    <div class="testimonial">
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-      <p class="quote">"Our patients love the secure portal and appointment reminders."</p>
-      <span class="author">— T. Williams, Pediatric Clinic</span>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="subscription">
-  <h3>Plans & Pricing</h3>
-  <div class="plans">
-    <div class="plan free">
-      <h4>Free</h4>
-      <p class="price">$0/mo</p>
-      <ul>
-        <li>1 user</li>
-        <li>Max 2 patients</li>
-        <li>Basic support</li>
-        <li>Core modules</li>
-      </ul>
-      <a href="/accounts/register/" class="plan-cta">Start Free</a>
+  <!-- Trusted By Section -->
+  <section class="trusted-by">
+    <p>Trusted by healthcare providers worldwide</p>
+    <div class="trusted-logos">
+      <span><i class="fas fa-hospital-alt"></i> HealthFirst Clinics</span>
+      <span><i class="fas fa-stethoscope"></i> MediGroup</span>
+      <span><i class="fas fa-heartbeat"></i> City Medical</span>
+      <span><i class="fas fa-user-md"></i> FamilyCare</span>
     </div>
-    <div class="plan">
-      <h4>Starter</h4>
-      <p class="price">$49/mo</p>
-      <ul>
-        <li>Up to 3 users</li>
-        <li>Basic support</li>
-        <li>Core modules</li>
-      </ul>
-      <a href="/accounts/register/" class="plan-cta">Start Free Trial</a>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="landing-features">
+    <div class="section-header">
+      <span class="section-badge">Features</span>
+      <h2>Everything You Need for Modern Healthcare</h2>
+      <p class="section-subtitle">Designed with healthcare professionals in mind</p>
     </div>
-    <div class="plan popular">
-      <h4>Professional</h4>
-      <p class="price">$149/mo</p>
-      <ul>
-        <li>Up to 20 users</li>
-        <li>Priority support</li>
-        <li>All modules</li>
-        <li>AI features</li>
-      </ul>
-      <a href="/accounts/login/" class="plan-cta">Start Free Trial</a>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-hospital-user"></i>
+        </div>
+        <h3>Multi-Tenant Architecture</h3>
+        <p>Serve multiple clinics with strict data isolation and role-based access control.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> Complete data isolation</li>
+          <li><i class="fas fa-check"></i> Customizable workflows</li>
+          <li><i class="fas fa-check"></i> Role-based permissions</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>PHI & HIPAA Compliance</h3>
+        <p>End-to-end encryption, audit logging, and regulatory compliance built-in.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> AES-256 encryption</li>
+          <li><i class="fas fa-check"></i> Audit trail logging</li>
+          <li><i class="fas fa-check"></i> Automatic backups</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-puzzle-piece"></i>
+        </div>
+        <h3>Modular & Extensible</h3>
+        <p>Plug in new features as your needs grow. Fully customizable modules.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> API-first design</li>
+          <li><i class="fas fa-check"></i> Custom integrations</li>
+          <li><i class="fas fa-check"></i> Plugin ecosystem</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <h3>AI-Powered Healthcare</h3>
+        <p>Automated note-taking, smart triage, and predictive analytics.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> Voice-to-text notes</li>
+          <li><i class="fas fa-check"></i> Predictive analytics</li>
+          <li><i class="fas fa-check"></i> Smart scheduling</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <h3>Analytics & Insights</h3>
+        <p>Real-time dashboards for admin staff, clinicians, and researchers.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> Custom dashboards</li>
+          <li><i class="fas fa-check"></i> Real-time analytics</li>
+          <li><i class="fas fa-check"></i> Export to PDF/Excel</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        <h3>User Management</h3>
+        <p>Personalized profile pages and comprehensive role-based access control.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check"></i> Multi-factor auth</li>
+          <li><i class="fas fa-check"></i> SSO integration</li>
+          <li><i class="fas fa-check"></i> Activity monitoring</li>
+        </ul>
+      </div>
     </div>
-    <div class="plan">
-      <h4>Enterprise</h4>
-      <p class="price">Custom</p>
-      <ul>
-        <li>Unlimited users</li>
-        <li>Dedicated support</li>
-        <li>Custom integrations</li>
-      </ul>
-      <a href="/accounts/login/" class="plan-cta">Contact Sales</a>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="section-header">
+      <span class="section-badge">Simple Setup</span>
+      <h2>Get Started in 3 Easy Steps</h2>
     </div>
-  </div>
-</section>
-<<<<<<< HEAD
-<section class="features">
-  <h3>Centralized Healthcare Objects</h3>
-  <div class="feature-grid">
-    <div class="feature">
-      <h4>Patients</h4>
-      <p>Manage PHI, demographics, and care history securely.</p>
+    
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Sign Up</h3>
+          <p>Create your clinic account. No credit card required for free tier.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Configure</h3>
+          <p>Set up your clinic profile, users, and customize workflows.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Go Live</h3>
+          <p>Start managing patients, appointments, and billing immediately.</p>
+        </div>
+      </div>
     </div>
-    <div class="feature">
-      <h4>Appointments</h4>
-      <p>Schedule, track, and notify with conflict detection.</p>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="plans" class="landing-plans">
+    <div class="section-header">
+      <span class="section-badge">Pricing</span>
+      <h2>Plans That Scale With Your Practice</h2>
+      <p class="section-subtitle">Choose the perfect plan for your clinic's needs</p>
     </div>
-    <div class="feature">
-      <h4>Clinical Records</h4>
-      <p>SOAP notes, record locking, and immutable audit trails.</p>
+    
+    <div class="plans-container">
+      <div class="plan-card">
+        <div class="plan-header">
+          <h3>Free</h3>
+          <div class="plan-price">
+            <span class="price">$0</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="plan-description">Perfect for small clinics starting out</p>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> 1 user account</li>
+          <li><i class="fas fa-check"></i> Up to 2 patients</li>
+          <li><i class="fas fa-check"></i> Basic support</li>
+          <li><i class="fas fa-check"></i> Core modules</li>
+          <li class="disabled"><i class="fas fa-times"></i> AI features</li>
+          <li class="disabled"><i class="fas fa-times"></i> Advanced analytics</li>
+        </ul>
+        <a href="/accounts/register/" class="plan-cta">Start Free</a>
+      </div>
+      
+      <div class="plan-card">
+        <div class="plan-header">
+          <h3>Starter</h3>
+          <div class="plan-price">
+            <span class="price">$49</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="plan-description">Ideal for growing practices</p>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Up to 3 users</li>
+          <li><i class="fas fa-check"></i> All core modules</li>
+          <li><i class="fas fa-check"></i> Email support</li>
+          <li><i class="fas fa-check"></i> 5GB storage</li>
+          <li><i class="fas fa-check"></i> Basic analytics</li>
+          <li class="disabled"><i class="fas fa-times"></i> AI features</li>
+        </ul>
+        <a href="/accounts/register/" class="plan-cta">Free Trial</a>
+      </div>
+      
+      <div class="plan-card popular">
+        <div class="popular-badge">Most Popular</div>
+        <div class="plan-header">
+          <h3>Professional</h3>
+          <div class="plan-price">
+            <span class="price">$149</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="plan-description">Perfect for established clinics</p>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Up to 20 users</li>
+          <li><i class="fas fa-check"></i> All modules included</li>
+          <li><i class="fas fa-check"></i> AI features</li>
+          <li><i class="fas fa-check"></i> Priority support</li>
+          <li><i class="fas fa-check"></i> 50GB storage</li>
+          <li><i class="fas fa-check"></i> Advanced analytics</li>
+        </ul>
+        <a href="/accounts/register/" class="plan-cta">Start Free Trial</a>
+      </div>
+      
+      <div class="plan-card">
+        <div class="plan-header">
+          <h3>Enterprise</h3>
+          <div class="plan-price">
+            <span class="price">Custom</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="plan-description">For large healthcare organizations</p>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> Unlimited users</li>
+          <li><i class="fas fa-check"></i> Dedicated support</li>
+          <li><i class="fas fa-check"></i> Custom integrations</li>
+          <li><i class="fas fa-check"></i> On-premise option</li>
+          <li><i class="fas fa-check"></i> SLAs available</li>
+          <li><i class="fas fa-check"></i> White-label option</li>
+        </ul>
+        <a href="/contact/" class="plan-cta">Contact Sales</a>
+      </div>
     </div>
-    <div class="feature">
-      <h4>Labs</h4>
-      <p>Order, track, and view encrypted lab results.</p>
+    
+    <div class="pricing-note">
+      <p><i class="fas fa-sync-alt"></i> All plans include a 14-day free trial. No credit card required.</p>
     </div>
-    <div class="feature">
-      <h4>Billing</h4>
-      <p>Plans, subscriptions, and Stripe integration.</p>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="landing-testimonials">
+    <div class="section-header">
+      <span class="section-badge">Testimonials</span>
+      <h2>Trusted by Healthcare Professionals</h2>
+      <p class="section-subtitle">See what our clients have to say</p>
     </div>
-    <div class="feature">
-=======
-<section class="centralized-objects">
-  <h3>Centralized Healthcare Objects</h3>
-  <div class="object-grid">
-    <div class="object-card">
-      <h4>Patients</h4>
-      <p>Manage PHI, demographics, and care history securely.</p>
+    
+    <div class="testimonials-container">
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">"ClinicCloud transformed our clinic's workflow. The multi-tenant features allowed us to manage three locations effortlessly!"</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="author-info">
+            <h4>Dr. Sarah Johnson</h4>
+            <p>Cardiologist, HealthFirst Clinics</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">"The AI-powered note-taking saves our team 10+ hours per week. The HIPAA compliance gave us immediate peace of mind."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <i class="fas fa-user-nurse"></i>
+          </div>
+          <div class="author-info">
+            <h4>Maria Rodriguez</h4>
+            <p>Clinic Manager, MediGroup</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Implementation was seamless. The analytics dashboards provide insights we never had before. Highly recommended!"</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="author-info">
+            <h4>David Chen</h4>
+            <p>IT Director, City Medical</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="object-card">
-      <h4>Appointments</h4>
-      <p>Schedule, track, and notify with conflict detection.</p>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="landing-cta">
+    <div class="cta-container">
+      <h2>Ready to Transform Your Clinic?</h2>
+      <p>Join thousands of healthcare providers using ClinicCloud today.</p>
+      <div class="cta-actions">
+        <a href="/accounts/register/" class="cta-button primary">
+          <i class="fas fa-rocket"></i> Start Your Free Trial
+        </a>
+        <a href="/demo/" class="cta-button secondary">
+          <i class="fas fa-calendar-alt"></i> Schedule a Demo
+        </a>
+      </div>
+      <p class="cta-note"><i class="fas fa-shield-alt"></i> All plans include HIPAA compliance and 99.9% uptime SLA</p>
     </div>
-    <div class="object-card">
-      <h4>Clinical Records</h4>
-      <p>SOAP notes, record locking, and immutable audit trails.</p>
-    </div>
-    <div class="object-card">
-      <h4>Labs</h4>
-      <p>Order, track, and view encrypted lab results.</p>
-    </div>
-    <div class="object-card">
-      <h4>Billing</h4>
-      <p>Plans, subscriptions, and Stripe integration.</p>
-    </div>
-    <div class="object-card">
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-      <h4>AI & Analytics</h4>
-      <p>Telemedicine AI, automated notes, document upload, and actionable analytics for staff and researchers.</p>
-    </div>
-  </div>
-</section>
-{% endblock %}
+  </section>
+</div>
 
 <style>
-/* ============================================
-   LANDING PAGE - WORLD CLASS DESIGN
-   ============================================ */
+:root {
+  --primary-blue: #0f4c81;
+  --secondary-blue: #38b6ff;
+  --accent-blue: #1e88e5;
+  --dark-blue: #0a2a4a;
+  --light-blue: #e3f2fd;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-600: #4b5563;
+  --gray-800: #1f2937;
+  --white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.landing-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
 
 /* Hero Section */
-.hero {
-  background: linear-gradient(135deg, #0f4c81 0%, #38b6ff 100%);
-  padding: 5rem 2rem 4rem 2rem;
-  text-align: center;
-  color: #fff;
+.landing-hero {
+  padding: 5rem 0 3rem;
+  background: linear-gradient(135deg, #0a2a4a 0%, #0f4c81 50%, #1e88e5 100%);
+  color: var(--white);
+  border-radius: 0 0 40px 40px;
+  margin-bottom: 3rem;
   position: relative;
   overflow: hidden;
 }
 
-.hero::before {
+.landing-hero::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
-  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231e88e5' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.1;
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 2rem;
 }
 
 .hero-content {
-  max-width: 700px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
   animation: fadeInUp 0.8s ease-out;
 }
 
-.hero-content h2 {
-  color: #fff;
-  font-size: 2.75rem;
-  margin-bottom: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.hero-badge {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.hero-content p {
-  color: rgba(255,255,255,0.95);
+.hero-badge span {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title .highlight {
+  color: var(--secondary-blue);
+  position: relative;
+}
+
+.hero-title .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--secondary-blue);
+  border-radius: 2px;
+}
+
+.hero-subtitle {
   font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2rem;
   line-height: 1.6;
 }
 
-.hero .cta-btn {
-  background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
-  color: #0f4c81;
-  padding: 1rem 2.5rem;
-  border-radius: 50px;
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin: 2rem 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 2.5rem;
   font-weight: 700;
-  font-size: 1.05rem;
-  display: inline-block;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  text-decoration: none;
+  color: var(--secondary-blue);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.hero .cta-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-  background: linear-gradient(135deg, #f3f4f6 0%, #fff 100%);
-}
-
-/* Features Section */
-.features {
-  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
-  padding: 5rem 2rem;
-  text-align: center;
-}
-
-.features h3 {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  color: #0f4c81;
-}
-
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.feature {
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-top: 4px solid #38b6ff;
-  min-height: 220px;
+.hero-actions {
   display: flex;
-  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
 }
 
-.feature:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-  border-top-color: #0f4c81;
+.hero-cta.primary {
+  background: var(--secondary-blue);
+  color: var(--white);
 }
 
-.feature h4 {
-  color: #0f4c81;
+.hero-cta.primary:hover {
+  background: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-cta.secondary {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-cta.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
+.hero-note {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-visual {
+  animation: fadeInRight 0.8s ease-out 0.3s both;
+}
+
+.dashboard-preview {
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  transform: perspective(1000px) rotateY(-10deg);
+  transition: transform 0.3s ease;
+}
+
+.dashboard-preview:hover {
+  transform: perspective(1000px) rotateY(-5deg);
+}
+
+.dashboard-header {
+  background: var(--gray-100);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab.active {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+.tab:hover:not(.active) {
+  background: var(--gray-200);
+}
+
+.dashboard-content {
+  padding: 2rem;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: 10px;
+  border: 1px solid var(--gray-200);
+}
+
+.stat-card i {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+}
+
+/* Trusted By */
+.trusted-by {
+  text-align: center;
+  padding: 2rem 0;
+  margin-bottom: 4rem;
+}
+
+.trusted-by p {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.trusted-logos {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.trusted-logos span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-800);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.trusted-logos i {
+  color: var(--primary-blue);
+  font-size: 1.5rem;
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-badge {
+  display: inline-block;
+  background: var(--light-blue);
+  color: var(--primary-blue);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
   margin-bottom: 1rem;
-  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.feature p {
-  color: #6b7280;
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  color: var(--gray-600);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
   line-height: 1.6;
+}
+
+/* Features */
+.landing-features {
+  padding: 6rem 0;
+  background: var(--gray-50);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-blue);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  color: var(--white);
+  font-size: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
+}
+
+.feature-card p {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
 
-/* Testimonials Section */
-.testimonials {
-<<<<<<< HEAD
-  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
-=======
-  background: linear-gradient(180deg, #fff 0%, #f9fafb 100%);
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-  padding: 5rem 2rem;
-  text-align: center;
+.feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--gray-800);
+  font-size: 0.95rem;
 }
 
-.testimonials h3 {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  color: #0f4c81;
+.feature-list i.fa-check {
+  color: var(--success);
 }
 
-<<<<<<< HEAD
-.testimonials .feature {
-  border-top: 4px solid #38b6ff;
+/* How It Works */
+.how-it-works {
+  padding: 6rem 0;
 }
 
-.testimonials .feature:hover {
-  border-top-color: #0f4c81;
-}
-
-.testimonials .feature .quote {
-=======
-.testimonial-grid {
+.steps-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 3rem auto 0 auto;
-}
-
-.testimonial {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
-  box-shadow: 
-    0 4px 6px rgba(15, 76, 129, 0.05),
-    0 8px 20px rgba(15, 76, 129, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #e5e7eb;
-  border-left: 5px solid #38b6ff;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
   position: relative;
-  overflow: hidden;
 }
 
-.testimonial::before {
-  content: '"';
+.steps-container::before {
+  content: '';
   position: absolute;
-  top: 10px;
-  left: 15px;
-  font-size: 4rem;
-  color: rgba(56, 182, 255, 0.1);
-  font-family: Georgia, serif;
-  line-height: 1;
-  pointer-events: none;
-}
-
-.testimonial:hover {
-  box-shadow: 
-    0 8px 12px rgba(15, 76, 129, 0.1),
-    0 16px 40px rgba(15, 76, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  transform: translateY(-6px);
-  border-color: #38b6ff;
-  border-left-width: 6px;
-}
-
-.testimonial .quote {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-  font-style: italic;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  position: relative;
+  top: 40px;
+  left: 100px;
+  right: 100px;
+  height: 2px;
+  background: var(--gray-300);
   z-index: 1;
-  font-weight: 500;
 }
 
-<<<<<<< HEAD
-.testimonials .feature .author {
-=======
-.testimonial .author {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-  font-size: 0.95rem;
-  color: #0f4c81;
-  font-weight: 700;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 2px solid #e5e7eb;
-  display: block;
-<<<<<<< HEAD
-  margin: 1rem 0 0 0;
-=======
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-}
-
-/* Subscription Plans Section */
-.subscription {
-  background: linear-gradient(135deg, #0f4c81 0%, #38b6ff 100%);
-  padding: 5rem 2rem;
-  text-align: center;
-  color: #fff;
-}
-
-.subscription h3 {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.plans {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2.5rem;
-  max-width: 1200px;
-  margin: 3rem auto 0 auto;
-}
-
-.plan {
-  background: rgba(255,255,255,0.95);
-  border-radius: 12px;
-  padding: 2.5rem 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+.step {
   position: relative;
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #1f2937;
-  border: 2px solid transparent;
-}
-
-.plan:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-.plan.popular {
-  border: 2px solid #fff;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  transform: scale(1.05);
-}
-
-.plan.popular:hover {
-  transform: scale(1.05) translateY(-8px);
-}
-
-.plan h4 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #0f4c81;
-}
-
-.plan .price {
-  font-size: 2.75rem;
-  color: #0f4c81;
-  margin: 0.5rem 0 1.5rem 0;
-  font-weight: 800;
-}
-
-.plan ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  text-align: left;
-  width: 100%;
-}
-
-.plan ul li {
-  margin-bottom: 1rem;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.plan ul li::before {
-  content: '✓';
-  color: #10b981;
-  font-weight: bold;
-  font-size: 1.25rem;
-}
-
-.plan-cta {
-  background: linear-gradient(135deg, #0f4c81 0%, #38b6ff 100%);
-  color: #fff;
-  padding: 0.9rem 2rem;
-  border-radius: 50px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: auto;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.95rem;
-  border: 2px solid transparent;
-  display: inline-block;
-}
-
-.plan-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(15, 76, 129, 0.3);
-}
-
-.plan.free {
-  opacity: 0.9;
-}
-
-.plan.popular::before {
-  content: "⭐ MOST POPULAR";
-  position: absolute;
-  top: -1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
-  color: #0f4c81;
-  font-size: 0.85rem;
-  padding: 0.5rem 1.25rem;
-  border-radius: 50px;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  letter-spacing: 0.5px;
-}
-
-<<<<<<< HEAD
-=======
-/* Centralized Objects Section */
-.centralized-objects {
-  background: linear-gradient(180deg, #f3f4f6 0%, #f9fafb 100%);
-  padding: 5rem 2rem;
+  z-index: 2;
   text-align: center;
 }
 
-.centralized-objects h3 {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  color: #0f4c81;
+.step-number {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem;
+  box-shadow: var(--shadow);
 }
 
-.object-grid {
+.step-content h3 {
+  font-size: 1.5rem;
+  color: var(--dark-blue);
+  margin-bottom: 0.5rem;
+}
+
+.step-content p {
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+/* Pricing */
+.landing-plans {
+  padding: 6rem 0;
+  background: var(--gray-50);
+}
+
+.plans-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   max-width: 1200px;
-  margin: 3rem auto 0 auto;
+  margin: 0 auto 3rem;
 }
 
-.object-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+.plan-card {
+  background: var(--white);
   border-radius: 16px;
   padding: 2.5rem 2rem;
-  box-shadow: 
-    0 4px 6px rgba(15, 76, 129, 0.05),
-    0 8px 20px rgba(15, 76, 129, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #e5e7eb;
-  border-bottom: 5px solid #38b6ff;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  border: 2px solid transparent;
 }
 
-.object-card::after {
-  content: '';
+.plan-card.popular {
+  border-color: var(--primary-blue);
+  transform: scale(1.05);
+}
+
+.popular-badge {
   position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(56, 182, 255, 0.08) 0%, transparent 70%);
-  pointer-events: none;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-blue);
+  color: var(--white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.object-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 
-    0 8px 12px rgba(15, 76, 129, 0.1),
-    0 16px 40px rgba(15, 76, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  border-color: #38b6ff;
-  border-bottom-width: 6px;
+.plan-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.object-card h4 {
-  color: #0f4c81;
-  margin-bottom: 1rem;
+.plan-header h3 {
   font-size: 1.5rem;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
 }
 
-.object-card p {
-  color: #374151;
-  line-height: 1.7;
-  font-weight: 500;
-  position: relative;
-  z-index: 1;
+.plan-price {
+  margin-bottom: 0.5rem;
 }
 
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
+.price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-blue);
+}
+
+.period {
+  color: var(--gray-600);
+  font-size: 1rem;
+}
+
+.plan-description {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--gray-800);
+}
+
+.plan-features li.disabled {
+  color: var(--gray-400);
+}
+
+.plan-features i.fa-check {
+  color: var(--success);
+}
+
+.plan-features i.fa-times {
+  color: var(--gray-400);
+}
+
+.plan-cta {
+  display: block;
+  text-align: center;
+  background: var(--primary-blue);
+  color: var(--white);
+  padding: 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.plan-cta:hover {
+  background: var(--secondary-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.pricing-note {
+  text-align: center;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Testimonials */
+.landing-testimonials {
+  padding: 6rem 0;
+}
+
+.testimonials-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stars {
+  color: #fbbf24;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.testimonial-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--gray-800);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-avatar {
+  width: 50px;
+  height: 50px;
+  background: var(--light-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+}
+
+.author-info h4 {
+  color: var(--dark-blue);
+  margin-bottom: 0.25rem;
+}
+
+.author-info p {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+/* CTA Section */
+.landing-cta {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+  color: var(--white);
+  text-align: center;
+  border-radius: 40px 40px 0 0;
+}
+
+.cta-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.cta-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-container p {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 3rem;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+  background: var(--secondary-blue);
+  color: var(--white);
+}
+
+.cta-button.primary:hover {
+  background: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
+.cta-note {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -704,105 +1151,197 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .hero {
-    padding: 3rem 1.5rem 2.5rem 1.5rem;
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
   }
-
-  .hero-content h2 {
-    font-size: 2rem;
-  }
-
-  .hero-content p {
-    font-size: 1.1rem;
-  }
-
-<<<<<<< HEAD
-  .features, .testimonials, .subscription {
-    padding: 3rem 1.5rem;
-  }
-
-  .feature-grid, .plans {
-=======
-  .features, .testimonials, .subscription, .centralized-objects {
-    padding: 3rem 1.5rem;
-  }
-
-  .feature-grid, .testimonial-grid, .plans, .object-grid {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .plan.popular {
-    transform: scale(1);
-  }
-
-  .plan.popular:hover {
-    transform: translateY(-8px);
-  }
-
-  h2 {
-    font-size: 1.75rem;
-  }
-
-<<<<<<< HEAD
-  .testimonials h3, .features h3, .subscription h3 {
-=======
-  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-    font-size: 1.75rem;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-@media (max-width: 640px) {
-  .hero {
-    padding: 2rem 1rem 1.5rem 1rem;
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
   }
-
-  .hero-content h2 {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
+  
+  .hero-stats {
+    justify-content: center;
   }
-
-  .hero-content p {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+  
+  .hero-actions {
+    justify-content: center;
   }
-
-<<<<<<< HEAD
-  .features, .testimonials, .subscription {
-    padding: 2rem 1rem;
+  
+  .hero-badge {
+    justify-content: center;
   }
-
-  .feature {
-=======
-  .features, .testimonials, .subscription, .centralized-objects {
-    padding: 2rem 1rem;
+  
+  .dashboard-preview {
+    max-width: 600px;
+    margin: 0 auto;
+    transform: none;
   }
-
-  .feature, .testimonial, .object-card {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-    padding: 1.5rem 1rem;
-    min-height: auto;
+  
+  .plan-card.popular {
+    transform: none;
   }
-
-  .plan {
-    padding: 1.5rem 1rem;
-    min-height: auto;
+  
+  .steps-container::before {
+    display: none;
   }
+}
 
-  .plan .price {
+@media (max-width: 768px) {
+  .landing-hero {
+    padding: 3rem 0 2rem;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hero-stats {
+    gap: 2rem;
+  }
+  
+  .stat-number {
     font-size: 2rem;
   }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .plans-container {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+  
+  .testimonials-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
 
-<<<<<<< HEAD
-  .testimonials h3, .features h3, .subscription h3 {
-=======
-  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
->>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
-    font-size: 1.5rem;
+@media (max-width: 480px) {
+  .landing-main {
+    padding: 0 0.5rem;
+  }
+  
+  .hero-container {
+    padding: 0 1rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-badge {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-stats {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+  }
+  
+  .section-header h2 {
+    font-size: 1.75rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Feature cards animation
+  const featureCards = document.querySelectorAll('.feature-card');
+  const testimonialCards = document.querySelectorAll('.testimonial-card');
+  const planCards = document.querySelectorAll('.plan-card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, index * 100);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  // Animate elements on scroll
+  [featureCards, testimonialCards, planCards].forEach(group => {
+    group.forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(element);
+    });
+  });
+  
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+  
+  // Dashboard tabs interaction
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+  
+  // Add current year to footer if needed
+  const yearElements = document.querySelectorAll('[data-current-year]');
+  yearElements.forEach(el => {
+    el.textContent = new Date().getFullYear();
+  });
+});
+</script>
+{% endblock %}
