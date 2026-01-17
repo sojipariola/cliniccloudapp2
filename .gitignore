@@ -1,0 +1,148 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+frontend/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+venv.bak/
+env.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
+.settings/
+*.iml
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+*.cover
+coverage.xml
+junit/
+
+# Database
+db.sqlite3
+db.sqlite3-journal
+*.db
+*.sqlite
+
+# Static files
+/staticfiles/
+/static/collected/
+
+# Media files (uploads)
+/media/
+/tmp/
+
+# Logs
+*.log
+logs/
+
+# Celery
+celerybeat-schedule
+dump.rdb
+
+# Docker
+docker-compose.override.yml
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
+
+# OS specific
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Secrets and credentials
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+.aws/credentials
+.aws/config
+
+# AI/ML artifacts
+*.pkl
+*.pickle
+*.joblib
+*.model
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Node modules (if using any frontend tools)
+node_modules/
+npm-debug.log
+
+# Sensitive configuration
+config/settings/local.py
+config/settings/production.py
+
+# IDE cache
+.vscode/settings.json
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+temp/
+.temp/
+
+# Stripe and external API keys
+stripe_keys.txt
+api_keys.json
+
+# HIPAA/Compliance
+audit_logs/exports/
+backup/
+
+# Git
+.git/
+gitnotes/
