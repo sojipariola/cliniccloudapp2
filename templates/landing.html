@@ -1,9 +1,16 @@
 {% extends 'base/base.html' %}
+<<<<<<< HEAD
 {% load static %}
 {% block title %}Welcome to ClinicCloud{% endblock %}
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 <script src="{% static 'js/landing.js' %}" defer></script>
+=======
+{% block title %}Welcome to ClinicCloud{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/css/landing.css">
+<script src="/static/js/landing.js" defer></script>
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 <meta name="description" content="ClinicCloud: World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready.">
 <meta property="og:title" content="ClinicCloud - Modern Healthcare SaaS" />
 <meta property="og:description" content="World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready." />
@@ -18,6 +25,7 @@
 {% include 'includes/flashmessages.html' %}
 <section class="hero">
   <div class="hero-content">
+<<<<<<< HEAD
     <picture>
       <source media="(max-width: 768px)" srcset="{% static 'img/landing_graphic_mobile.jpg' %}">
       <img src="{% static 'img/landing_graphic.jpg' %}" alt="ClinicCloud Graphic - Transform Your Healthcare Practice" class="hero-image">
@@ -28,6 +36,13 @@
       <p class="hero-description">Multi-tenant, PHI-compliant, and ready for scale. Join thousands of healthcare professionals revolutionizing patient care.</p>
       <a href="/accounts/register/" class="cta-btn">Get Started</a>
     </div>
+=======
+    <img src="/static/img/landing_graphic.svg" alt="ClinicCloud Graphic" style="max-width:100%;height:auto;margin-bottom:2rem;">
+    <h2>Transform Your Healthcare Practice</h2>
+    <p>World-class, secure, and modular SaaS for modern healthcare teams. Multi-tenant, PHI-compliant, and ready for scale.</p>
+    <p>Join thousands of healthcare professionals revolutionizing patient care.</p>
+    <a href="/accounts/register/" class="cta-btn">Get Started</a>
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   </div>
 </section>
 <section class="features">
@@ -62,6 +77,7 @@
 
 <section class="testimonials">
   <h3>What Our Clients Say</h3>
+<<<<<<< HEAD
   <div class="feature-grid">
     <div class="feature">
       <p class="quote">"ClinicCloud transformed our clinic's workflow. Secure, fast, and easy to use!"</p>
@@ -88,6 +104,34 @@
       <span class="author">— R. Kim, Finance Director</span>
     </div>
     <div class="feature">
+=======
+  <div class="testimonial-grid">
+    <div class="testimonial">
+      <p class="quote">"ClinicCloud transformed our clinic's workflow. Secure, fast, and easy to use!"</p>
+      <span class="author">— Dr. A. Smith, Family Practice</span>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"The multi-tenant features let us manage multiple locations effortlessly."</p>
+      <span class="author">— J. Patel, Clinic Administrator</span>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"Audit logging and PHI compliance give us peace of mind for patient data."</p>
+      <span class="author">— M. Chen, Compliance Officer</span>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"AI-powered notes and analytics save our team hours every week."</p>
+      <span class="author">— Dr. L. Garcia, Telemedicine Lead</span>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"ClinicCloud's support team is responsive and knowledgeable. Highly recommended!"</p>
+      <span class="author">— S. Okafor, Practice Manager</span>
+    </div>
+    <div class="testimonial">
+      <p class="quote">"Billing and Stripe integration made our transition seamless."</p>
+      <span class="author">— R. Kim, Finance Director</span>
+    </div>
+    <div class="testimonial">
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
       <p class="quote">"Our patients love the secure portal and appointment reminders."</p>
       <span class="author">— T. Williams, Pediatric Clinic</span>
     </div>
@@ -141,6 +185,7 @@
     </div>
   </div>
 </section>
+<<<<<<< HEAD
 <section class="features">
   <h3>Centralized Healthcare Objects</h3>
   <div class="feature-grid">
@@ -165,6 +210,32 @@
       <p>Plans, subscriptions, and Stripe integration.</p>
     </div>
     <div class="feature">
+=======
+<section class="centralized-objects">
+  <h3>Centralized Healthcare Objects</h3>
+  <div class="object-grid">
+    <div class="object-card">
+      <h4>Patients</h4>
+      <p>Manage PHI, demographics, and care history securely.</p>
+    </div>
+    <div class="object-card">
+      <h4>Appointments</h4>
+      <p>Schedule, track, and notify with conflict detection.</p>
+    </div>
+    <div class="object-card">
+      <h4>Clinical Records</h4>
+      <p>SOAP notes, record locking, and immutable audit trails.</p>
+    </div>
+    <div class="object-card">
+      <h4>Labs</h4>
+      <p>Order, track, and view encrypted lab results.</p>
+    </div>
+    <div class="object-card">
+      <h4>Billing</h4>
+      <p>Plans, subscriptions, and Stripe integration.</p>
+    </div>
+    <div class="object-card">
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
       <h4>AI & Analytics</h4>
       <p>Telemedicine AI, automated notes, document upload, and actionable analytics for staff and researchers.</p>
     </div>
@@ -300,7 +371,11 @@
 
 /* Testimonials Section */
 .testimonials {
+<<<<<<< HEAD
   background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+=======
+  background: linear-gradient(180deg, #fff 0%, #f9fafb 100%);
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   padding: 5rem 2rem;
   text-align: center;
 }
@@ -311,6 +386,7 @@
   color: #0f4c81;
 }
 
+<<<<<<< HEAD
 .testimonials .feature {
   border-top: 4px solid #38b6ff;
 }
@@ -320,6 +396,58 @@
 }
 
 .testimonials .feature .quote {
+=======
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 3rem auto 0 auto;
+}
+
+.testimonial {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 
+    0 4px 6px rgba(15, 76, 129, 0.05),
+    0 8px 20px rgba(15, 76, 129, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #e5e7eb;
+  border-left: 5px solid #38b6ff;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial::before {
+  content: '"';
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-size: 4rem;
+  color: rgba(56, 182, 255, 0.1);
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.testimonial:hover {
+  box-shadow: 
+    0 8px 12px rgba(15, 76, 129, 0.1),
+    0 16px 40px rgba(15, 76, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transform: translateY(-6px);
+  border-color: #38b6ff;
+  border-left-width: 6px;
+}
+
+.testimonial .quote {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   font-style: italic;
   color: #1f2937;
   margin-bottom: 1.5rem;
@@ -330,7 +458,11 @@
   font-weight: 500;
 }
 
+<<<<<<< HEAD
 .testimonials .feature .author {
+=======
+.testimonial .author {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   font-size: 0.95rem;
   color: #0f4c81;
   font-weight: 700;
@@ -338,7 +470,10 @@
   padding-top: 1rem;
   border-top: 2px solid #e5e7eb;
   display: block;
+<<<<<<< HEAD
   margin: 1rem 0 0 0;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 }
 
 /* Subscription Plans Section */
@@ -470,6 +605,87 @@
   letter-spacing: 0.5px;
 }
 
+<<<<<<< HEAD
+=======
+/* Centralized Objects Section */
+.centralized-objects {
+  background: linear-gradient(180deg, #f3f4f6 0%, #f9fafb 100%);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.centralized-objects h3 {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+  color: #0f4c81;
+}
+
+.object-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 3rem auto 0 auto;
+}
+
+.object-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 
+    0 4px 6px rgba(15, 76, 129, 0.05),
+    0 8px 20px rgba(15, 76, 129, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #e5e7eb;
+  border-bottom: 5px solid #38b6ff;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.object-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(56, 182, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.object-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 8px 12px rgba(15, 76, 129, 0.1),
+    0 16px 40px rgba(15, 76, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-color: #38b6ff;
+  border-bottom-width: 6px;
+}
+
+.object-card h4 {
+  color: #0f4c81;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.object-card p {
+  color: #374151;
+  line-height: 1.7;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -496,11 +712,19 @@
     font-size: 1.1rem;
   }
 
+<<<<<<< HEAD
   .features, .testimonials, .subscription {
     padding: 3rem 1.5rem;
   }
 
   .feature-grid, .plans {
+=======
+  .features, .testimonials, .subscription, .centralized-objects {
+    padding: 3rem 1.5rem;
+  }
+
+  .feature-grid, .testimonial-grid, .plans, .object-grid {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
@@ -517,7 +741,11 @@
     font-size: 1.75rem;
   }
 
+<<<<<<< HEAD
   .testimonials h3, .features h3, .subscription h3 {
+=======
+  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
     font-size: 1.75rem;
   }
 }
@@ -537,11 +765,19 @@
     margin-bottom: 1.5rem;
   }
 
+<<<<<<< HEAD
   .features, .testimonials, .subscription {
     padding: 2rem 1rem;
   }
 
   .feature {
+=======
+  .features, .testimonials, .subscription, .centralized-objects {
+    padding: 2rem 1rem;
+  }
+
+  .feature, .testimonial, .object-card {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
     padding: 1.5rem 1rem;
     min-height: auto;
   }
@@ -555,7 +791,11 @@
     font-size: 2rem;
   }
 
+<<<<<<< HEAD
   .testimonials h3, .features h3, .subscription h3 {
+=======
+  .testimonials h3, .features h3, .subscription h3, .centralized-objects h3 {
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
     font-size: 1.5rem;
   }
 }

@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 import dj_database_url
 from celery.schedules import crontab
@@ -22,21 +23,32 @@ CELERY_BEAT_SCHEDULE = {
 =======
 from dotenv import load_dotenv
 from celery.schedules import crontab
+=======
+
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 import dj_database_url
+from celery.schedules import crontab
+from dotenv import load_dotenv
 
 CELERY_BEAT_SCHEDULE = {
-    'send-weekly-trial-expiry-notifications': {
-        'task': 'billing.tasks.weekly_trial_expiry_notifications',
-        'schedule': crontab(minute=0, hour=9, day_of_week='monday'),
+    "send-weekly-trial-expiry-notifications": {
+        "task": "billing.tasks.weekly_trial_expiry_notifications",
+        "schedule": crontab(minute=0, hour=9, day_of_week="monday"),
     },
-    'daily-trial-reminders': {
-        'task': 'billing.tasks.daily_trial_expiry_soft_reminder',
-        'schedule': crontab(minute=15, hour=8),  # 08:15 UTC daily
+    "daily-trial-reminders": {
+        "task": "billing.tasks.daily_trial_expiry_soft_reminder",
+        "schedule": crontab(minute=15, hour=8),  # 08:15 UTC daily
     },
+<<<<<<< HEAD
     'nightly-subscription-health-check': {
         'task': 'billing.tasks.nightly_subscription_health_check',
         'schedule': crontab(minute=45, hour=1),  # 01:45 UTC daily
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+    "nightly-subscription-health-check": {
+        "task": "billing.tasks.nightly_subscription_health_check",
+        "schedule": crontab(minute=45, hour=1),  # 01:45 UTC daily
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
     },
 }
 
@@ -69,6 +81,7 @@ CELERY_RESULT_BACKEND_USE_SSL = CELERY_BROKER_USE_SSL
 
 # Email backend configuration
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+<<<<<<< HEAD
 =======
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or os.environ.get("REDIS_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND") or os.environ.get("REDIS_URL", "redis://localhost:6379/0")
@@ -76,6 +89,8 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND") or os.environ.ge
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 # For production, use SMTP:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.example.com')
@@ -87,12 +102,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Use custom tenant-aware authentication backend
 AUTHENTICATION_BACKENDS = [
 <<<<<<< HEAD
+<<<<<<< HEAD
     "users.auth_backend.TenantAwareAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 =======
     'users.auth_backend.TenantAwareAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+    "users.auth_backend.TenantAwareAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 ]
 
 # Use custom user model
@@ -118,10 +138,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
 <<<<<<< HEAD
+<<<<<<< HEAD
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 =======
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 
 # Use environment variable for SECRET_KEY
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
@@ -130,15 +154,21 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]"
 ).split(",")
 
 # Site URL for emails and absolute URLs
 SITE_URL = os.environ.get("SITE_URL", "http://localhost:8000")
+<<<<<<< HEAD
 =======
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 
 
 # Application definition
@@ -173,10 +203,14 @@ INSTALLED_APPS = [
     "ai",
     "fhir",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "admin_dashboard",
     "api",
 =======
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+    "admin_dashboard",
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 ]
 
 MIDDLEWARE = [
@@ -207,9 +241,13 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "common.context_processors.recent_patients",
 =======
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+                "common.context_processors.recent_patients",
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
             ],
         },
     },
@@ -273,12 +311,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 # Media files (User-uploaded content)
 # https://docs.djangoproject.com/en/6.0/topics/files/
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+<<<<<<< HEAD
 # Stripe configuration
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
@@ -289,6 +331,12 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
 >>>>>>> 453538e (Configure for Heroku deployment with PostgreSQL, Redis, and WhiteNoise)
+=======
+# Stripe configuration
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Additional security best practices for production

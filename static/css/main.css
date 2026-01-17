@@ -227,7 +227,10 @@ button[type="submit"]:active {
 }
 
 /* ============================================
+<<<<<<< HEAD
 /* ============================================
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
    LAYOUT
    ============================================ */
 
@@ -251,9 +254,14 @@ nav {
 	overflow-x: hidden;
 	flex-shrink: 0;
 	position: sticky;
+<<<<<<< HEAD
 	top: 80px;
 	align-self: flex-start;
 	z-index: 50;
+=======
+	top: 0;
+	align-self: flex-start;
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 }
 
 header {
@@ -262,7 +270,10 @@ header {
 	padding: var(--space-lg) var(--space-2xl);
 	box-shadow: var(--shadow-sm);
 	z-index: 100;
+<<<<<<< HEAD
 	position: relative;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 }
 
 header h1 {
@@ -277,7 +288,10 @@ main {
 	background: #fff;
 	min-height: auto;
 	overflow-y: auto;
+<<<<<<< HEAD
 	z-index: 10;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 }
 
 main h2 {
@@ -319,14 +333,20 @@ footer p {
 		overflow-y: auto;
 		position: relative;
 		top: unset;
+<<<<<<< HEAD
 		z-index: 40;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 	}
 
 	main {
 		flex: 1;
 		padding: var(--space-lg);
 		overflow-y: auto;
+<<<<<<< HEAD
 		z-index: 10;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 	}
 
 	header {
@@ -339,15 +359,22 @@ footer p {
 	h2 { font-size: 1.5rem; }
 	h3 { font-size: 1.25rem; }
 
+<<<<<<< HEAD
 	.layout {
 		flex-direction: column;
 		gap: 0;
+=======
+	.form-container {
+		padding: var(--space-lg) var(--space-lg);
+		margin: var(--space-lg) var(--space-sm);
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 	}
 
 	nav {
 		width: 100%;
 		min-width: 100%;
 		max-height: 40vh;
+<<<<<<< HEAD
 		position: relative;
 		top: unset;
 		z-index: 40;
@@ -357,10 +384,13 @@ footer p {
 	.form-container {
 		padding: var(--space-lg) var(--space-lg);
 		margin: var(--space-lg) var(--space-sm);
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 	}
 
 	main {
 		padding: var(--space-lg);
+<<<<<<< HEAD
 		z-index: 10;
 	}
 
@@ -386,5 +416,7 @@ footer p {
 
 	header {
 		padding: var(--space-sm) var(--space-md);
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
 	}
 }

@@ -260,7 +260,10 @@
 @media (max-width: 768px) {
   .accordion-nav {
     position: relative;
+<<<<<<< HEAD
     z-index: 40;
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   }
 
   .accordion-menu {
@@ -299,10 +302,13 @@
 }
 
 @media (max-width: 480px) {
+<<<<<<< HEAD
   .accordion-nav {
     z-index: 40;
   }
 
+=======
+>>>>>>> 11b5166 (Major feature updates: pagination, live search, admin dashboard, and bug fixes)
   .accordion-toggle .arrow {
     font-size: 0.55rem;
   }
