@@ -35,15 +35,21 @@
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.8s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .hero-image {
   width: 100%;
-  max-width: 100%;
+  max-width: 90%;
   height: auto;
   display: block;
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.5rem auto;
   border-radius: 12px;
+  object-fit: contain;
 }
 
 .hero-text h1 {
@@ -337,6 +343,10 @@
     padding: 3rem 1.5rem;
   }
 
+  .hero-image {
+    max-width: 85%;
+  }
+
   .hero-text h1 {
     font-size: 2.25rem;
   }
@@ -388,6 +398,10 @@
 @media (min-width: 1024px) {
   .hero {
     padding: 4rem 2rem;
+  }
+
+  .hero-image {
+    max-width: 80%;
   }
 
   .hero-text h1 {
@@ -481,6 +495,10 @@
 
   .hero {
     padding: 5rem 2rem 4rem 2rem;
+  }
+
+  .hero-image {
+    max-width: 75%;
   }
 
   .features, .testimonials, .subscription {
