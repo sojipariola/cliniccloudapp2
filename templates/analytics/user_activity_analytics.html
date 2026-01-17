@@ -1,0 +1,107 @@
+{% extends 'base/base.html' %}
+{% load get_item %}
+{% block title %}User Activity Analytics{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  .analytics-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+  .chart-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="analytics-page">
+  <a href="{% url 'analytics_dashboard' %}" style="display:inline-block;margin-bottom:15px;color:#667eea;text-decoration:none;font-weight:600;">← Back to Analytics</a>
+  
+  <div class="page-header">
+    <h1>👤 User Activity Analytics</h1>
+    <p>System usage patterns and user engagement metrics</p>
+  </div>
+
+  <div class="chart-container">
+    <h3>📊 Activity Timeline (Last 30 Days)</h3>
+    <canvas id="activityChart"></canvas>
+    <p style="text-align: center; color: #666; margin-top: 15px;">
+      Total Events: <strong>{{ total_events }}</strong>
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px;">
+    <div class="chart-container">
+      <h3>📋 Top Event Types</h3>
+      <table style="width: 100%;">
+        <thead>
+          <tr><th>Event Type</th><th>Count</th></tr>
+        </thead>
+        <tbody>
+          {% for event in event_counts %}
+          <tr>
+            <td>{{ event.event_type }}</td>
+            <td><strong>{{ event.count }}</strong></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="2">No events recorded</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-container">
+      <h3>👥 Most Active Users</h3>
+      <table style="width: 100%;">
+        <thead>
+          <tr><th>User</th><th>Activity Count</th></tr>
+        </thead>
+        <tbody>
+          {% for activity in user_activity %}
+          <tr>
+            <td>{{ users|get_item:activity.user_id|default:"Unknown" }}</td>
+            <td><strong>{{ activity.count }}</strong></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="2">No user activity recorded</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+new Chart(activityCtx, {
+  type: 'line',
+  data: {
+    labels: {{ activity_labels|safe }},
+    datasets: [{
+      label: 'Daily Activity',
+      data: {{ activity_data|safe }},
+      borderColor: '#667eea',
+      backgroundColor: 'rgba(102, 126, 234, 0.1)',
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+{% endblock %}

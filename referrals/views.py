@@ -1,26 +1,56 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Clinic, Referral, CLINIC_TYPES
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from common.tenant_scope import enforce_tenant, scope_queryset
 from patients.models import Patient
 from tenants.models import Tenant
 from users.models import CustomUser
-from django.contrib import messages
-from django.db.models import Q
-from common.tenant_scope import scope_queryset, enforce_tenant
+
+from .models import CLINIC_TYPES, Clinic, Referral
+
 
 @login_required
 def referral_list(request):
     referrals = (
-        scope_queryset(Referral.objects.select_related("patient", "from_clinic", "to_clinic", "referred_by"), request.user)
+        scope_queryset(
+            Referral.objects.select_related(
+                "patient", "from_clinic", "to_clinic", "referred_by"
+            ),
+            request.user,
+        )
         .order_by("-created_at")
         .distinct()
     )
+    
+    # Pagination
+    paginator = Paginator(referrals, 10)  # 10 referrals per page
+    page = request.GET.get('page')
+    try:
+        referrals = paginator.page(page)
+    except PageNotAnInteger:
+        referrals = paginator.page(1)
+    except EmptyPage:
+        referrals = paginator.page(paginator.num_pages)
+    
     return render(request, "referrals/list.html", {"referrals": referrals})
+
 
 @login_required
 def create_referral(request):
-    clinics = scope_queryset(Clinic.objects.all(), request.user)
+    patient_id = request.GET.get('patient')
+    patient = None
+    if patient_id:
+        patient = get_object_or_404(Patient, pk=patient_id)
+        # Use patient's tenant to get clinics when patient is pre-selected
+        clinics = Clinic.objects.filter(tenant=patient.tenant)
+    else:
+        clinics = scope_queryset(Clinic.objects.all(), request.user)
+    
     patients = scope_queryset(Patient.objects.all(), request.user)
+    
     if request.method == "POST":
         patient_id = request.POST.get("patient")
         from_clinic_id = request.POST.get("from_clinic")
@@ -35,8 +65,20 @@ def create_referral(request):
             from_clinic=from_clinic,
             to_clinic=to_clinic,
             referred_by=request.user,
-            notes=notes
+            notes=notes,
         )
         messages.success(request, "Referral created successfully.")
+        if patient_id:
+            return redirect("patient_detail", pk=patient_id)
         return redirect("referral_list")
-    return render(request, "referrals/create.html", {"clinics": clinics, "patients": patients, "clinic_types": CLINIC_TYPES})
+    
+    return render(
+        request,
+        "referrals/create.html",
+        {
+            "clinics": clinics,
+            "patients": patients,
+            "patient": patient,
+            "clinic_types": CLINIC_TYPES
+        },
+    )

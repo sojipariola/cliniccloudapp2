@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for ref in referrals %}
+        {% for ref in referrals.object_list %}
           <tr style="border-bottom:1px solid #f1f5f9;">
             <td style="padding:12px; font-weight:600;">{{ ref.patient }}</td>
             <td style="padding:12px;">
@@ -52,5 +52,8 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  {% include 'components/pagination.html' with page_obj=referrals %}
 </div>
 {% endblock %}

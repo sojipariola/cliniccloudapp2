@@ -1,15 +1,22 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+
 from tenants.models import Tenant
+
 
 class RouteSmokeTests(TestCase):
     def setUp(self):
         self.tenant = Tenant.objects.create(name="Test Clinic", subdomain="test")
         self.user = get_user_model().objects.create_user(
-            username="testuser", password="testpass123", tenant=self.tenant, is_active=True
+            username="testuser",
+            password="testpass123",
+            tenant=self.tenant,
+            is_active=True,
         )
-        self.client.login(username="testuser", password="testpass123", tenant=self.tenant)
+        self.client.login(
+            username="testuser", password="testpass123", tenant=self.tenant
+        )
 
     def test_landing_page(self):
         resp = self.client.get(reverse("landing"))

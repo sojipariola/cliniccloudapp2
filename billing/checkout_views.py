@@ -5,15 +5,36 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from tenants.models import Tenant
+
 from billing.constants import PLAN_DETAILS, PRICE_TO_PLAN
+from tenants.models import Tenant
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+def _stripe_key_valid(key: str) -> bool:
+    if not isinstance(key, str) or not key:
+        return False
+    if "here" in key.lower():
+        return False
+    if not (key.startswith("sk_test_") or key.startswith("sk_live_")):
+        return False
+    return len(key) > 20
+
 
 @login_required
 @require_POST
 def create_checkout_session(request):
     """Create a Stripe Checkout session for a subscription."""
+    if not _stripe_key_valid(settings.STRIPE_SECRET_KEY):
+        messages.error(
+            request,
+            (
+                "Payment is not configured: invalid Stripe secret key. "
+                "Set STRIPE_SECRET_KEY in your environment (.env) with a valid test/live secret key."
+            ),
+        )
+        return redirect("view_plans")
     price_id = request.POST.get("price_id")
     plan = PRICE_TO_PLAN.get(price_id)
 
@@ -39,7 +60,8 @@ def create_checkout_session(request):
         mode="subscription",
         customer=tenant.stripe_customer_id,
         line_items=[{"price": price_id, "quantity": 1}],
-        success_url=request.build_absolute_uri(reverse("upgrade_success")) + "?session_id={CHECKOUT_SESSION_ID}",
+        success_url=request.build_absolute_uri(reverse("upgrade_success"))
+        + "?session_id={CHECKOUT_SESSION_ID}",
         cancel_url=request.build_absolute_uri(reverse("view_plans")),
         metadata={"plan": plan, "tenant_id": str(tenant.id)},
     )

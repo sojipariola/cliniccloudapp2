@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% block title %}{{ document.description|default:"Document" }}{% endblock %}
+{% block content %}
+<div style="max-width:1400px; margin:0 auto; padding:1rem;">
+  <!-- Header with Back Link -->
+  <div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:1rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <a href="{% url 'patient_detail' document.patient.pk %}" 
+         style="background:#0f4c81; color:#fff; padding:0.5rem 1rem; border-radius:6px; text-decoration:none; font-weight:600; display:flex; align-items:center; gap:0.5rem;">
+        ← Back to Patient
+      </a>
+      <div>
+        <h2 style="margin:0; font-size:1.25rem; color:#111827;">{{ document.description|default:"Document" }}</h2>
+        <p style="margin:0.25rem 0 0; color:#6b7280; font-size:0.9rem;">
+          Patient: <strong>{{ document.patient.first_name }} {{ document.patient.last_name }}</strong> | 
+          Uploaded: {{ document.uploaded_at|date:"M d, Y" }}
+          {% if document.uploaded_by %} by {{ document.uploaded_by.get_full_name|default:document.uploaded_by.username }}{% endif %}
+        </p>
+      </div>
+    </div>
+    <a href="{{ document.file.url }}" download 
+       style="background:#10b981; color:#fff; padding:0.5rem 1rem; border-radius:6px; text-decoration:none; font-weight:600;">
+      ⬇ Download PDF
+    </a>
+  </div>
+
+  <!-- PDF Viewer -->
+  <div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; height:calc(100vh - 200px);">
+    <iframe 
+      src="{{ document.file.url }}" 
+      style="width:100%; height:100%; border:none;"
+      title="{{ document.description|default:'Document' }}">
+    </iframe>
+  </div>
+</div>
+{% endblock %}

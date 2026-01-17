@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful - Healthcare SaaS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <svg class="text-success" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h1 class="card-title text-success mb-3">Payment Successful!</h1>
+                    <p class="card-text text-muted mb-4">
+                        Thank you for upgrading. Your new plan is now active.
+                    </p>
+
+                    <div class="alert alert-info">
+                        <strong>Session ID:</strong> 
+                        <br>
+                        <code>{{ session_id }}</code>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary me-2">
+                            Go to Dashboard
+                        </a>
+                        <a href="{% url 'view_plans' %}" class="btn btn-outline-secondary">
+                            View Plans
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">What's Next?</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ Your subscription is active</li>
+                        <li class="mb-2">✓ You have access to all plan features</li>
+                        <li class="mb-2">✓ Billing cycle starts today</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

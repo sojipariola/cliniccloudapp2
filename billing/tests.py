@@ -1,6 +1,9 @@
 from django.test import TestCase
-from .models import BillingPlan
+
 from tenants.models import Tenant
+
+from .models import BillingPlan
+
 
 class BillingPlanModelTest(TestCase):
     def setUp(self):

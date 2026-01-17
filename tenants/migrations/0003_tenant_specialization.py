@@ -4,15 +4,44 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tenants', '0002_tenant_is_active_tenant_plan_and_more'),
+        ("tenants", "0002_tenant_is_active_tenant_plan_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='tenant',
-            name='specialization',
-            field=models.CharField(choices=[('general_practice', 'General Practice'), ('pediatrics', 'Pediatrics'), ('dental', 'Dental'), ('eye', 'Ophthalmology'), ('womens_health', "Women's Health"), ('dermatology', 'Dermatology'), ('mental_health', 'Mental Health'), ('physiotherapy', 'Physiotherapy'), ('orthopedic', 'Orthopedic Surgery'), ('cardiology', 'Cardiology'), ('ent', 'Ear, Nose & Throat'), ('urology', 'Urology'), ('oncology', 'Oncology'), ('allergy', 'Allergy & Immunology'), ('pain', 'Pain Management'), ('gastroenterology', 'Gastroenterology'), ('endocrinology', 'Endocrinology'), ('neurology', 'Neurology'), ('surgical', 'General Surgery'), ('urgent_care', 'Urgent Care'), ('multi_specialty', 'Multi-Specialty'), ('telemedicine', 'Telemedicine'), ('community_health', 'Community Health'), ('fertility', 'Fertility Clinic'), ('geriatric', 'Geriatric Care')], default='general_practice', max_length=50),
+            model_name="tenant",
+            name="specialization",
+            field=models.CharField(
+                choices=[
+                    ("general_practice", "General Practice"),
+                    ("pediatrics", "Pediatrics"),
+                    ("dental", "Dental"),
+                    ("eye", "Ophthalmology"),
+                    ("womens_health", "Women's Health"),
+                    ("dermatology", "Dermatology"),
+                    ("mental_health", "Mental Health"),
+                    ("physiotherapy", "Physiotherapy"),
+                    ("orthopedic", "Orthopedic Surgery"),
+                    ("cardiology", "Cardiology"),
+                    ("ent", "Ear, Nose & Throat"),
+                    ("urology", "Urology"),
+                    ("oncology", "Oncology"),
+                    ("allergy", "Allergy & Immunology"),
+                    ("pain", "Pain Management"),
+                    ("gastroenterology", "Gastroenterology"),
+                    ("endocrinology", "Endocrinology"),
+                    ("neurology", "Neurology"),
+                    ("surgical", "General Surgery"),
+                    ("urgent_care", "Urgent Care"),
+                    ("multi_specialty", "Multi-Specialty"),
+                    ("telemedicine", "Telemedicine"),
+                    ("community_health", "Community Health"),
+                    ("fertility", "Fertility Clinic"),
+                    ("geriatric", "Geriatric Care"),
+                ],
+                default="general_practice",
+                max_length=50,
+            ),
         ),
     ]

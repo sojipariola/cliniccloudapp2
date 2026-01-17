@@ -2,6 +2,8 @@
 {% block title %}Clinical Record Detail{% endblock %}
 {% block content %}
 <div style="padding: 2rem 0; max-width: 900px;">
+  {% include 'includes/patient_header.html' with patient=record.patient %}
+  
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
     <h2 style="font-size: 2rem; color: #0f4c81; margin: 0; font-weight: 700;">Clinical Record</h2>
     <div style="display: flex; gap: 0.75rem;">
@@ -39,17 +41,168 @@
     </div>
   </div>
 
-  <div style="background: #f3f4f6; border-left: 4px solid #0f4c81; padding: 1.5rem; border-radius: 4px; margin-bottom: 1.5rem;">
-    <h3 style="margin: 0 0 1rem; color: #0f172a; font-size: 1rem; font-weight: 700;">CLINICAL NOTES</h3>
-    <div style="background: #fff; padding: 1.25rem; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 0.95rem; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
-      {{ record.note }}
+  <!-- SOAP Sections -->
+  <div style="background: #f9fafb; border-radius: 8px; padding: 2rem;">
+    
+    <!-- Chief Complaint -->
+    {% if record.chief_complaint %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">📋 Chief Complaint</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.chief_complaint }}
+      </div>
     </div>
+    {% endif %}
+
+    <!-- History of Present Illness -->
+    {% if record.history_of_present_illness %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">📝 History of Present Illness (HPI)</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.history_of_present_illness }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Past Medical History -->
+    {% if record.past_medical_history %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">🏥 Past Medical History (PMH)</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.past_medical_history }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Medications History -->
+    {% if record.medications_history %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">💊 Medications History</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.medications_history }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Allergy History -->
+    {% if record.allergy_history %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">⚠️ Allergy History</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.allergy_history }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Physical Examination -->
+    {% if record.physical_exam_inspection or record.physical_exam_palpation or record.physical_exam_percussion or record.physical_exam_auscultation %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 1rem; font-weight: 700;">🩺 Physical Examination</h3>
+      
+      {% if record.physical_exam_inspection %}
+      <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="color: #1f2937; margin-top: 0; font-size: 0.95rem; font-weight: 600;">Inspection</h4>
+        <div style="line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+          {{ record.physical_exam_inspection }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if record.physical_exam_palpation %}
+      <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="color: #1f2937; margin-top: 0; font-size: 0.95rem; font-weight: 600;">Palpation</h4>
+        <div style="line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+          {{ record.physical_exam_palpation }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if record.physical_exam_percussion %}
+      <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="color: #1f2937; margin-top: 0; font-size: 0.95rem; font-weight: 600;">Percussion</h4>
+        <div style="line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+          {{ record.physical_exam_percussion }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if record.physical_exam_auscultation %}
+      <div style="background: #fff; border-radius: 6px; padding: 1rem;">
+        <h4 style="color: #1f2937; margin-top: 0; font-size: 0.95rem; font-weight: 600;">Auscultation</h4>
+        <div style="line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+          {{ record.physical_exam_auscultation }}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Provisional Diagnosis -->
+    {% if record.provisional_diagnosis %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">🔍 Provisional Diagnosis</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.provisional_diagnosis }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Investigations -->
+    {% if record.investigations_ordered or record.investigation_results %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 1rem; font-weight: 700;">🧪 Investigations</h3>
+      
+      {% if record.investigations_ordered %}
+      <h4 style="color: #1f2937; margin: 0 0 0.5rem 0; font-weight: 600;">Tests Ordered</h4>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.investigations_ordered }}
+      </div>
+      {% endif %}
+
+      {% if record.investigation_results %}
+      <h4 style="color: #1f2937; margin: 0 0 0.5rem 0; font-weight: 600;">Results</h4>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.investigation_results }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Assessment & Diagnosis -->
+    {% if record.assessment_diagnosis %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">✅ Assessment & Diagnosis</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.assessment_diagnosis }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Plan -->
+    {% if record.plan %}
+    <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">📋 Plan</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.plan }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- General Notes -->
+    {% if record.note %}
+    <div>
+      <h3 style="color: #0f4c81; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;">📄 Additional Notes</h3>
+      <div style="background: #fff; padding: 1rem; border-radius: 6px; line-height: 1.6; color: #1f2937; white-space: pre-wrap; word-break: break-word;">
+        {{ record.note }}
+      </div>
+    </div>
+    {% endif %}
   </div>
 
-  <div>
+  <div style="margin-top: 2rem;">
     <a href="{% url 'clinicalrecord_list' %}" style="color: #0f4c81; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
       ← Back to Records
     </a>
   </div>
 </div>
-  {% endblock %}
+{% endblock %}

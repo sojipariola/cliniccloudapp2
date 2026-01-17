@@ -1,11 +1,30 @@
 {% extends 'base/base.html' %}
-{% block title %}Add Appointment{% endblock %}
+{% block title %}{% if appointment.pk %}Edit{% else %}Add{% endif %} Appointment{% endblock %}
 {% block content %}
-<h2>Add Appointment</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save</button>
-</form>
-<a href="{% url 'appointment_list' %}">Back to list</a>
+<div style="padding: 2rem 0; max-width: 900px;">
+  {% if form.instance.patient %}
+    {% include 'includes/patient_header.html' with patient=form.instance.patient %}
+  {% endif %}
+  
+  <h2 style="color: #0f4c81; font-size: 1.75rem; margin-bottom: 1.5rem; font-weight: 700;">
+    {% if appointment.pk %}Edit{% else %}Add New{% endif %} Appointment
+  </h2>
+  
+  <form method="post" style="max-width: 700px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem;">
+    {% csrf_token %}
+    
+    <div style="margin-bottom: 1.5rem;">
+      {{ form.as_p }}
+    </div>
+    
+    <div style="display: flex; gap: 0.75rem;">
+      <button type="submit" style="background: #0f4c81; color: #fff; padding: 0.55rem 1.5rem; border-radius: 6px; border: none; font-weight: 600; font-size: 0.9rem; cursor: pointer;">
+        💾 Save Appointment
+      </button>
+      <a href="{% url 'appointment_list' %}" style="background: #6b7280; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
 {% endblock %}

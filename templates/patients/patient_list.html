@@ -12,10 +12,36 @@
     {% endif %}
   </div>
 
+  <!-- Live Search Form -->
+  <div style="margin-bottom:1.5rem;">
+    <div style="display:flex; gap:0.5rem; align-items:center;">
+      <div style="flex:1; position:relative;">
+        <input 
+          id="search-input"
+          type="text" 
+          value="{{ search_query|default:'' }}" 
+          placeholder="Search by name, email, phone, or date of birth... (searches as you type)"
+          style="width:100%; padding:0.75rem 2.5rem 0.75rem 1rem; border:1px solid #cbd5e1; border-radius:6px; font-size:0.95rem;"
+        >
+        <span style="position:absolute; right:1rem; top:50%; transform:translateY(-50%); color:#9ca3af; font-size:1.2rem;">🔍</span>
+      </div>
+      {% if search_query %}
+        <button type="button" onclick="clearSearch()" style="padding:0.75rem 1.5rem; background:#6b7280; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Clear</button>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if search_query %}
+    <p style="color:#6b7280; margin-bottom:1rem; font-size:0.95rem;">
+      Showing results for: <strong>"{{ search_query }}"</strong> ({{ patients.count }} patient{{ patients.count|pluralize }})
+    </p>
+  {% endif %}
+
   <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
     <table style="width:100%; border-collapse:collapse;">
       <thead>
         <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700; width:50px;"></th>
           <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Name</th>
           <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Date of Birth</th>
           <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Email</th>
@@ -26,8 +52,13 @@
         </tr>
       </thead>
       <tbody>
-        {% for patient in patients %}
+        {% for patient in patients.object_list %}
           <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; text-align:center;">
+              <img src="{{ patient.get_profile_picture_url }}" 
+                   alt="{{ patient.first_name }}" 
+                   style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #d1d5db;">
+            </td>
             <td style="padding:12px; font-weight:600;">
               <a href="{% url 'patient_detail' patient.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ patient.first_name }} {{ patient.last_name }}</a>
             </td>
@@ -47,11 +78,37 @@
           </tr>
         {% empty %}
           <tr>
-            <td colspan="5" style="padding:16px; text-align:center; color:#6b7280;">No patients found.</td>
+            <td colspan="6" style="padding:16px; text-align:center; color:#6b7280;">No patients found.</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  {% include 'components/pagination.html' with page_obj=patients %}
 </div>
+
+<script>
+let searchTimeout;
+
+document.getElementById('search-input').addEventListener('input', function(e) {
+  clearTimeout(searchTimeout);
+  const query = e.target.value.trim();
+  
+  // Debounce the search to avoid too many requests
+  searchTimeout = setTimeout(() => {
+    if (query.length > 0 || query.length === 0) {
+      // Redirect to search with query parameter
+      const url = query ? `?search=${encodeURIComponent(query)}` : '{% url "patient_list" %}';
+      window.location.href = url;
+    }
+  }, 300);  // Wait 300ms after user stops typing
+});
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  window.location.href = '{% url "patient_list" %}';
+}
+</script>
 {% endblock %}

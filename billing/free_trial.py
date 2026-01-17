@@ -1,10 +1,12 @@
 from datetime import timedelta
+
+from django.conf import settings
+from django.core.mail import send_mail
 from django.utils import timezone
+
+from patients.models import Patient
 from tenants.models import Tenant
 from users.models import CustomUser
-from patients.models import Patient
-from django.core.mail import send_mail
-from django.conf import settings
 
 FREE_TRIAL_DAYS = 90
 MAX_FREE_USERS = 2
@@ -14,15 +16,19 @@ MAX_FREE_PATIENTS = 5
 def is_tenant_in_free_trial(tenant):
     return (timezone.now() - tenant.created_at).days < FREE_TRIAL_DAYS
 
+
 def free_trial_days_left(tenant):
     days_used = (timezone.now() - tenant.created_at).days
     return max(0, FREE_TRIAL_DAYS - days_used)
 
+
 def is_free_user_limit_reached(tenant):
     return CustomUser.objects.filter(tenant=tenant).count() >= MAX_FREE_USERS
 
+
 def is_free_patient_limit_reached(tenant):
     return Patient.objects.filter(tenant=tenant).count() >= MAX_FREE_PATIENTS
+
 
 def send_trial_expiry_notification(tenant):
     admin_users = CustomUser.objects.filter(tenant=tenant, role__in=["admin", "owner"])

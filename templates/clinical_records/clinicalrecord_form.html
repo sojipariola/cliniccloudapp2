@@ -2,6 +2,10 @@
 {% block title %}{% if edit %}Edit{% else %}Add{% endif %} Clinical Record{% endblock %}
 {% block content %}
 <div style="padding: 2rem 0;">
+  {% if form.instance.patient %}
+    {% include 'includes/patient_header.html' with patient=form.instance.patient %}
+  {% endif %}
+  
   <h2 style="font-size: 2rem; color: #0f4c81; margin-bottom: 1rem; font-weight: 700;">
     {% if edit %}Edit{% else %}Create New{% endif %} Clinical Record
   </h2>
@@ -11,55 +15,348 @@
     </p>
   {% endif %}
   
-  <form method="post" style="max-width: 700px;">
+  <!-- Change Confirmation Modal -->
+  {% if show_confirmation %}
+  <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; margin-top: 1rem;">
+    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+      <span style="font-size: 1.5rem;">⚠️</span>
+      <div>
+        <h3 style="color: #b45309; margin: 0 0 0.5rem 0; font-weight: 700;">Changes Detected</h3>
+        <p style="color: #92400e; margin: 0 0 1rem 0;">
+          The following sections have been modified. Please review before confirming:
+        </p>
+        
+        {% if changes %}
+        <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+          {% for field, change in changes.items %}
+          <div style="margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+            <strong style="color: #0f4c81;">{{ change.label }}</strong>
+            {% if change.old %}
+            <p style="margin: 0.25rem 0; color: #666; font-size: 0.9rem;">
+              <span style="color: #dc2626;">❌ Old:</span> {{ change.old }}{% if change.old|length >= 100 %}...{% endif %}
+            </p>
+            {% endif %}
+            {% if change.new %}
+            <p style="margin: 0.25rem 0; color: #666; font-size: 0.9rem;">
+              <span style="color: #16a34a;">✅ New:</span> {{ change.new }}{% if change.new|length >= 100 %}...{% endif %}
+            </p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post" style="display: flex; gap: 1rem;">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="hidden" name="confirm_changes" value="true">
+          <button type="submit" style="background: #f59e0b; color: #fff; border: none; padding: 0.65rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
+            ✓ Confirm Changes
+          </button>
+          <button type="button" onclick="window.location.reload();" style="background: #6b7280; color: #fff; border: none; padding: 0.65rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
+            ✕ Cancel & Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  
+  <form method="post" style="max-width: 900px;">
     {% csrf_token %}
     
-    <div style="margin-bottom: 1.5rem;">
-      <label for="{{ form.patient.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a;">
-        Patient
-      </label>
-      {{ form.patient }}
-      {% if form.patient.errors %}
-        <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
-          {% for error in form.patient.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+    <!-- Patient and Note Type -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <div>
+        <label for="{{ form.patient.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a;">
+          Patient
+        </label>
+        {{ form.patient }}
+        {% if form.patient.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.patient.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.note_type.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a;">
+          Note Type
+        </label>
+        {{ form.note_type }}
+        <p style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">
+          Select the appropriate note type
+        </p>
+        {% if form.note_type.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.note_type.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
     </div>
 
-    <div style="margin-bottom: 1.5rem;">
-      <label for="{{ form.note_type.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a;">
-        Note Type
-      </label>
-      {{ form.note_type }}
-      <p style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">
-        Select the type of clinical note appropriate for your specialization
-      </p>
-      {% if form.note_type.errors %}
-        <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
-          {% for error in form.note_type.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+    <!-- SOAP Sections -->
+    <div style="background: #f9fafb; border-radius: 8px; padding: 2rem;">
+      
+      <!-- Chief Complaint -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          📋 Chief Complaint
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Patient's main reason for visit
+        </p>
+        {{ form.chief_complaint }}
+        {% if form.chief_complaint.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.chief_complaint.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- History of Present Illness -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          📝 History of Present Illness (HPI)
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Detailed timeline, characteristics, and evolution of current illness
+        </p>
+        {{ form.history_of_present_illness }}
+        {% if form.history_of_present_illness.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.history_of_present_illness.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Past Medical History -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          🏥 Past Medical History (PMH)
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Significant past medical conditions, surgeries, and treatments
+        </p>
+        {{ form.past_medical_history }}
+        {% if form.past_medical_history.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.past_medical_history.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Medications History -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          💊 Medications History
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Current and recent medications with dosages
+        </p>
+        {{ form.medications_history }}
+        {% if form.medications_history.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.medications_history.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Allergy History -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          ⚠️ Allergy History
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Known allergies (medications, food, environmental)
+        </p>
+        {{ form.allergy_history }}
+        {% if form.allergy_history.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.allergy_history.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Physical Examination -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 1rem; font-weight: 700;">
+          🩺 Physical Examination
+        </h3>
+        
+        <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+          <h4 style="color: #1f2937; margin-top: 0; font-size: 1rem; font-weight: 600;">Inspection</h4>
+          <p style="color: #6b7280; font-size: 0.9rem; margin: 0.5rem 0;">Observation findings (appearance, color, scars, etc.)</p>
+          {{ form.physical_exam_inspection }}
+          {% if form.physical_exam_inspection.errors %}
+            <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+              {% for error in form.physical_exam_inspection.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+          <h4 style="color: #1f2937; margin-top: 0; font-size: 1rem; font-weight: 600;">Palpation</h4>
+          <p style="color: #6b7280; font-size: 0.9rem; margin: 0.5rem 0;">Findings from touch and pressure examination</p>
+          {{ form.physical_exam_palpation }}
+          {% if form.physical_exam_palpation.errors %}
+            <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+              {% for error in form.physical_exam_palpation.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <div style="background: #fff; border-radius: 6px; padding: 1rem; margin-bottom: 1rem;">
+          <h4 style="color: #1f2937; margin-top: 0; font-size: 1rem; font-weight: 600;">Percussion</h4>
+          <p style="color: #6b7280; font-size: 0.9rem; margin: 0.5rem 0;">Findings from tapping examination</p>
+          {{ form.physical_exam_percussion }}
+          {% if form.physical_exam_percussion.errors %}
+            <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+              {% for error in form.physical_exam_percussion.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <div style="background: #fff; border-radius: 6px; padding: 1rem;">
+          <h4 style="color: #1f2937; margin-top: 0; font-size: 1rem; font-weight: 600;">Auscultation</h4>
+          <p style="color: #6b7280; font-size: 0.9rem; margin: 0.5rem 0;">Findings from listening with stethoscope</p>
+          {{ form.physical_exam_auscultation }}
+          {% if form.physical_exam_auscultation.errors %}
+            <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+              {% for error in form.physical_exam_auscultation.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Provisional Diagnosis -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          🔍 Provisional Diagnosis
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Working diagnosis based on initial findings
+        </p>
+        {{ form.provisional_diagnosis }}
+        {% if form.provisional_diagnosis.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.provisional_diagnosis.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Investigations -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          🧪 Investigations
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Tests and investigations to be performed
+        </p>
+        {{ form.investigations_ordered }}
+        {% if form.investigations_ordered.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.investigations_ordered.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <h4 style="color: #1f2937; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;">Investigation Results</h4>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Results of investigations and tests
+        </p>
+        {{ form.investigation_results }}
+        {% if form.investigation_results.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.investigation_results.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Assessment & Diagnosis -->
+      <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          ✅ Assessment & Diagnosis
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Final assessment and confirmed diagnosis
+        </p>
+        {{ form.assessment_diagnosis }}
+        {% if form.assessment_diagnosis.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.assessment_diagnosis.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- Plan -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          📋 Plan
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Treatment plan, medications, referrals, follow-up
+        </p>
+        {{ form.plan }}
+        {% if form.plan.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.plan.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <!-- General Notes -->
+      <div>
+        <h3 style="color: #0f4c81; font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 700;">
+          📄 Additional Notes
+        </h3>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">
+          Any other relevant clinical information
+        </p>
+        {{ form.note }}
+        {% if form.note.errors %}
+          <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
+            {% for error in form.note.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
     </div>
 
-    <div style="margin-bottom: 1.5rem;">
-      <label for="{{ form.note.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a;">
-        Note Content
-      </label>
-      {{ form.note }}
-      {% if form.note.errors %}
-        <ul style="color: #ef4444; margin-top: 0.25rem; font-size: 0.9rem;">
-          {% for error in form.note.errors %}
-            <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-
-    <div style="display: flex; gap: 1rem;">
+    <!-- Submit Buttons -->
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
       <button type="submit" style="background: #0f4c81; color: #fff; border: none; padding: 0.65rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
         Save Clinical Record
       </button>
@@ -68,6 +365,7 @@
       </a>
     </div>
   </form>
+  {% endif %}
 </div>
 
 <style>
@@ -78,6 +376,7 @@
     border-radius: 6px;
     font-size: 1rem;
     font-family: inherit;
+    box-sizing: border-box;
   }
   
   select {
@@ -87,7 +386,15 @@
   
   textarea {
     resize: vertical;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+  }
+
+  textarea:focus, input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #0f4c81;
+    box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
   }
 </style>
+{% endblock %}
 

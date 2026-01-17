@@ -1,0 +1,148 @@
+{% extends 'base/base.html' %}
+{% block title %}Patient Analytics{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  .analytics-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+  .chart-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .chart-container h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+  }
+  canvas {
+    max-height: 400px;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .stat-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .stat-box h4 {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 0.9em;
+  }
+  .stat-box .value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #4facfe;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="analytics-page">
+  <a href="{% url 'analytics_dashboard' %}" style="display:inline-block;margin-bottom:15px;color:#4facfe;text-decoration:none;font-weight:600;">← Back to Analytics</a>
+  
+  <div class="page-header">
+    <h1>👥 Patient Analytics</h1>
+    <p>Patient demographics, growth trends, and engagement metrics</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-box">
+      <h4>Total Patients</h4>
+      <div class="value">{{ total_patients }}</div>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <h3>📈 Patient Growth (Last 12 Months)</h3>
+    <canvas id="growthChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h3>👥 Age Distribution</h3>
+    <div style="max-width: 600px; margin: 0 auto;">
+      <canvas id="ageChart"></canvas>
+    </div>
+    <div style="margin-top: 20px;">
+      <table style="width: 100%; max-width: 500px; margin: 0 auto;">
+        <thead>
+          <tr><th>Age Range</th><th>Patient Count</th></tr>
+        </thead>
+        <tbody>
+          {% for item in age_distribution %}
+          <tr>
+            <td>{{ item.label }}</td>
+            <td style="text-align: center;"><strong>{{ item.count }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// Patient Growth Chart
+const growthCtx = document.getElementById('growthChart').getContext('2d');
+new Chart(growthCtx, {
+  type: 'line',
+  data: {
+    labels: {{ patient_growth_labels|safe }},
+    datasets: [{
+      label: 'New Patients',
+      data: {{ patient_growth_data|safe }},
+      borderColor: '#4facfe',
+      backgroundColor: 'rgba(79, 172, 254, 0.1)',
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true },
+      title: { display: false }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+// Age Distribution Chart
+const ageCtx = document.getElementById('ageChart').getContext('2d');
+new Chart(ageCtx, {
+  type: 'doughnut',
+  data: {
+    labels: [{% for item in age_distribution %}'{{ item.label }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+    datasets: [{
+      data: [{% for item in age_distribution %}{{ item.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+      backgroundColor: ['#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#667eea']
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' }
+    }
+  }
+});
+</script>
+{% endblock %}

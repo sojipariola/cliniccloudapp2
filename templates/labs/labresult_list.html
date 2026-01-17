@@ -23,7 +23,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for result in results %}
+        {% for result in results.object_list %}
           <tr style="border-bottom:1px solid #f1f5f9;">
             <td style="padding:12px; font-weight:600;">
               <a href="{% url 'labresult_detail' result.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ result.patient }}</a>
@@ -48,5 +48,8 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  {% include 'components/pagination.html' with page_obj=results %}
 </div>
 {% endblock %}

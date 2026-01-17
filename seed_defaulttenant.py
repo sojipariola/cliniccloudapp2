@@ -1,23 +1,23 @@
 import os
-import django
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
 
+import django
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from tenants.models import Tenant
-from patients.models import Patient
-from appointments.models import Appointment
-from clinical_records.models import ClinicalRecord
-from labs.models import LabResult
-from referrals.models import Referral, Clinic, CLINIC_TYPES
-from billing.models import TenantSubscription, SubscriptionPlan, Payment
-from audit_logs.models import AuditLog
+
 from analytics.models import AnalyticsEvent
+from appointments.models import Appointment
+from audit_logs.models import AuditLog
+from billing.models import Payment, SubscriptionPlan, TenantSubscription
+from clinical_records.models import ClinicalRecord
 from documents.models import Document
+from labs.models import LabResult
+from patients.models import Patient
+from referrals.models import CLINIC_TYPES, Clinic, Referral
+from tenants.models import Tenant
 
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 User = get_user_model()
@@ -28,66 +28,66 @@ print("=" * 60)
 
 print("\n🔄 Creating default tenant...")
 tenant, created = Tenant.objects.get_or_create(
-    name='DefaultTenant',
-    subdomain='default',
+    name="DefaultTenant",
+    subdomain="default",
     defaults={
-        'plan': 'free_trial',
-        'trial_started_at': timezone.now(),
-        'trial_ended_at': timezone.now() + timedelta(days=14),
-        'is_active': True,
-    }
+        "plan": "free_trial",
+        "trial_started_at": timezone.now(),
+        "trial_ended_at": timezone.now() + timedelta(days=14),
+        "is_active": True,
+    },
 )
 print(f"✓ Tenant: {tenant.name} (created={created})")
 
 print("\n👤 Creating users...")
 admin, created = User.objects.get_or_create(
-    username='admin',
+    username="admin",
     defaults={
-        'email': 'admin@example.com',
-        'tenant': tenant,
-        'is_staff': True,
-        'is_superuser': True,
-    }
+        "email": "admin@example.com",
+        "tenant": tenant,
+        "is_staff": True,
+        "is_superuser": True,
+    },
 )
 if created:
-    admin.set_password('adminpass')
+    admin.set_password("adminpass")
     admin.save()
 print(f"✓ Admin user: {admin.username}")
 
 user1, created = User.objects.get_or_create(
-    username='user1',
+    username="user1",
     defaults={
-        'email': 'user1@example.com',
-        'tenant': tenant,
-        'is_staff': False,
-    }
+        "email": "user1@example.com",
+        "tenant": tenant,
+        "is_staff": False,
+    },
 )
 if created:
-    user1.set_password('userpass')
+    user1.set_password("userpass")
     user1.save()
 print(f"✓ User: {user1.username}")
 
 user2, created = User.objects.get_or_create(
-    username='doctor1',
+    username="doctor1",
     defaults={
-        'email': 'doctor1@example.com',
-        'tenant': tenant,
-        'is_staff': False,
-    }
+        "email": "doctor1@example.com",
+        "tenant": tenant,
+        "is_staff": False,
+    },
 )
 if created:
-    user2.set_password('docpass')
+    user2.set_password("docpass")
     user2.save()
 print(f"✓ Doctor user: {user2.username}")
 
 print("\n👥 Creating patients...")
 patients = []
 patient_data = [
-    ('John', 'Doe', '1990-05-15', 'john@example.com', '555-0001'),
-    ('Jane', 'Smith', '1985-08-20', 'jane@example.com', '555-0002'),
-    ('Robert', 'Johnson', '1992-03-10', 'robert@example.com', '555-0003'),
-    ('Emily', 'Williams', '1988-11-25', 'emily@example.com', '555-0004'),
-    ('Michael', 'Brown', '1995-07-12', 'michael@example.com', '555-0005'),
+    ("John", "Doe", "1990-05-15", "john@example.com", "555-0001"),
+    ("Jane", "Smith", "1985-08-20", "jane@example.com", "555-0002"),
+    ("Robert", "Johnson", "1992-03-10", "robert@example.com", "555-0003"),
+    ("Emily", "Williams", "1988-11-25", "emily@example.com", "555-0004"),
+    ("Michael", "Brown", "1995-07-12", "michael@example.com", "555-0005"),
 ]
 
 for first, last, dob, email, phone in patient_data:
@@ -96,10 +96,10 @@ for first, last, dob, email, phone in patient_data:
         last_name=last,
         tenant=tenant,
         defaults={
-            'date_of_birth': datetime.strptime(dob, '%Y-%m-%d').date(),
-            'email': email,
-            'phone': phone,
-        }
+            "date_of_birth": datetime.strptime(dob, "%Y-%m-%d").date(),
+            "email": email,
+            "phone": phone,
+        },
     )
     patients.append(p)
     print(f"✓ Patient: {p.first_name} {p.last_name}")
@@ -112,19 +112,21 @@ for i, patient in enumerate(patients):
             tenant=tenant,
             scheduled_for=timezone.now() + timedelta(days=random.randint(1, 30)),
             defaults={
-                'status': random.choice(['scheduled', 'completed', 'cancelled']),
-            }
+                "status": random.choice(["scheduled", "completed", "cancelled"]),
+            },
         )
         if created:
-            print(f"✓ Appointment for {patient.first_name} - {appt.scheduled_for.strftime('%Y-%m-%d')}")
+            print(
+                f"✓ Appointment for {patient.first_name} - {appt.scheduled_for.strftime('%Y-%m-%d')}"
+            )
 
 print("\n📝 Creating clinical records...")
 soap_notes = [
-    'Patient presents with general checkup. Vitals stable. No complaints.',
-    'Follow-up visit. All vitals normal. Continue current treatment plan.',
-    'Patient reports mild headaches. Prescribed analgesics. Follow up in 1 week.',
-    'Lab results normal. Patient doing well. Maintain current lifestyle.',
-    'Initial consultation. Comprehensive evaluation completed. Referred to specialist.',
+    "Patient presents with general checkup. Vitals stable. No complaints.",
+    "Follow-up visit. All vitals normal. Continue current treatment plan.",
+    "Patient reports mild headaches. Prescribed analgesics. Follow up in 1 week.",
+    "Lab results normal. Patient doing well. Maintain current lifestyle.",
+    "Initial consultation. Comprehensive evaluation completed. Referred to specialist.",
 ]
 
 for patient in patients:
@@ -133,21 +135,21 @@ for patient in patients:
             patient=patient,
             tenant=tenant,
             defaults={
-                'note': random.choice(soap_notes),
-            }
+                "note": random.choice(soap_notes),
+            },
         )
         if created:
             print(f"✓ Clinical record for {patient.first_name}")
 
 print("\n🧪 Creating lab results...")
 lab_results_text = [
-    'Blood Work - Normal. All values within range.',
-    'Cholesterol Panel - High cholesterol detected. Recommend dietary changes.',
-    'Glucose Test - Normal fasting glucose level.',
-    'Complete Blood Count - All parameters normal.',
-    'Thyroid Function - TSH levels normal.',
-    'Kidney Function - Creatinine and BUN within normal range.',
-    'Liver Function - AST and ALT levels normal.',
+    "Blood Work - Normal. All values within range.",
+    "Cholesterol Panel - High cholesterol detected. Recommend dietary changes.",
+    "Glucose Test - Normal fasting glucose level.",
+    "Complete Blood Count - All parameters normal.",
+    "Thyroid Function - TSH levels normal.",
+    "Kidney Function - Creatinine and BUN within normal range.",
+    "Liver Function - AST and ALT levels normal.",
 ]
 
 for patient in patients:
@@ -161,16 +163,21 @@ for patient in patients:
 
 print("\n🏥 Creating clinics for referrals...")
 clinics = []
-clinic_names = ['General Practice', 'Cardiology Center', 'Dermatology Clinic', 'Orthopedic Center']
-clinic_types = ['general_practice', 'cardiology', 'dermatology', 'orthopedic']
+clinic_names = [
+    "General Practice",
+    "Cardiology Center",
+    "Dermatology Clinic",
+    "Orthopedic Center",
+]
+clinic_types = ["general_practice", "cardiology", "dermatology", "orthopedic"]
 
 for name, clinic_type in zip(clinic_names, clinic_types):
     clinic, created = Clinic.objects.get_or_create(
         name=name,
         tenant=tenant,
         defaults={
-            'clinic_type': clinic_type,
-        }
+            "clinic_type": clinic_type,
+        },
     )
     clinics.append(clinic)
     print(f"✓ Clinic: {clinic.name}")
@@ -186,20 +193,20 @@ for patient in patients:
                 from_clinic=from_clinic,
                 to_clinic=to_clinic,
                 defaults={
-                    'referred_by': random.choice([admin, user1, user2]),
-                    'notes': 'Follow-up care and specialized treatment',
-                    'accepted': random.choice([True, False]),
-                }
+                    "referred_by": random.choice([admin, user1, user2]),
+                    "notes": "Follow-up care and specialized treatment",
+                    "accepted": random.choice([True, False]),
+                },
             )
             if created:
                 print(f"✓ Referral for {patient.first_name} from {from_clinic.name}")
 
 print("\n💳 Creating subscription plans...")
 plans_data = [
-    ('Free Trial', 0, 'trial', '14-day free trial'),
-    ('Starter', 99.00, 'monthly', 'Up to 5 users, 100 patients'),
-    ('Professional', 299.00, 'monthly', 'Up to 20 users, 500 patients'),
-    ('Enterprise', 999.00, 'monthly', 'Unlimited users and patients'),
+    ("Free Trial", 0, "trial", "14-day free trial"),
+    ("Starter", 99.00, "monthly", "Up to 5 users, 100 patients"),
+    ("Professional", 299.00, "monthly", "Up to 20 users, 500 patients"),
+    ("Enterprise", 999.00, "monthly", "Unlimited users and patients"),
 ]
 
 subscription_plans = {}
@@ -207,42 +214,53 @@ for name, price, interval, desc in plans_data:
     plan, created = SubscriptionPlan.objects.get_or_create(
         name=name,
         defaults={
-            'price': price,
-            'interval': interval,
-            'description': desc,
-            'is_active': True,
-        }
+            "price": price,
+            "interval": interval,
+            "description": desc,
+            "is_active": True,
+        },
     )
     subscription_plans[name] = plan
     print(f"✓ Plan: {plan.name} (${plan.price}/{interval})")
 
 print("\n📋 Creating tenant subscriptions...")
-current_plan = subscription_plans['Free Trial']
+current_plan = subscription_plans["Free Trial"]
 sub, created = TenantSubscription.objects.get_or_create(
     tenant=tenant,
     plan=current_plan,
     defaults={
-        'active': True,
-        'start_date': timezone.now().date(),
-        'end_date': (timezone.now() + timedelta(days=14)).date(),
-    }
+        "active": True,
+        "start_date": timezone.now().date(),
+        "end_date": (timezone.now() + timedelta(days=14)).date(),
+    },
 )
 print(f"✓ Subscription: {tenant.name} -> {current_plan.name}")
 
 print("\n💰 Creating payments...")
-payment_reasons = ['Subscription Payment', 'Trial Upgrade', 'Monthly Billing', 'Annual Billing']
+payment_reasons = [
+    "Subscription Payment",
+    "Trial Upgrade",
+    "Monthly Billing",
+    "Annual Billing",
+]
 for i in range(5):
     payment = Payment.objects.create(
         tenant=tenant,
         amount=random.choice([99.00, 299.00, 999.00]),
-        currency='USD',
+        currency="USD",
         description=random.choice(payment_reasons),
         is_subscription=True,
     )
     print(f"✓ Payment: ${payment.amount} - {payment.description}")
 
 print("\n📄 Creating documents...")
-document_types = ['Lab Report', 'Prescription', 'Medical Record', 'Insurance Form', 'Test Result']
+document_types = [
+    "Lab Report",
+    "Prescription",
+    "Medical Record",
+    "Insurance Form",
+    "Test Result",
+]
 for patient in patients:
     for i in range(random.randint(1, 2)):
         doc = Document.objects.create(
@@ -254,12 +272,12 @@ for patient in patients:
 
 print("\n📊 Creating analytics events...")
 event_types = [
-    'patient_created',
-    'appointment_scheduled',
-    'lab_result_added',
-    'clinical_record_created',
-    'report_generated',
-    'user_login',
+    "patient_created",
+    "appointment_scheduled",
+    "lab_result_added",
+    "clinical_record_created",
+    "report_generated",
+    "user_login",
 ]
 
 for i in range(20):
@@ -268,17 +286,17 @@ for i in range(20):
         event_type=random.choice(event_types),
         user_id=random.choice([admin.id, user1.id, user2.id]),
         metadata={
-            'source': 'web',
-            'platform': 'django',
-        }
+            "source": "web",
+            "platform": "django",
+        },
     )
     print(f"✓ Analytics event: {event.event_type}")
 
 print("\n📋 Creating audit logs...")
 audit_actions = [
-    ('user_registered', 'User registered'),
-    ('login_success', 'User logged in'),
-    ('user_approved', 'User approved by admin'),
+    ("user_registered", "User registered"),
+    ("login_success", "User logged in"),
+    ("user_approved", "User approved by admin"),
 ]
 
 for i in range(20):
@@ -305,7 +323,9 @@ print(f"  Lab Results: {LabResult.objects.filter(tenant=tenant).count()}")
 print(f"  Clinics: {Clinic.objects.filter(tenant=tenant).count()}")
 print(f"  Referrals: {Referral.objects.filter(from_clinic__tenant=tenant).count()}")
 print(f"  Subscription Plans: {SubscriptionPlan.objects.count()}")
-print(f"  Tenant Subscriptions: {TenantSubscription.objects.filter(tenant=tenant).count()}")
+print(
+    f"  Tenant Subscriptions: {TenantSubscription.objects.filter(tenant=tenant).count()}"
+)
 print(f"  Payments: {Payment.objects.filter(tenant=tenant).count()}")
 print(f"  Documents: {Document.objects.filter(patient__tenant=tenant).count()}")
 print(f"  Analytics Events: {AnalyticsEvent.objects.filter(tenant=tenant).count()}")

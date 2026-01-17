@@ -1,7 +1,10 @@
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
+
 from patients.models import Patient
+
 from .utils import patient_to_fhir
+
 
 @require_http_methods(["GET"])
 def patient_read(request, pk):
@@ -18,17 +21,14 @@ def patient_read(request, pk):
     if not tenant_id and not is_platform_admin:
         return HttpResponseBadRequest("tenant_id is required")
 
-    base_qs = (
-        Patient.objects.select_related("tenant")
-        .only(
-            "id",
-            "tenant_id",
-            "first_name",
-            "last_name",
-            "date_of_birth",
-            "email",
-            "phone",
-        )
+    base_qs = Patient.objects.select_related("tenant").only(
+        "id",
+        "tenant_id",
+        "first_name",
+        "last_name",
+        "date_of_birth",
+        "email",
+        "phone",
     )
 
     scoped_qs = base_qs

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Cancelled - Healthcare SaaS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <svg class="text-warning" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h1 class="card-title text-warning mb-3">Payment Cancelled</h1>
+                    <p class="card-text text-muted mb-4">
+                        Your payment was cancelled. No charges have been made to your account.
+                    </p>
+
+                    <p class="card-text">
+                        You can try upgrading again whenever you're ready.
+                    </p>
+
+                    <div class="mt-4">
+                        <a href="{% url 'view_plans' %}" class="btn btn-primary me-2">
+                            Return to Plans
+                        </a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Questions?</h5>
+                    <p class="card-text text-muted">
+                        If you have any issues or questions about upgrading, please contact our support team.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

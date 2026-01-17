@@ -1,9 +1,13 @@
 from django.contrib.auth.backends import ModelBackend
-from users.models import CustomUser
+
 from tenants.models import Tenant
+from users.models import CustomUser
+
 
 class TenantAwareAuthBackend(ModelBackend):
-    def authenticate(self, request, username=None, password=None, tenant=None, **kwargs):
+    def authenticate(
+        self, request, username=None, password=None, tenant=None, **kwargs
+    ):
         if username is None or password is None or tenant is None:
             return None
         try:

@@ -1,0 +1,145 @@
+{% extends 'base/base.html' %}
+{% block title %}Appointment Analytics{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  .analytics-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .page-header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+  .chart-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .chart-container h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="analytics-page">
+  <a href="{% url 'analytics_dashboard' %}" style="display:inline-block;margin-bottom:15px;color:#f093fb;text-decoration:none;font-weight:600;">← Back to Analytics</a>
+  
+  <div class="page-header">
+    <h1>📅 Appointment Analytics</h1>
+    <p>Scheduling patterns, utilization rates, and appointment insights</p>
+  </div>
+
+  <div class="chart-container">
+    <h3>📊 Monthly Appointment Trends</h3>
+    <canvas id="monthlyChart"></canvas>
+  </div>
+
+  <div class="grid-2">
+    <div class="chart-container">
+      <h3>📍 Appointments by Status</h3>
+      <canvas id="statusChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3>📆 Appointments by Day of Week</h3>
+      <canvas id="dayChart"></canvas>
+    </div>
+  </div>
+
+  {% if type_distribution %}
+  <div class="chart-container">
+    <h3>🏥 Top Appointment Types</h3>
+    <table style="width: 100%;">
+      <thead>
+        <tr><th>Appointment Type</th><th>Count</th><th>Percentage</th></tr>
+      </thead>
+      <tbody>
+        {% for item in type_distribution %}
+        <tr>
+          <td>{{ item.appointment_type|default:"General" }}</td>
+          <td><strong>{{ item.count }}</strong></td>
+          <td>
+            <div style="background: #e0e0e0; border-radius: 10px; overflow: hidden;">
+              <div style="background: linear-gradient(90deg, #f093fb, #f5576c); height: 20px; width: {% widthratio item.count total_appointments 100 %}%;"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+// Monthly Trends
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+new Chart(monthlyCtx, {
+  type: 'bar',
+  data: {
+    labels: {{ monthly_labels|safe }},
+    datasets: [{
+      label: 'Appointments',
+      data: {{ monthly_data|safe }},
+      backgroundColor: 'rgba(240, 147, 251, 0.7)',
+      borderColor: '#f093fb',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+// Status Distribution
+const statusCtx = document.getElementById('statusChart').getContext('2d');
+new Chart(statusCtx, {
+  type: 'pie',
+  data: {
+    labels: [{% for s in status_distribution %}'{{ s.status|title }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+    datasets: [{
+      data: [{% for s in status_distribution %}{{ s.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+      backgroundColor: ['#4facfe', '#f093fb', '#43e97b', '#feca57', '#ff6b6b']
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom' } }
+  }
+});
+
+// Day of Week
+const dayCtx = document.getElementById('dayChart').getContext('2d');
+new Chart(dayCtx, {
+  type: 'bar',
+  data: {
+    labels: [{% for d in appointments_by_day %}'{{ d.day }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+    datasets: [{
+      label: 'Appointments (90d)',
+      data: [{% for d in appointments_by_day %}{{ d.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+      backgroundColor: 'rgba(79, 172, 254, 0.7)',
+      borderColor: '#4facfe',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+{% endblock %}

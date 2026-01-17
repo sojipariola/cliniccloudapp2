@@ -8,35 +8,40 @@
       </a>
     </li>
     
-    <li class="accordion-item {% if request.path|startswith:'/patients/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active-section{% endif %}">
-      <button class="accordion-toggle {% if request.path|startswith:'/patients/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}" type="button">
+    <li class="accordion-item {% if request.path|startswith:'/patients/' %}active-section{% endif %}">
+      <button class="accordion-toggle {% if request.path|startswith:'/patients/' %}active{% endif %}" type="button">
         <span class="icon">👥</span>Patients<span class="arrow">▼</span>
       </button>
-      <ul class="accordion-content {% if request.path|startswith:'/patients/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}">
+      <ul class="accordion-content {% if request.path|startswith:'/patients/' %}active{% endif %}">
         <li><a href="/patients/" class="accordion-link {% if request.path|startswith:'/patients/' %}active{% endif %}"><span class="icon">🧑‍🤝‍🧑</span>Patients</a></li>
+        {% if recent_patients_sidebar %}
+          {% for p in recent_patients_sidebar %}
+            <li><a href="/patients/{{ p.id }}/" class="accordion-link"><span class="icon">⏱</span>{{ p.first_name }} {{ p.last_name }}</a></li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </li>
+    
+    <li class="accordion-item {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active-section{% endif %}">
+      <button class="accordion-toggle {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}" type="button">
+        <span class="icon">🩺</span>Clinical<span class="arrow">▼</span>
+      </button>
+      <ul class="accordion-content {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' or request.path|startswith:'/appointments/' or request.path|startswith:'/referrals/' %}active{% endif %}">
+        <li><a href="/clinical-records/" class="accordion-link {% if request.path|startswith:'/clinical-records/' and not request.path|startswith:'/clinical-records/ai-note' and not request.path|startswith:'/clinical-records/clinic-note' %}active{% endif %}"><span class="icon">📄</span>Clinical Records</a></li>
+        <li><a href="/clinical-records/notes/" class="accordion-link {% if request.path|startswith:'/clinical-records/ai-note' or request.path|startswith:'/clinical-records/clinic-note' %}active{% endif %}"><span class="icon">📝</span>Notes</a></li>
+        <li><a href="/labs/" class="accordion-link {% if request.path|startswith:'/labs/' %}active{% endif %}"><span class="icon">🧪</span>Lab Results</a></li>
+        <li><a href="/documents/upload/" class="accordion-link {% if request.path|startswith:'/documents/' %}active{% endif %}"><span class="icon">📤</span>Upload Document</a></li>
         <li><a href="/appointments/" class="accordion-link {% if request.path|startswith:'/appointments/' %}active{% endif %}"><span class="icon">📅</span>Appointments</a></li>
         <li><a href="/referrals/" class="accordion-link {% if request.path|startswith:'/referrals/' %}active{% endif %}"><span class="icon">🔗</span>Referrals</a></li>
       </ul>
     </li>
     
-    <li class="accordion-item {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' %}active-section{% endif %}">
-      <button class="accordion-toggle {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' %}active{% endif %}" type="button">
-        <span class="icon">🩺</span>Clinical<span class="arrow">▼</span>
-      </button>
-      <ul class="accordion-content {% if request.path|startswith:'/clinical-records/' or request.path|startswith:'/labs/' or request.path|startswith:'/documents/' %}active{% endif %}">
-        <li><a href="/clinical-records/" class="accordion-link {% if request.path|startswith:'/clinical-records/' %}active{% endif %}"><span class="icon">📄</span>Clinical Records</a></li>
-        <li><a href="/labs/" class="accordion-link {% if request.path|startswith:'/labs/' %}active{% endif %}"><span class="icon">🧪</span>Lab Results</a></li>
-        <li><a href="/documents/upload/" class="accordion-link {% if request.path|startswith:'/documents/' %}active{% endif %}"><span class="icon">📤</span>Upload Document</a></li>
-      </ul>
-    </li>
-    
     <li class="accordion-item {% if request.path|startswith:'/clinical-records/ai-note' %}active-section{% endif %}">
       <button class="accordion-toggle {% if request.path|startswith:'/clinical-records/ai-note' %}active{% endif %}" type="button">
-        <span class="icon">🤖</span>AI & Notes<span class="arrow">▼</span>
+        <span class="icon">🤖</span>AI Features<span class="arrow">▼</span>
       </button>
       <ul class="accordion-content {% if request.path|startswith:'/clinical-records/ai-note' %}active{% endif %}">
         <li><a href="/clinical-records/ai-note/" class="accordion-link {% if request.path == '/clinical-records/ai-note/' %}active{% endif %}"><span class="icon">📝</span>AI Note-Taking</a></li>
-        <li><a href="/clinical-records/clinic-note/create/" class="accordion-link {% if request.path|startswith:'/clinical-records/clinic-note' %}active{% endif %}"><span class="icon">🏥</span>Clinic-Specific Note</a></li>
       </ul>
     </li>
     

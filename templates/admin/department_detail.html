@@ -1,0 +1,155 @@
+{% extends 'base/base.html' %}
+{% block title %}{{ clinic.name }} - Records & Details{% endblock %}
+{% block content %}
+<div style="max-width:1400px; margin:0 auto; padding:1.5rem;">
+  <!-- Header -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem;">
+    <div>
+      <a href="{% url 'department_overview' %}" style="color:#0f4c81; text-decoration:none; font-weight:600; margin-bottom:0.5rem; display:inline-block;">← Back to Departments</a>
+      <h1 style="margin:0.5rem 0 0; color:#0f4c81; font-size:2rem; font-weight:700;">📋 {{ clinic.name }}</h1>
+      <p style="color:#666; margin:0.5rem 0 0;">
+        <span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:16px; font-size:0.85rem; font-weight:600;">
+          {{ clinic.get_clinic_type_display }}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Key Stats -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:2rem;">
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">👥 Patients</p>
+      <p style="margin:0.5rem 0 0; font-size:2rem; font-weight:700; color:#0f4c81;">{{ patient_count }}</p>
+    </div>
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">📝 Clinical Records</p>
+      <p style="margin:0.5rem 0 0; font-size:2rem; font-weight:700; color:#0f4c81;">{{ record_count }}</p>
+    </div>
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">📅 Appointments</p>
+      <p style="margin:0.5rem 0 0; font-size:2rem; font-weight:700; color:#0f4c81;">{{ appointment_count }}</p>
+    </div>
+  </div>
+
+  <!-- Recent Clinical Records -->
+  <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:2rem; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <div style="background:#f8f9fa; padding:1.5rem; border-bottom:1px solid #e2e8f0;">
+      <h2 style="margin:0; color:#0f4c81; font-size:1.25rem; font-weight:700;">📋 Recent Clinical Records (Last 50)</h2>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8f9fa; border-bottom:2px solid #e2e8f0;">
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Patient</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Note Type</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Created</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in clinical_records %}
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:12px 15px; font-weight:600; color:#0f4c81;">
+                <a href="{% url 'patient_detail' record.patient.id %}" style="color:#0f4c81; text-decoration:none;">
+                  {{ record.patient.first_name }} {{ record.patient.last_name }}
+                </a>
+              </td>
+              <td style="padding:12px 15px; color:#475569;">
+                <span style="background:#e5e7eb; color:#0f172a; padding:2px 8px; border-radius:12px; font-size:0.85rem;">
+                  {{ record.note_type|default:"General" }}
+                </span>
+              </td>
+              <td style="padding:12px 15px; color:#666; font-size:0.9rem;">{{ record.created_at|date:'M d, Y H:i' }}</td>
+              <td style="padding:12px 15px; color:#475569; max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                {{ record.note|truncatewords:15 }}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" style="padding:20px 15px; text-align:center; color:#9ca3af;">No clinical records found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Appointments -->
+  <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:2rem; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <div style="background:#f8f9fa; padding:1.5rem; border-bottom:1px solid #e2e8f0;">
+      <h2 style="margin:0; color:#0f4c81; font-size:1.25rem; font-weight:700;">📅 Recent Appointments (Last 50)</h2>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8f9fa; border-bottom:2px solid #e2e8f0;">
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Patient</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Date & Time</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:12px 15px; font-weight:600; color:#0f4c81;">
+                <a href="{% url 'patient_detail' appointment.patient.id %}" style="color:#0f4c81; text-decoration:none;">
+                  {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                </a>
+              </td>
+              <td style="padding:12px 15px; color:#475569;">{{ appointment.scheduled_for|date:'M d, Y H:i' }}</td>
+              <td style="padding:12px 15px;">
+                <span style="background:#eef2ff; color:#3730a3; padding:4px 10px; border-radius:12px; font-weight:600; font-size:0.85rem; text-transform:capitalize;">
+                  {{ appointment.status|default:'scheduled' }}
+                </span>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="3" style="padding:20px 15px; text-align:center; color:#9ca3af;">No appointments found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Patients in This Department -->
+  <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <div style="background:#f8f9fa; padding:1.5rem; border-bottom:1px solid #e2e8f0;">
+      <h2 style="margin:0; color:#0f4c81; font-size:1.25rem; font-weight:700;">👥 Patients (Sample of 20)</h2>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8f9fa; border-bottom:2px solid #e2e8f0;">
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Name</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Email</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Phone</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Date of Birth</th>
+            <th style="padding:12px 15px; text-align:left; font-weight:700; color:#0f172a;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:12px 15px; font-weight:600; color:#0f4c81;">
+                {{ patient.first_name }} {{ patient.last_name }}
+              </td>
+              <td style="padding:12px 15px; color:#475569;">{{ patient.email|default:'—' }}</td>
+              <td style="padding:12px 15px; color:#475569;">{{ patient.phone|default:'—' }}</td>
+              <td style="padding:12px 15px; color:#666;">{{ patient.date_of_birth|default:'—' }}</td>
+              <td style="padding:12px 15px;">
+                <a href="{% url 'patient_detail' patient.id %}" style="color:#0f4c81; text-decoration:none; font-weight:600;">View →</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" style="padding:20px 15px; text-align:center; color:#9ca3af;">No patients found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

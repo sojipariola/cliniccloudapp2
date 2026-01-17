@@ -1,22 +1,23 @@
 # Celery beat schedule for free trial expiry notifications
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-from celery.schedules import crontab
+
 import dj_database_url
+from celery.schedules import crontab
+from dotenv import load_dotenv
 
 CELERY_BEAT_SCHEDULE = {
-    'send-weekly-trial-expiry-notifications': {
-        'task': 'billing.tasks.weekly_trial_expiry_notifications',
-        'schedule': crontab(minute=0, hour=9, day_of_week='monday'),
+    "send-weekly-trial-expiry-notifications": {
+        "task": "billing.tasks.weekly_trial_expiry_notifications",
+        "schedule": crontab(minute=0, hour=9, day_of_week="monday"),
     },
-    'daily-trial-reminders': {
-        'task': 'billing.tasks.daily_trial_expiry_soft_reminder',
-        'schedule': crontab(minute=15, hour=8),  # 08:15 UTC daily
+    "daily-trial-reminders": {
+        "task": "billing.tasks.daily_trial_expiry_soft_reminder",
+        "schedule": crontab(minute=15, hour=8),  # 08:15 UTC daily
     },
-    'nightly-subscription-health-check': {
-        'task': 'billing.tasks.nightly_subscription_health_check',
-        'schedule': crontab(minute=45, hour=1),  # 01:45 UTC daily
+    "nightly-subscription-health-check": {
+        "task": "billing.tasks.nightly_subscription_health_check",
+        "schedule": crontab(minute=45, hour=1),  # 01:45 UTC daily
     },
 }
 
@@ -38,17 +39,16 @@ CELERY_BROKER_URL = _broker_url
 CELERY_RESULT_BACKEND = _result_url
 
 # Celery config for production
-CELERY_BROKER_USE_SSL = {
-    "keyfile": None,
-    "certfile": None,
-    "ca_certs": None,
-    "cert_reqs": "CERT_NONE"
-} if _broker_url.startswith("rediss://") else None
+CELERY_BROKER_USE_SSL = (
+    {"keyfile": None, "certfile": None, "ca_certs": None, "cert_reqs": "CERT_NONE"}
+    if _broker_url.startswith("rediss://")
+    else None
+)
 
 CELERY_RESULT_BACKEND_USE_SSL = CELERY_BROKER_USE_SSL
 
 # Email backend configuration
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # For production, use SMTP:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.example.com')
@@ -59,8 +59,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@example.com')
 # Use custom tenant-aware authentication backend
 AUTHENTICATION_BACKENDS = [
-    'users.auth_backend.TenantAwareAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    "users.auth_backend.TenantAwareAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 # Use custom user model
@@ -85,7 +85,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # Load environment variables from .env file
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Use environment variable for SECRET_KEY
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
@@ -93,7 +93,12 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-dev-key-change-me")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]"
+).split(",")
+
+# Site URL for emails and absolute URLs
+SITE_URL = os.environ.get("SITE_URL", "http://localhost:8000")
 
 
 # Application definition
@@ -120,6 +125,7 @@ INSTALLED_APPS = [
     "analytics",
     "ai",
     "fhir",
+    "admin_dashboard",
 ]
 
 MIDDLEWARE = [
@@ -145,6 +151,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "common.context_processors.recent_patients",
             ],
         },
     },
@@ -207,10 +214,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Enable WhiteNoise's GZip and caching support
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# Media files (User-uploaded content)
+# https://docs.djangoproject.com/en/6.0/topics/files/
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 # Stripe configuration
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
-STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
-STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Additional security best practices for production

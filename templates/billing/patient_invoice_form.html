@@ -1,0 +1,127 @@
+{% extends 'base/base.html' %}
+{% block title %}Create Invoice - {{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:0 auto; padding:1.5rem;">
+  {% include 'includes/patient_header.html' %}
+  
+  <h2 style="margin:0 0 1rem; font-size:1.8rem; color:#0f4c81;">Create Invoice</h2>
+
+  <form method="post" style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:1.5rem;">
+    {% csrf_token %}
+
+    <!-- Invoice Header -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+      <div>
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Invoice Number *</label>
+        <input type="text" name="invoice_number" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Due Date *</label>
+        <input type="date" name="due_date" required style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;">
+      </div>
+    </div>
+
+    <!-- Line Items -->
+    <div style="margin-bottom:1.5rem;">
+      <h3 style="margin:0 0 1rem; color:#0f4c81;">Line Items</h3>
+      <div id="items-container" style="border:1px solid #e5e7eb; border-radius:6px; overflow:hidden;">
+        <!-- Items will be added here -->
+      </div>
+      <button type="button" onclick="addLineItem()" style="margin-top:0.75rem; background:#0f4c81; color:#fff; border:none; padding:0.6rem 1.2rem; border-radius:6px; font-weight:600; cursor:pointer;">
+        ➕ Add Line Item
+      </button>
+    </div>
+
+    <!-- Tax & Notes -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+      <div>
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Tax (£)</label>
+        <input type="number" name="tax" step="0.01" value="0" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Currency</label>
+        <select style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem; background:#fff;" disabled>
+          <option>GBP</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">Notes</label>
+      <textarea name="notes" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-size:1rem; resize:vertical; min-height:100px;"></textarea>
+    </div>
+
+    <!-- Hidden item count -->
+    <input type="hidden" name="item_count" value="1" id="item_count">
+
+    <!-- Actions -->
+    <div style="display:flex; gap:1rem; justify-content:flex-end;">
+      <a href="{% url 'patient_billing' patient.pk %}" style="background:#e5e7eb; color:#0f4c81; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600;">
+        Cancel
+      </a>
+      <button type="submit" style="background:#0f4c81; color:#fff; border:none; padding:0.6rem 1.2rem; border-radius:6px; font-weight:600; cursor:pointer;">
+        Create Invoice
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+let itemCount = 0;
+
+function addLineItem() {
+  const container = document.getElementById('items-container');
+  const itemDiv = document.createElement('div');
+  itemDiv.id = 'item-' + itemCount;
+  itemDiv.style.cssText = 'border-bottom:1px solid #e5e7eb; padding:1rem;';
+  
+  itemDiv.innerHTML = `
+    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:0.75rem; align-items:end;">
+      <div>
+        <label style="display:block; margin-bottom:0.25rem; font-weight:600; font-size:0.9rem;">Description</label>
+        <input type="text" name="item_${itemCount}_description" style="width:100%; padding:0.5rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.9rem;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:0.25rem; font-weight:600; font-size:0.9rem;">Type</label>
+        <select name="item_${itemCount}_service_type" style="width:100%; padding:0.5rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.9rem; background:#fff;">
+          <option value="consultation">Consultation</option>
+          <option value="procedure">Procedure</option>
+          <option value="test">Lab Test</option>
+          <option value="medication">Medication</option>
+          <option value="imaging">Imaging</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:0.25rem; font-weight:600; font-size:0.9rem;">Qty</label>
+        <input type="number" name="item_${itemCount}_quantity" value="1" step="0.01" style="width:100%; padding:0.5rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.9rem;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:0.25rem; font-weight:600; font-size:0.9rem;">Unit Price (£)</label>
+        <input type="number" name="item_${itemCount}_unit_price" step="0.01" style="width:100%; padding:0.5rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.9rem;">
+      </div>
+      <button type="button" onclick="removeLineItem(${itemCount})" style="background:#ef4444; color:#fff; border:none; padding:0.5rem 1rem; border-radius:4px; cursor:pointer; font-size:0.9rem;">
+        ✕
+      </button>
+    </div>
+  `;
+  
+  container.appendChild(itemDiv);
+  itemCount++;
+  document.getElementById('item_count').value = itemCount;
+}
+
+function removeLineItem(index) {
+  const item = document.getElementById('item-' + index);
+  if (item) {
+    item.remove();
+  }
+}
+
+// Add first item on load
+window.addEventListener('DOMContentLoaded', function() {
+  addLineItem();
+});
+</script>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.db import models
-from users.models import CustomUser
+
 from tenants.models import Tenant
+from users.models import CustomUser
+
 
 class AuditLog(models.Model):
     ACTION_CHOICES = [
@@ -11,7 +13,9 @@ class AuditLog(models.Model):
         # Add more as needed
     ]
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(
+        CustomUser, null=True, blank=True, on_delete=models.SET_NULL
+    )
     tenant = models.ForeignKey(Tenant, null=True, blank=True, on_delete=models.SET_NULL)
     action = models.CharField(max_length=50, choices=ACTION_CHOICES)
     details = models.TextField(blank=True)

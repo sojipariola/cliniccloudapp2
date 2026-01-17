@@ -1,6 +1,7 @@
 from django.db import models
-from tenants.models import Tenant
+
 from patients.models import Patient
+from tenants.models import Tenant
 from users.models import CustomUser
 
 CLINIC_TYPES = [
@@ -31,6 +32,7 @@ CLINIC_TYPES = [
     ("geriatric", "Geriatric"),
 ]
 
+
 class Clinic(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -39,11 +41,16 @@ class Clinic(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_clinic_type_display()})"
 
+
 class Referral(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    from_clinic = models.ForeignKey(Clinic, related_name='referrals_sent', on_delete=models.CASCADE)
-    to_clinic = models.ForeignKey(Clinic, related_name='referrals_received', on_delete=models.CASCADE)
+    from_clinic = models.ForeignKey(
+        Clinic, related_name="referrals_sent", on_delete=models.CASCADE
+    )
+    to_clinic = models.ForeignKey(
+        Clinic, related_name="referrals_received", on_delete=models.CASCADE
+    )
     referred_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

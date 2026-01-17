@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import SubscriptionPlan, TenantSubscription, Payment
+
+from .models import Payment, SubscriptionPlan, TenantSubscription, PatientInvoice, InvoiceLineItem
+
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
@@ -7,14 +9,55 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
     list_filter = ("interval", "is_active")
     search_fields = ("name",)
 
+
 @admin.register(TenantSubscription)
 class TenantSubscriptionAdmin(admin.ModelAdmin):
     list_display = ("tenant", "plan", "start_date", "end_date", "active")
     list_filter = ("active", "plan")
     search_fields = ("tenant__name", "plan__name")
 
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("tenant", "patient", "amount", "currency", "timestamp", "is_subscription")
+    list_display = (
+        "tenant",
+        "patient",
+        "amount",
+        "currency",
+        "timestamp",
+        "is_subscription",
+    )
     list_filter = ("is_subscription", "currency")
     search_fields = ("tenant__name", "patient__first_name", "patient__last_name")
+
+
+class InvoiceLineItemInline(admin.TabularInline):
+    model = InvoiceLineItem
+    extra = 1
+    fields = ("description", "service_type", "quantity", "unit_price", "total")
+    readonly_fields = ("total",)
+
+
+@admin.register(PatientInvoice)
+class PatientInvoiceAdmin(admin.ModelAdmin):
+    list_display = ("invoice_number", "patient", "issued_date", "due_date", "status", "total")
+    list_filter = ("status", "issued_date", "currency")
+    search_fields = ("invoice_number", "patient__first_name", "patient__last_name")
+    readonly_fields = ("created_at", "updated_at", "subtotal", "total")
+    inlines = [InvoiceLineItemInline]
+    fields = (
+        "invoice_number",
+        "tenant",
+        "patient",
+        "status",
+        "issued_date",
+        "due_date",
+        "paid_date",
+        "subtotal",
+        "tax",
+        "total",
+        "currency",
+        "notes",
+        "created_at",
+        "updated_at",
+    )

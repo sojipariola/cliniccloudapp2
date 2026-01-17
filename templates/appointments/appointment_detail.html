@@ -1,15 +1,39 @@
 {% extends 'base/base.html' %}
 {% block title %}Appointment Detail{% endblock %}
 {% block content %}
-<h2>Appointment</h2>
-<p>Patient: {{ appointment.patient }}</p>
-<p>Scheduled For: {{ appointment.scheduled_for }}</p>
-<p>Status: {{ appointment.status }}</p>
-<a href="{% url 'appointment_list' %}">Back to list</a>
-{% if perms.appointments.change_appointment %}
-	<a href="{% url 'appointment_edit' appointment.pk %}">Edit</a>
-{% endif %}
-{% if perms.appointments.delete_appointment %}
-	<a href="{% url 'appointment_delete' appointment.pk %}">Delete</a>
-{% endif %}
+<div style="padding: 2rem 0; max-width: 900px;">
+  {% with patient=appointment.patient %}
+    {% include 'includes/patient_header.html' %}
+  {% endwith %}
+  
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin-top: 0; color: #0f4c81;">Appointment Details</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">SCHEDULED FOR</p>
+        <p style="margin: 0; color: #0f172a; font-size: 1.1rem; font-weight: 600;">{{ appointment.scheduled_for|date:"M d, Y H:i" }}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 0.25rem; color: #6b7280; font-size: 0.85rem; font-weight: 600;">STATUS</p>
+        <p style="margin: 0; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem; background: #e5e7eb; color: #0f172a; font-weight: 600;">{{ appointment.status }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="{% url 'appointment_list' %}" style="background: #6b7280; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+      ← Back
+    </a>
+    {% if perms.appointments.change_appointment %}
+      <a href="{% url 'appointment_edit' appointment.pk %}" style="background: #0f4c81; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+        ✏️ Edit
+      </a>
+    {% endif %}
+    {% if perms.appointments.delete_appointment %}
+      <a href="{% url 'appointment_delete' appointment.pk %}" style="background: #ef4444; color: #fff; padding: 0.55rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+        🗑️ Delete
+      </a>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

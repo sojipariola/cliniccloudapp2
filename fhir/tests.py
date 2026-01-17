@@ -1,8 +1,11 @@
 from datetime import date
+
 from django.test import TestCase
 from django.urls import reverse
+
 from patients.models import Patient
 from tenants.models import Tenant
+
 
 class FhirPatientTests(TestCase):
     def setUp(self):

@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('clinical_records', '0001_initial'),
+        ("clinical_records", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='clinicalrecord',
-            name='note_type',
-            field=models.CharField(default='general', help_text='Type of clinical note based on specialization', max_length=50),
+            model_name="clinicalrecord",
+            name="note_type",
+            field=models.CharField(
+                default="general",
+                help_text="Type of clinical note based on specialization",
+                max_length=50,
+            ),
         ),
     ]

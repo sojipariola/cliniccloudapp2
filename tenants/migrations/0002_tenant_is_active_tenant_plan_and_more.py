@@ -4,40 +4,48 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tenants', '0001_initial'),
+        ("tenants", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='tenant',
-            name='is_active',
+            model_name="tenant",
+            name="is_active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='tenant',
-            name='plan',
-            field=models.CharField(choices=[('free_trial', 'Free Trial'), ('starter', 'Starter'), ('professional', 'Professional'), ('enterprise', 'Enterprise')], default='free_trial', max_length=20),
+            model_name="tenant",
+            name="plan",
+            field=models.CharField(
+                choices=[
+                    ("free_trial", "Free Trial"),
+                    ("starter", "Starter"),
+                    ("professional", "Professional"),
+                    ("enterprise", "Enterprise"),
+                ],
+                default="free_trial",
+                max_length=20,
+            ),
         ),
         migrations.AddField(
-            model_name='tenant',
-            name='stripe_customer_id',
+            model_name="tenant",
+            name="stripe_customer_id",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='tenant',
-            name='stripe_subscription_id',
+            model_name="tenant",
+            name="stripe_subscription_id",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='tenant',
-            name='trial_ended_at',
+            model_name="tenant",
+            name="trial_ended_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='tenant',
-            name='trial_started_at',
+            model_name="tenant",
+            name="trial_started_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

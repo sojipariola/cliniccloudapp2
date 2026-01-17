@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% block title %}Department Management - Central Medical Clinic{% endblock %}
+{% block content %}
+<div style="max-width:1400px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem;">
+    <div>
+      <h1 style="margin:0; color:#0f4c81; font-size:2rem; font-weight:700;">🏥 Central Medical Clinic Departments</h1>
+      <p style="color:#666; margin:0.5rem 0 0;">Manage all clinical departments and their records</p>
+    </div>
+    <div style="background:#f0f9ff; padding:1rem 1.5rem; border-radius:8px; border-left:4px solid #0f4c81;">
+      <p style="margin:0; color:#0f4c81; font-weight:600;">Total Departments</p>
+      <p style="margin:0.25rem 0 0; font-size:2rem; font-weight:700; color:#0f4c81;">{{ total_departments }}</p>
+    </div>
+  </div>
+
+  <!-- Key Metrics -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:2rem;">
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">Total Patients</p>
+      <p style="margin:0.5rem 0 0; font-size:1.8rem; font-weight:700; color:#0f4c81;">{{ total_patients }}</p>
+    </div>
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">Clinical Records</p>
+      <p style="margin:0.5rem 0 0; font-size:1.8rem; font-weight:700; color:#0f4c81;">{{ total_records }}</p>
+    </div>
+    <div style="background:#fff; padding:1.5rem; border-radius:8px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+      <p style="margin:0; color:#666; font-size:0.9rem; font-weight:600;">Appointments</p>
+      <p style="margin:0.5rem 0 0; font-size:1.8rem; font-weight:700; color:#0f4c81;">{{ total_appointments }}</p>
+    </div>
+  </div>
+
+  <!-- Departments Table -->
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#f8f9fa; border-bottom:2px solid #e2e8f0;">
+          <th style="padding:15px 20px; text-align:left; font-weight:700; color:#0f172a;">Department Name</th>
+          <th style="padding:15px 20px; text-align:center; font-weight:700; color:#0f172a;">Type</th>
+          <th style="padding:15px 20px; text-align:center; font-weight:700; color:#0f172a;">Patients</th>
+          <th style="padding:15px 20px; text-align:center; font-weight:700; color:#0f172a;">Records</th>
+          <th style="padding:15px 20px; text-align:center; font-weight:700; color:#0f172a;">Appointments</th>
+          <th style="padding:15px 20px; text-align:right; font-weight:700; color:#0f172a;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for clinic in clinics %}
+          <tr style="border-bottom:1px solid #f1f5f9; transition:background-color 0.2s;"
+              onmouseover="this.style.backgroundColor='#f8f9fa'"
+              onmouseout="this.style.backgroundColor='transparent'">
+            <td style="padding:15px 20px; font-weight:600; color:#0f172a;">
+              📋 {{ clinic.name }}
+            </td>
+            <td style="padding:15px 20px; text-align:center; color:#475569;">
+              <span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:16px; font-size:0.85rem; font-weight:600;">
+                {{ clinic.get_clinic_type_display }}
+              </span>
+            </td>
+            <td style="padding:15px 20px; text-align:center; color:#0f4c81; font-weight:600;">
+              {{ clinic.patient_count }}
+            </td>
+            <td style="padding:15px 20px; text-align:center; color:#0f4c81; font-weight:600;">
+              {{ clinic.record_count }}
+            </td>
+            <td style="padding:15px 20px; text-align:center; color:#0f4c81; font-weight:600;">
+              {{ clinic.appointment_count }}
+            </td>
+            <td style="padding:15px 20px; text-align:right;">
+              <a href="{% url 'department_detail' clinic.id %}" 
+                 style="background:#0f4c81; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-weight:600; display:inline-block; transition:background 0.2s;"
+                 onmouseover="this.style.backgroundColor='#0a2f4d'"
+                 onmouseout="this.style.backgroundColor='#0f4c81'">
+                View Details →
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding:40px 20px; text-align:center; color:#9ca3af;">
+              <p style="margin:0; font-size:1rem;">No departments found</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

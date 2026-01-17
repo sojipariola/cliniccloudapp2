@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for record in records %}
+        {% for record in records.object_list %}
           <tr style="border-bottom:1px solid #f1f5f9;">
             <td style="padding:12px; font-weight:600;">
               <a href="{% url 'clinicalrecord_detail' record.pk %}" style="color:#1d4ed8; text-decoration:none;">{{ record.patient }}</a>
@@ -54,6 +54,9 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  {% include 'components/pagination.html' with page_obj=records %}
 
 </div>
 {% endblock %}

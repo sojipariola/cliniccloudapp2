@@ -1,7 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from tenants.models import Tenant
+from django.shortcuts import render
+
 from billing.constants import PLAN_DETAILS
+from tenants.models import Tenant
+
 
 @login_required
 def billing_dashboard(request):
@@ -19,18 +21,22 @@ def billing_dashboard(request):
                 next((u for u in users if u.is_staff), None),
             ) or (users[0] if users else None)
 
-            tenant_rows.append({
-                "tenant": tenant,
-                "primary_admin": primary_admin,
-                "contact_email": primary_admin.email if primary_admin else "",
-                "plan": tenant.plan,
-                "stripe_customer_id": tenant.stripe_customer_id,
-                "stripe_subscription_id": tenant.stripe_subscription_id,
-                "trial": {
-                    "is_free_trial": tenant.plan == "free_trial",
-                    "trial_days_remaining": tenant.trial_days_remaining() if hasattr(tenant, "trial_days_remaining") else None,
-                },
-            })
+            tenant_rows.append(
+                {
+                    "tenant": tenant,
+                    "primary_admin": primary_admin,
+                    "contact_email": primary_admin.email if primary_admin else "",
+                    "plan": tenant.plan,
+                    "stripe_customer_id": tenant.stripe_customer_id,
+                    "stripe_subscription_id": tenant.stripe_subscription_id,
+                    "trial": {
+                        "is_free_trial": tenant.plan == "free_trial",
+                        "trial_days_remaining": tenant.trial_days_remaining()
+                        if hasattr(tenant, "trial_days_remaining")
+                        else None,
+                    },
+                }
+            )
 
         context = {
             "is_platform_admin": True,
@@ -49,7 +55,9 @@ def billing_dashboard(request):
         "stripe_subscription_id": tenant.stripe_subscription_id,
         "trial": {
             "is_free_trial": tenant.plan == "free_trial",
-            "trial_days_remaining": tenant.trial_days_remaining() if hasattr(tenant, "trial_days_remaining") else None,
+            "trial_days_remaining": tenant.trial_days_remaining()
+            if hasattr(tenant, "trial_days_remaining")
+            else None,
         },
         "primary_admin": primary_admin,
     }

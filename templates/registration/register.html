@@ -2,43 +2,94 @@
 {% block title %}Register{% endblock %}
 {% block content %}
 <div class="form-container">
-  <h2>Register</h2>
-  <p class="info">Your account will require admin approval before you can log in.</p>
+  <h2>Register for ClinicCloud</h2>
+  <p class="info" id="registration-info">Choose whether to create a new organization or join an existing one.</p>
   <form method="post">
     {% csrf_token %}
-    {# Render all fields except password1/password2 #}
-    {% for field in form.visible_fields %}
-      {% if field.name != 'password1' and field.name != 'password2' %}
-        <p>
-          {{ field.label_tag }} {{ field }}
-          {% if field.errors %}<span class="error">{{ field.errors }}</span>{% endif %}
-        </p>
-      {% endif %}
-    {% endfor %}
-    <p>
+    
+    {# Registration Type Selection #}
+    <div class="form-group">
+      {{ form.registration_type.label_tag }}
+      {{ form.registration_type }}
+      {% if form.registration_type.errors %}<span class="error">{{ form.registration_type.errors }}</span>{% endif %}
+    </div>
+    
+    {# Username Field #}
+    <div class="form-group">
+      {{ form.username.label_tag }} {{ form.username }}
+      {% if form.username.errors %}<span class="error">{{ form.username.errors }}</span>{% endif %}
+    </div>
+    
+    {# Email Field #}
+    <div class="form-group">
+      {{ form.email.label_tag }} {{ form.email }}
+      {% if form.email.errors %}<span class="error">{{ form.email.errors }}</span>{% endif %}
+    </div>
+    
+    {# Fields for Creating New Company (show when 'create' is selected) #}
+    <div id="create-company-fields" style="display:none;">
+      <div class="form-group">
+        {{ form.company_name.label_tag }} {{ form.company_name }}
+        {% if form.company_name.errors %}<span class="error">{{ form.company_name.errors }}</span>{% endif %}
+        <small style="display:block;margin-top:4px;color:#666;">This will be your organization's name</small>
+      </div>
+      
+      <div class="form-group">
+        {{ form.specialization.label_tag }} {{ form.specialization }}
+        {% if form.specialization.errors %}<span class="error">{{ form.specialization.errors }}</span>{% endif %}
+        <small style="display:block;margin-top:4px;color:#666;">Select your primary medical specialization</small>
+      </div>
+    </div>
+    
+    {# Fields for Joining Existing Company (show when 'join' is selected) #}
+    <div id="join-company-fields" style="display:none;">
+      <div class="form-group">
+        {{ form.tenant.label_tag }} {{ form.tenant }}
+        {% if form.tenant.errors %}<span class="error">{{ form.tenant.errors }}</span>{% endif %}
+        <small style="display:block;margin-top:4px;color:#666;">Select the organization you want to join</small>
+      </div>
+    </div>
+    
+    {# Password Fields #}
+    <div class="form-group">
       {{ form.password1.label_tag }} {{ form.password1 }}
       {% if form.password1.errors %}<span class="error">{{ form.password1.errors }}</span>{% endif %}
-    </p>
+    </div>
+    
     <ul id="password-rules" style="margin-bottom:0.5em;list-style:none;padding-left:0;">
       <li id="pw-length" style="color:#e53935;">&#10007; At least 8 characters</li>
       <li id="pw-common" style="color:#e53935;">&#10007; Not a common password</li>
       <li id="pw-match" style="color:#e53935;">&#10007; Passwords match</li>
     </ul>
-    <p>
+    
+    <div class="form-group">
       {{ form.password2.label_tag }} {{ form.password2 }}
       {% if form.password2.errors %}<span class="error">{{ form.password2.errors }}</span>{% endif %}
-    </p>
+    </div>
+    
+    {# Non-field errors #}
+    {% if form.non_field_errors %}
+      <div class="error-box" style="background:#ffebee;border:1px solid #e53935;padding:10px;margin-bottom:15px;border-radius:4px;">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+    
     <button type="submit">Register</button>
+  </form>
+  
   <script>
+    // Password validation logic
     const pw1 = document.getElementById('id_password1');
     const pw2 = document.getElementById('id_password2');
     const ruleLength = document.getElementById('pw-length');
     const ruleCommon = document.getElementById('pw-common');
     const ruleMatch = document.getElementById('pw-match');
+    
     function checkPasswordRules() {
       const val1 = pw1.value;
       const val2 = pw2.value;
-      // Length
+      
+      // Length check
       if (val1.length >= 8) {
         ruleLength.style.color = '#388e3c';
         ruleLength.innerHTML = '&#10003; At least 8 characters';
@@ -46,7 +97,8 @@
         ruleLength.style.color = '#e53935';
         ruleLength.innerHTML = '&#10007; At least 8 characters';
       }
-      // Common
+      
+      // Common password check
       const common = ['password', '123456', 'qwerty', 'letmein'];
       if (val1 && !common.includes(val1.toLowerCase())) {
         ruleCommon.style.color = '#388e3c';
@@ -55,7 +107,8 @@
         ruleCommon.style.color = '#e53935';
         ruleCommon.innerHTML = '&#10007; Not a common password';
       }
-      // Match
+      
+      // Match check
       if (val1 && val2 && val1 === val2) {
         ruleMatch.style.color = '#388e3c';
         ruleMatch.innerHTML = '&#10003; Passwords match';
@@ -64,11 +117,41 @@
         ruleMatch.innerHTML = '&#10007; Passwords match';
       }
     }
+    
     if (pw1 && pw2) {
       pw1.addEventListener('input', checkPasswordRules);
       pw2.addEventListener('input', checkPasswordRules);
     }
+    
+    // Registration type toggle logic
+    const registrationTypeInputs = document.querySelectorAll('input[name="registration_type"]');
+    const createFields = document.getElementById('create-company-fields');
+    const joinFields = document.getElementById('join-company-fields');
+    const infoText = document.getElementById('registration-info');
+    
+    function updateVisibility() {
+      const selectedType = document.querySelector('input[name="registration_type"]:checked');
+      
+      if (!selectedType) return;
+      
+      if (selectedType.value === 'create') {
+        createFields.style.display = 'block';
+        joinFields.style.display = 'none';
+        infoText.textContent = 'Create a new organization and start your 14-day free trial. You will be the administrator.';
+      } else if (selectedType.value === 'join') {
+        createFields.style.display = 'none';
+        joinFields.style.display = 'block';
+        infoText.textContent = 'Join an existing organization. Your account will require admin approval before you can log in.';
+      }
+    }
+    
+    // Add event listeners to radio buttons
+    registrationTypeInputs.forEach(input => {
+      input.addEventListener('change', updateVisibility);
+    });
+    
+    // Initial visibility on page load
+    updateVisibility();
   </script>
-  </form>
 </div>
 {% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% block title %}Patient Billing - {{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  {% include 'includes/patient_header.html' %}
+  
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <div>
+      <h2 style="margin:0; font-size:1.8rem; color:#0f4c81;">Patient Invoices</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">Manage invoices for services and procedures</p>
+    </div>
+    <div>
+      {% if perms.billing.add_patientinvoice %}
+        <a href="{% url 'patient_invoice_create' patient.pk %}" class="btn btn-primary" style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600;">
+          ➕ New Invoice
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if total_owed > 0 %}
+    <div style="background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:1rem; margin-bottom:1.5rem;">
+      <strong style="color:#856404;">Total Amount Owed: £{{ total_owed }}</strong>
+    </div>
+  {% endif %}
+
+  <div style="border:1px solid #e2e8f0; border-radius:8px; background:#fff; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#e5e7eb; text-align:left; color:#111827;">
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Invoice #</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Issued</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Due Date</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; text-align:right; font-weight:700;">Amount</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; font-weight:700;">Status</th>
+          <th style="padding:12px; border-bottom:2px solid #cbd5e1; text-align:right; font-weight:700;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for invoice in invoices %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:12px; font-weight:600;">{{ invoice.invoice_number }}</td>
+            <td style="padding:12px; color:#475569;">{{ invoice.issued_date|date:"M d, Y" }}</td>
+            <td style="padding:12px; color:#475569;">{{ invoice.due_date|date:"M d, Y" }}</td>
+            <td style="padding:12px; text-align:right; font-weight:600; color:#0f4c81;">£{{ invoice.total }}</td>
+            <td style="padding:12px;">
+              <span style="background:{% if invoice.status == 'paid' %}#d1fae5{% elif invoice.status == 'overdue' %}#fee2e2{% elif invoice.status == 'draft' %}#f3f4f6{% else %}#dbeafe{% endif %}; color:{% if invoice.status == 'paid' %}#065f46{% elif invoice.status == 'overdue' %}#7f1d1d{% elif invoice.status == 'draft' %}#374151{% else %}#1e40af{% endif %}; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                {{ invoice.get_status_display }}
+              </span>
+            </td>
+            <td style="padding:12px; text-align:right;">
+              <a href="{% url 'patient_invoice_detail' invoice.pk %}" style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                View
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding:16px; text-align:center; color:#6b7280;">No invoices yet. Create one to get started.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

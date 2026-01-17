@@ -1,10 +1,83 @@
 {% extends 'base/base.html' %}
 {% block title %}Patient Detail{% endblock %}
 {% block content %}
-<h2>{{ patient.first_name }} {{ patient.last_name }}</h2>
-<p>Date of Birth: {{ patient.date_of_birth }}</p>
-<p>Email: {{ patient.email }}</p>
-<p>Phone: {{ patient.phone }}</p>
+<div style="display:flex; gap:2rem; margin-bottom:2rem; align-items:flex-start;">
+  <!-- Patient Picture -->
+  <div style="flex-shrink:0;">
+    <img src="{{ patient.get_profile_picture_url }}" 
+         alt="{{ patient.first_name }} {{ patient.last_name }}" 
+         style="width:150px; height:150px; border-radius:12px; border:3px solid #d1d5db; object-fit:cover;">
+  </div>
+  
+  <!-- Patient Info -->
+  <div style="flex:1;">
+    <h2 style="margin-top:0;">{{ patient.first_name }} {{ patient.last_name }}</h2>
+    <p style="margin:0.5rem 0;"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+    {% if patient.gender %}
+      <p style="margin:0.5rem 0;"><strong>Gender:</strong> {{ patient.get_gender_display }}</p>
+    {% endif %}
+    <p style="margin:0.5rem 0;"><strong>Email:</strong> {{ patient.email|default:"N/A" }}</p>
+    <p style="margin:0.5rem 0;"><strong>Phone:</strong> {{ patient.phone|default:"N/A" }}</p>
+  </div>
+</div>
+
+<!-- Patient Navigation Tabs -->
+<div style="border-bottom:2px solid #e5e7eb; margin-bottom:2rem;">
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="#clinical-records" 
+       onclick="scrollToSection('clinical-records')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      📄 Clinical Records
+    </a>
+    <a href="#appointments" 
+       onclick="scrollToSection('appointments')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      📅 Appointments
+    </a>
+    <a href="#referrals" 
+       onclick="scrollToSection('referrals')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      🔗 Referrals
+    </a>
+    <a href="#lab-results" 
+       onclick="scrollToSection('lab-results')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      🧪 Lab Results
+    </a>
+    <a href="#documents" 
+       onclick="scrollToSection('documents')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      📄 Documents
+    </a>
+    <a href="#billing" 
+       onclick="scrollToSection('billing')" 
+       style="padding:0.75rem 1.5rem; text-decoration:none; color:#0f4c81; font-weight:600; border-bottom:3px solid transparent; transition:all 0.2s;"
+       onmouseover="this.style.borderBottomColor='#0f4c81'" 
+       onmouseout="this.style.borderBottomColor='transparent'">
+      💳 Billing & Invoices
+    </a>
+  </div>
+</div>
+
+<script>
+function scrollToSection(sectionId) {
+  event.preventDefault();
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
 
 <div style="margin-top:1.5rem; padding:1rem; background:#f0f8ff; border-left:4px solid #007bff;">
   <h3 style="margin-top:0;">FHIR Resource Access</h3>
@@ -19,7 +92,7 @@
   </a>
 </div>
 
-<div style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
+<div id="clinical-records" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
     <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Clinical Records</h3>
     <a href="{% url 'clinic_note_create' %}?patient={{ patient.pk }}" 
@@ -63,6 +136,211 @@
   {% else %}
     <p style="color:#6b7280; font-style:italic;">No clinical records yet. Create one to get started.</p>
   {% endif %}
+</div>
+
+<!-- Appointments Section -->
+<div id="appointments" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Appointments</h3>
+    <a href="{% url 'appointment_create' %}?patient={{ patient.pk }}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      ➕ New Appointment
+    </a>
+  </div>
+  
+  {% if appointments %}
+    <div style="display:grid; gap:1rem;">
+      {% for appointment in appointments %}
+        <div style="background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:1rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+            <div>
+              <span style="background:#e5e7eb; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600; color:#0f172a;">
+                {{ appointment.appointment_type|default:"General" }}
+              </span>
+              <span style="color:#6b7280; font-size:0.85rem; margin-left:0.75rem;">
+                {{ appointment.scheduled_for|date:"M d, Y H:i" }}
+              </span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'appointment_detail' appointment.pk %}" 
+                 style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                View
+              </a>
+              {% if perms.appointments.change_appointment %}
+                <a href="{% url 'appointment_edit' appointment.pk %}" 
+                   style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                  Edit
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color:#6b7280; font-style:italic;">No appointments yet.</p>
+  {% endif %}
+</div>
+
+<!-- Referrals Section -->
+<div id="referrals" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Referrals</h3>
+    <a href="{% url 'create_referral' %}?patient={{ patient.pk }}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      ➕ New Referral
+    </a>
+  </div>
+  
+  {% if referrals %}
+    <div style="display:grid; gap:1rem;">
+      {% for referral in referrals %}
+        <div style="background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:1rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+            <div>
+              <span style="background:#e5e7eb; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600; color:#0f172a;">
+                Referral
+              </span>
+              <span style="color:#6b7280; font-size:0.85rem; margin-left:0.75rem;">
+                {{ referral.created_at|date:"M d, Y" }}
+              </span>
+            </div>
+            <div>
+              {% if referral.accepted %}
+                <span style="background:#10b981; color:#fff; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                  Accepted
+                </span>
+              {% else %}
+                <span style="background:#f59e0b; color:#fff; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                  Pending
+                </span>
+              {% endif %}
+            </div>
+          </div>
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.9rem; color:#374151; margin-bottom:0.5rem;">
+              <strong>From:</strong> {{ referral.from_clinic.name }} ({{ referral.from_clinic.get_clinic_type_display }})
+            </div>
+            <div style="font-size:0.9rem; color:#374151; margin-bottom:0.5rem;">
+              <strong>To:</strong> {{ referral.to_clinic.name }} ({{ referral.to_clinic.get_clinic_type_display }})
+            </div>
+            {% if referral.referred_by %}
+              <div style="font-size:0.9rem; color:#374151; margin-bottom:0.5rem;">
+                <strong>Referred by:</strong> {{ referral.referred_by.get_full_name|default:referral.referred_by.username }}
+              </div>
+            {% endif %}
+            {% if referral.notes %}
+              <div style="font-size:0.9rem; color:#6b7280; margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid #e5e7eb;">
+                <strong>Notes:</strong> {{ referral.notes }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color:#6b7280; font-style:italic;">No referrals yet.</p>
+  {% endif %}
+</div>
+
+<!-- Lab Results Section -->
+<div id="lab-results" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Lab Results</h3>
+    <a href="{% url 'labresult_create' %}?patient={{ patient.pk }}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      ➕ New Lab Result
+    </a>
+  </div>
+  
+  {% if lab_results %}
+    <div style="display:grid; gap:1rem;">
+      {% for lab in lab_results %}
+        <div style="background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:1rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+            <div>
+              <span style="background:#e5e7eb; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600; color:#0f172a;">
+                {{ lab.test_name|default:"Lab Test" }}
+              </span>
+              <span style="color:#6b7280; font-size:0.85rem; margin-left:0.75rem;">
+                {{ lab.created_at|date:"M d, Y H:i" }}
+              </span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'labresult_detail' lab.pk %}" 
+                 style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                View
+              </a>
+              {% if perms.labs.change_labresult %}
+                <a href="{% url 'labresult_edit' lab.pk %}" 
+                   style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                  Edit
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color:#6b7280; font-style:italic;">No lab results yet.</p>
+  {% endif %}
+</div>
+
+<!-- Documents Section -->
+<div id="documents" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Documents</h3>
+    <a href="{% url 'upload_document' %}?patient={{ patient.pk }}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      ➕ Upload Document
+    </a>
+  </div>
+  
+  {% if documents %}
+    <div style="display:grid; gap:1rem;">
+      {% for document in documents %}
+        <div style="background:#fff; border:1px solid #d1d5db; border-radius:6px; padding:1rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+            <div>
+              <span style="background:#e5e7eb; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.85rem; font-weight:600; color:#0f172a;">
+                {{ document.document_type|default:"Document" }}
+              </span>
+              <span style="color:#6b7280; font-size:0.85rem; margin-left:0.75rem;">
+                {{ document.uploaded_at|date:"M d, Y H:i" }}
+              </span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'document_detail' document.pk %}" 
+                 style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                View
+              </a>
+              <a href="{{ document.file.url }}" download
+                 style="color:#10b981; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                Download
+              </a>
+            </div>
+          </div>
+          <p style="color:#6b7280; font-size:0.9rem;">{{ document.file.name }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color:#6b7280; font-style:italic;">No documents yet.</p>
+  {% endif %}
+</div>
+
+<!-- Billing Section -->
+<div id="billing" style="margin-top:2rem; padding:1.5rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb; scroll-margin-top:2rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <h3 style="margin:0; color:#0f4c81; font-size:1.5rem; font-weight:700;">Billing & Invoices</h3>
+    <a href="{% url 'patient_billing' patient.pk %}" 
+       style="background:#0f4c81; color:#fff; padding:0.6rem 1.2rem; border-radius:6px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+      → View Patient Billing
+    </a>
+  </div>
+  
+  <p style="color:#6b7280;">Manage invoices for services and procedures provided to this patient.</p>
 </div>
 
 <div style="margin-top:2rem;">

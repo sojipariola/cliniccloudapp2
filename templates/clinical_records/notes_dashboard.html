@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %}
+{% block title %}Notes{% endblock %}
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+    <div>
+      <h2 style="margin:0;">Notes</h2>
+      <p style="color:#666; margin:0.25rem 0 0;">{% if patient %}{{ patient.first_name }} {{ patient.last_name }}'s notes{% else %}All recent notes{% endif %}</p>
+    </div>
+    <div style="display:flex; gap:0.5rem;">
+      <a href="{% url 'ai_note' %}{% if patient %}?patient={{ patient.pk }}{% endif %}" 
+         class="btn btn-primary" style="text-decoration:none; padding:0.75rem 1.5rem; background:#0f4c81; color:#fff; border-radius:6px; font-weight:600;">
+        🤖 AI Note-Taking
+      </a>
+      <a href="{% url 'clinic_note_create' %}{% if patient %}?patient={{ patient.pk }}{% endif %}" 
+         class="btn btn-primary" style="text-decoration:none; padding:0.75rem 1.5rem; background:#10b981; color:#fff; border-radius:6px; font-weight:600;">
+        🏥 New Note
+      </a>
+    </div>
+  </div>
+
+  {% if notes %}
+    <div style="display:grid; gap:1.5rem;">
+      {% for note in notes %}
+        <div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+            <div style="flex:1;">
+              <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;">
+                <span style="background:#e5e7eb; padding:0.35rem 0.75rem; border-radius:20px; font-size:0.8rem; font-weight:600; color:#0f172a;">
+                  {{ note.note_type|default:"Note" }}
+                </span>
+                <span style="color:#6b7280; font-size:0.85rem;">
+                  {{ note.created_at|date:"M d, Y H:i" }}
+                </span>
+              </div>
+              <h3 style="margin:0; color:#111827; font-size:1.1rem;">
+                <a href="{% url 'clinicalrecord_detail' note.pk %}" style="text-decoration:none; color:#0f4c81;">
+                  {{ note.patient.first_name }} {{ note.patient.last_name }}
+                </a>
+              </h3>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <a href="{% url 'clinicalrecord_detail' note.pk %}" 
+                 style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem; padding:0.4rem 0.8rem; background:#f3f4f6; border-radius:4px;">
+                View
+              </a>
+              {% if perms.clinical_records.change_clinicalrecord %}
+                <a href="{% url 'clinicalrecord_edit' note.pk %}" 
+                   style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem; padding:0.4rem 0.8rem; background:#f3f4f6; border-radius:4px;">
+                  Edit
+                </a>
+              {% endif %}
+              <a href="{% url 'ai_note' %}?note_id={{ note.pk }}" 
+                 style="color:#7c3aed; text-decoration:none; font-weight:600; font-size:0.85rem; padding:0.4rem 0.8rem; background:#f3f4f6; border-radius:4px;">
+                🤖 AI Review
+              </a>
+            </div>
+          </div>
+          
+          <div style="color:#4b5563; font-size:0.9rem; line-height:1.6; max-height:6rem; overflow:hidden; text-overflow:ellipsis; white-space:pre-wrap;">
+            {{ note.note|truncatewords:50 }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align:center; padding:2rem; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
+      <p style="color:#6b7280; font-size:1rem; margin:0;">
+        {% if patient %}
+          No notes yet for this patient.
+        {% else %}
+          No notes found.
+        {% endif %}
+      </p>
+      <div style="margin-top:1rem;">
+        <a href="{% url 'ai_note' %}{% if patient %}?patient={{ patient.pk }}{% endif %}" 
+           style="display:inline-block; margin-right:0.5rem; padding:0.75rem 1.5rem; background:#0f4c81; color:#fff; border-radius:6px; text-decoration:none; font-weight:600;">
+          Create AI Note
+        </a>
+        <a href="{% url 'clinic_note_create' %}{% if patient %}?patient={{ patient.pk }}{% endif %}" 
+           style="display:inline-block; padding:0.75rem 1.5rem; background:#10b981; color:#fff; border-radius:6px; text-decoration:none; font-weight:600;">
+          Create Note
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+.btn {
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #0f4c81;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #0a3461;
+}
+</style>
+{% endblock %}

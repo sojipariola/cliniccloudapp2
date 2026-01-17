@@ -1,0 +1,63 @@
+{# Reusable Pagination Component #}
+{% if page_obj.has_other_pages %}
+<div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 2rem; padding: 1rem 0; border-top: 1px solid #e2e8f0;">
+  <!-- Previous Page -->
+  {% if page_obj.has_previous %}
+    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}" 
+       style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; text-decoration: none; color: #0f4c81; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+       onmouseover="this.style.background='#e2e8f0'" 
+       onmouseout="this.style.background='#f1f5f9'">
+      ⟨⟨ First
+    </a>
+    <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+       style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; text-decoration: none; color: #0f4c81; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+       onmouseover="this.style.background='#e2e8f0'" 
+       onmouseout="this.style.background='#f1f5f9'">
+      ⟨ Previous
+    </a>
+  {% else %}
+    <span style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; color: #cbd5e1; font-weight: 600; cursor: not-allowed;">⟨⟨ First</span>
+    <span style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; color: #cbd5e1; font-weight: 600; cursor: not-allowed;">⟨ Previous</span>
+  {% endif %}
+
+  <!-- Page Numbers -->
+  <span style="display: flex; gap: 0.25rem; align-items: center; padding: 0 0.5rem;">
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span style="min-width: 2rem; padding: 0.5rem 0.75rem; background: #0f4c81; color: #fff; border-radius: 4px; text-align: center; font-weight: 700;">{{ num }}</span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+           style="min-width: 2rem; padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; text-decoration: none; color: #0f4c81; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.2s;"
+           onmouseover="this.style.background='#e2e8f0'" 
+           onmouseout="this.style.background='#f1f5f9'">
+          {{ num }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </span>
+
+  <!-- Next Page -->
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+       style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; text-decoration: none; color: #0f4c81; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+       onmouseover="this.style.background='#e2e8f0'" 
+       onmouseout="this.style.background='#f1f5f9'">
+      Next ⟩
+    </a>
+    <a href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+       style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; text-decoration: none; color: #0f4c81; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+       onmouseover="this.style.background='#e2e8f0'" 
+       onmouseout="this.style.background='#f1f5f9'">
+      Last ⟩⟩
+    </a>
+  {% else %}
+    <span style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; color: #cbd5e1; font-weight: 600; cursor: not-allowed;">Next ⟩</span>
+    <span style="padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; color: #cbd5e1; font-weight: 600; cursor: not-allowed;">Last ⟩⟩</span>
+  {% endif %}
+
+  <!-- Page Info -->
+  <span style="margin-left: 1rem; color: #666; font-weight: 600;">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </span>
+</div>
+{% endif %}

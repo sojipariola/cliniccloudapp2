@@ -1,6 +1,9 @@
 from django.test import TestCase
-from .models import AnalyticsEvent
+
 from tenants.models import Tenant
+
+from .models import AnalyticsEvent
+
 
 class AnalyticsEventModelTest(TestCase):
     def setUp(self):

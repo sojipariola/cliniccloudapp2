@@ -1,0 +1,259 @@
+{% extends 'base/base.html' %}
+{% block title %}Executive Summary{% endblock %}
+{% block extra_head %}
+<style>
+  .executive-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .exec-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  .exec-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5em;
+  }
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+  .metric-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  }
+  .metric-label {
+    color: #666;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+  }
+  .metric-value-large {
+    font-size: 3em;
+    font-weight: bold;
+    color: #1e3c72;
+    margin: 10px 0;
+  }
+  .metric-change {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin: 10px 0;
+  }
+  .metric-change.positive {
+    color: #48c774;
+  }
+  .metric-change.negative {
+    color: #ff6b6b;
+  }
+  .metric-detail {
+    color: #999;
+    font-size: 0.9em;
+    margin-top: 10px;
+  }
+  .summary-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .summary-section h2 {
+    margin: 0 0 20px 0;
+    color: #1e3c72;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 12px;
+  }
+  .insight-box {
+    background: #f0f4ff;
+    border-left: 5px solid #667eea;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 6px;
+  }
+  .insight-box h4 {
+    margin: 0 0 10px 0;
+    color: #1e3c72;
+  }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="executive-container">
+  <a href="{% url 'analytics_dashboard' %}" class="back-link">← Back to Analytics</a>
+  
+  <div class="exec-header">
+    <h1>📊 Executive Summary</h1>
+    <p style="font-size: 1.2em; margin: 10px 0 0 0; opacity: 0.95;">
+      High-level business intelligence for strategic decision-making
+    </p>
+  </div>
+
+  <!-- Primary Metrics -->
+  <div class="metric-row">
+    <div class="metric-card">
+      <div class="metric-label">👥 Patient Growth</div>
+      <div class="metric-value-large">{{ patients_current_month }}</div>
+      <div class="metric-change {% if patient_growth_rate >= 0 %}positive{% else %}negative{% endif %}">
+        {% if patient_growth_rate >= 0 %}↑{% else %}↓{% endif %} {{ patient_growth_rate }}%
+      </div>
+      <div class="metric-detail">vs. last month | Total: {{ total_patients }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">💰 Monthly Revenue</div>
+      <div class="metric-value-large">${{ revenue_current_month|floatformat:0 }}</div>
+      <div class="metric-change {% if revenue_growth_rate >= 0 %}positive{% else %}negative{% endif %}">
+        {% if revenue_growth_rate >= 0 %}↑{% else %}↓{% endif %} {{ revenue_growth_rate }}%
+      </div>
+      <div class="metric-detail">vs. last month | YTD: ${{ total_revenue_ytd|floatformat:0 }}</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">✅ Completion Rate</div>
+      <div class="metric-value-large">{{ completion_rate }}%</div>
+      <div class="metric-change {% if completion_rate >= 80 %}positive{% else %}negative{% endif %}">
+        {% if completion_rate >= 80 %}Excellent{% else %}Needs Improvement{% endif %}
+      </div>
+      <div class="metric-detail">Appointment efficiency this month</div>
+    </div>
+  </div>
+
+  <!-- Secondary Metrics -->
+  <div class="metric-row">
+    <div class="metric-card">
+      <div class="metric-label">👤 Active Users (30d)</div>
+      <div class="metric-value-large">{{ active_users }}</div>
+      <div class="metric-detail">Users who logged in recently</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">📊 Total Patients</div>
+      <div class="metric-value-large">{{ total_patients }}</div>
+      <div class="metric-detail">All-time patient database</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">💵 YTD Revenue</div>
+      <div class="metric-value-large">${{ total_revenue_ytd|floatformat:0 }}</div>
+      <div class="metric-detail">Year-to-date earnings</div>
+    </div>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="summary-section">
+    <h2>💡 Key Insights & Recommendations</h2>
+    
+    <div class="insight-box">
+      <h4>📈 Patient Acquisition</h4>
+      <p>
+        {% if patient_growth_rate > 10 %}
+        <strong>Excellent growth!</strong> Your practice is attracting {{ patients_current_month }} new patients this month, 
+        representing a {{ patient_growth_rate }}% increase. Consider optimizing onboarding processes to maintain this momentum.
+        {% elif patient_growth_rate > 0 %}
+        <strong>Steady growth.</strong> You're adding {{ patients_current_month }} new patients this month. 
+        Consider implementing targeted marketing campaigns to accelerate growth.
+        {% else %}
+        <strong>Action needed.</strong> Patient acquisition has declined {{ patient_growth_rate|floatformat:1 }}%. 
+        Review marketing strategies and patient satisfaction to identify improvement opportunities.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="insight-box">
+      <h4>💰 Revenue Performance</h4>
+      <p>
+        {% if revenue_growth_rate > 10 %}
+        <strong>Outstanding performance!</strong> Revenue increased {{ revenue_growth_rate }}% this month. 
+        Year-to-date revenue stands at ${{ total_revenue_ytd|floatformat:0 }}.
+        {% elif revenue_growth_rate > 0 %}
+        <strong>Positive trajectory.</strong> Revenue is up {{ revenue_growth_rate }}% month-over-month. 
+        Focus on high-value services to maximize growth.
+        {% else %}
+        <strong>Revenue opportunity.</strong> Revenue declined {{ revenue_growth_rate|floatformat:1 }}%. 
+        Review pricing strategies and service offerings to optimize revenue streams.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="insight-box">
+      <h4>⏱️ Operational Efficiency</h4>
+      <p>
+        {% if completion_rate >= 90 %}
+        <strong>Excellent efficiency!</strong> {{ completion_rate }}% of appointments are completed successfully. 
+        Your operations are running smoothly.
+        {% elif completion_rate >= 75 %}
+        <strong>Good performance.</strong> {{ completion_rate }}% completion rate shows solid operations. 
+        Small improvements in scheduling could further optimize efficiency.
+        {% else %}
+        <strong>Improvement needed.</strong> {{ completion_rate }}% completion rate indicates scheduling or 
+        no-show challenges. Implement reminder systems and review appointment policies.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="insight-box">
+      <h4>👥 User Engagement</h4>
+      <p>
+        {{ active_users }} of your team members actively used the system in the last 30 days. 
+        {% if active_users >= 5 %}
+        Strong engagement indicates effective team adoption.
+        {% else %}
+        Consider additional training to improve system utilization across your team.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Action Items -->
+  <div class="summary-section">
+    <h2>🎯 Strategic Action Items</h2>
+    <ol style="line-height: 2; font-size: 1.05em;">
+      <li><strong>Review patient acquisition channels</strong> - Identify which marketing sources drive the most valuable patients</li>
+      <li><strong>Optimize appointment scheduling</strong> - Reduce no-shows through automated reminders and flexible rescheduling</li>
+      <li><strong>Analyze revenue per patient</strong> - Focus on high-value services and consider introducing new service lines</li>
+      <li><strong>Enhance team training</strong> - Ensure all staff are proficient with the system to maximize efficiency</li>
+      <li><strong>Patient retention strategy</strong> - Develop follow-up protocols for patients who haven't returned in 90+ days</li>
+    </ol>
+  </div>
+
+  <!-- Quick Links -->
+  <div style="text-align: center; margin-top: 40px;">
+    <h3 style="color: #1e3c72; margin-bottom: 20px;">Explore Detailed Analytics</h3>
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+      <a href="{% url 'patient_analytics' %}" style="background: #667eea; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold;">Patient Details</a>
+      <a href="{% url 'appointment_analytics' %}" style="background: #764ba2; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold;">Appointments</a>
+      <a href="{% url 'revenue_analytics' %}" style="background: #48c774; color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold;">Revenue</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

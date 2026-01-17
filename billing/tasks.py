@@ -4,14 +4,14 @@ from celery import shared_task
 from django.utils import timezone
 
 from billing.free_trial import (
-    is_tenant_in_free_trial,
     free_trial_days_left,
+    is_tenant_in_free_trial,
     send_trial_expiry_notification,
 )
 from tenants.models import Tenant
 
-
 logger = logging.getLogger(__name__)
+
 
 @shared_task
 def weekly_trial_expiry_notifications():
@@ -20,7 +20,10 @@ def weekly_trial_expiry_notifications():
             days_left = free_trial_days_left(tenant)
             if days_left <= 21:  # Notify in last 3 weeks
                 send_trial_expiry_notification(tenant)
-                logger.info("Sent weekly trial expiry notification", extra={"tenant_id": tenant.id, "days_left": days_left})
+                logger.info(
+                    "Sent weekly trial expiry notification",
+                    extra={"tenant_id": tenant.id, "days_left": days_left},
+                )
 
 
 @shared_task
@@ -43,5 +46,8 @@ def nightly_subscription_health_check():
     plans = {plan: 0 for plan, _ in Tenant.PLAN_CHOICES}
     for tenant in Tenant.objects.all():
         plans[tenant.plan] = plans.get(tenant.plan, 0) + 1
-    logger.info("Subscription mix", extra={"plans": plans, "timestamp": timezone.now().isoformat()})
+    logger.info(
+        "Subscription mix",
+        extra={"plans": plans, "timestamp": timezone.now().isoformat()},
+    )
     return plans

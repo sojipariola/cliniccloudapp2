@@ -1,12 +1,64 @@
 {% extends 'base/base.html' %}
 {% block title %}Upload Document{% endblock %}
 {% block content %}
-<div class="form-container" style="max-width:500px;">
-  <h2>Upload Document</h2>
-  <form method="post" enctype="multipart/form-data">
+<div style="max-width:700px; margin:0 auto; padding:1.5rem;">
+  <h2 style="font-size:1.75rem; color:#0f4c81; margin-bottom:1.5rem; font-weight:700;">Upload Document</h2>
+  
+  <form method="post" enctype="multipart/form-data" style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:1.5rem;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
+    <div style="margin-bottom:1.5rem;">
+      {% if form.patient %}
+        <div style="margin-bottom:1.5rem;">
+          <label for="{{ form.patient.id_for_label }}" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">
+            Patient *
+          </label>
+          {{ form.patient }}
+          <div id="patient-header-container" style="margin-top:1rem;"></div>
+        </div>
+      {% endif %}
+      
+      {% if form.referral %}
+        <div style="margin-bottom:1.5rem;">
+          <label for="{{ form.referral.id_for_label }}" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">
+            Referral (Optional)
+          </label>
+          {{ form.referral }}
+        </div>
+      {% endif %}
+      
+      {% if form.file %}
+        <div style="margin-bottom:1.5rem;">
+          <label for="{{ form.file.id_for_label }}" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">
+            Select File *
+          </label>
+          {{ form.file }}
+        </div>
+      {% endif %}
+      
+      {% if form.description %}
+        <div style="margin-bottom:1.5rem;">
+          <label for="{{ form.description.id_for_label }}" style="display:block; margin-bottom:0.5rem; font-weight:600; color:#0f172a;">
+            Description
+          </label>
+          {{ form.description }}
+        </div>
+      {% endif %}
+    </div>
+    
+    <div style="display:flex; gap:0.75rem;">
+      <button type="submit" style="background:#0f4c81; color:#fff; padding:0.6rem 1.5rem; border-radius:6px; border:none; font-weight:600; cursor:pointer;">
+        📤 Upload Document
+      </button>
+      {% if patient %}
+        <a href="{% url 'patient_detail' patient.pk %}" style="background:#6b7280; color:#fff; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; font-weight:600;">
+          Cancel
+        </a>
+      {% else %}
+        <a href="/" style="background:#6b7280; color:#fff; padding:0.6rem 1rem; border-radius:6px; text-decoration:none; font-weight:600;">
+          Cancel
+        </a>
+      {% endif %}
+    </div>
   </form>
 </div>
 {% endblock %}

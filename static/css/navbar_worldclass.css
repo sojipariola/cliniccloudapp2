@@ -7,8 +7,10 @@
   box-shadow: 0 4px 12px rgba(15, 32, 39, 0.15);
   font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
   padding: 0;
-  height: 100%;
-  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 .accordion-menu {
@@ -114,13 +116,13 @@
   padding: 0;
   margin: 0;
   max-height: 0;
-  overflow: hidden;
+  overflow: visible;
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: rgba(0, 0, 0, 0.1);
 }
 
 .accordion-content.active {
-  max-height: 500px;
+  max-height: 1000px;
 }
 
 .accordion-link {

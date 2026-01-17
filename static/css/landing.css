@@ -1,8 +1,11 @@
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; margin: 0; }
-.hero { background: linear-gradient(90deg, #0f4c81 60%, #38b6ff 100%); color: #fff; padding: 4rem 0; text-align: center; }
+.hero { background: linear-gradient(90deg, #0a3454 60%, #1e5f8a 100%); color: #fff; padding: 4rem 0; text-align: center; }
 .hero-content { max-width: 600px; margin: 0 auto; }
-.cta-btn { background: #38b6ff; color: #fff; padding: 1rem 2.5rem; border-radius: 2rem; font-size: 1.2rem; text-decoration: none; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: background 0.2s; }
-.cta-btn:hover { background: #0f4c81; }
+.hero h2 { font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 600; letter-spacing: -0.5px; color: #ffffff; }
+.hero p { font-size: 1.1rem; line-height: 1.6; margin: 1rem 0; color: #ffffff; font-weight: 500; }
+.hero p:last-of-type { margin-bottom: 2.5rem; }
+.cta-btn { background: #ffc107; color: #0a3454; padding: 1rem 2.5rem; border-radius: 2rem; font-size: 1.2rem; text-decoration: none; font-weight: bold; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.25); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; margin-top: 1rem; }
+.cta-btn:hover { background: #ffb300; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(255, 193, 7, 0.35); }
 .features { background: #fff; padding: 3rem 0; }
 .feature-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
 .feature { background: #f0f4f8; border-radius: 1rem; padding: 2rem; width: 250px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }

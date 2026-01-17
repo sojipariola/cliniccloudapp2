@@ -1,17 +1,26 @@
 {% extends 'base/base.html' %}
-{% block title %}New Referral{% endblock %}
+{% block title %}{% if patient %}New Referral for {{ patient }}{% else %}New Referral{% endif %}{% endblock %}
 {% block content %}
+
+{% if patient %}
+  {% include 'includes/patient_header.html' with patient=patient %}
+{% endif %}
+
 <div class="form-container" style="max-width:600px;">
-  <h2>New Referral</h2>
+  <h2>{% if patient %}New Referral for {{ patient }}{% else %}New Referral{% endif %}</h2>
   <form method="post">
     {% csrf_token %}
-    <label for="patient">Patient</label>
-    <select name="patient" id="patient" required>
-      <option value="">Select patient</option>
-      {% for p in patients %}
-        <option value="{{ p.id }}">{{ p }}</option>
-      {% endfor %}
-    </select>
+    {% if patient %}
+      <input type="hidden" name="patient" value="{{ patient.id }}">
+    {% else %}
+      <label for="patient">Patient</label>
+      <select name="patient" id="patient" required>
+        <option value="">Select patient</option>
+        {% for p in patients %}
+          <option value="{{ p.id }}">{{ p }}</option>
+        {% endfor %}
+      </select>
+    {% endif %}
     <label for="from_clinic">From Clinic</label>
     <select name="from_clinic" id="from_clinic" required>
       <option value="">Select clinic</option>

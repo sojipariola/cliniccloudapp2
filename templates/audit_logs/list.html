@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for log in logs %}
+      {% for log in logs.object_list %}
       <tr style="border-bottom:1px solid #e0e0e0;">
         <td style="padding:0.5rem;">{{ log.timestamp }}</td>
         <td style="padding:0.5rem;">{{ log.user }}</td>
@@ -27,5 +27,8 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <!-- Pagination -->
+  {% include 'components/pagination.html' with page_obj=logs %}
 </div>
 {% endblock %}
