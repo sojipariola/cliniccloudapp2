@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="AXstSbYP2s8DdhxhNaG3G-_JPNayhu6Che9mQzdmvC4" />
     <title>{% block title %}ClinicCloud{% endblock %}</title>
     <meta name="description" content="ClinicCloud: World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready.">
-    
+    <!-- SEO Meta Tags -->
+    <link rel="canonical" href="{{ request.build_absolute_uri|default:'' }}">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{% block og_title %}ClinicCloud{% endblock %}">
+    <meta property="og:description" content="ClinicCloud: World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri|default:'' }}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/og-default.png' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}ClinicCloud{% endblock %}">
+    <meta name="twitter:description" content="ClinicCloud: World-class, secure, multi-tenant healthcare SaaS platform. PHI-compliant, modular, and AI-ready.">
+    <meta name="twitter:image" content="{% block twitter_image %}{% static 'images/og-default.png' %}{% endblock %}">
+    <meta name="theme-color" content="#0f4c81">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
