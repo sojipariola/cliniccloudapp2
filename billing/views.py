@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
 
 from billing.constants import PLAN_DETAILS
 from tenants.models import Tenant
+from .forms import OfficeEmailRequestForm
 
 
 @login_required
@@ -62,3 +66,31 @@ def billing_dashboard(request):
         "primary_admin": primary_admin,
     }
     return render(request, "billing/dashboard.html", context)
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def office_email_request(request):
+    submitted = False
+    if request.method == "POST":
+        form = OfficeEmailRequestForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            send_mail(
+                subject=f"Office Email Setup Request: {data['organization']}",
+                message=(
+                    f"Contact Name: {data['contact_name']}\n"
+                    f"Contact Email: {data['contact_email']}\n"
+                    f"Organization: {data['organization']}\n"
+                    f"Domain: {data['domain']}\n"
+                    f"Users: {data['users']}\n"
+                    f"Notes: {data['notes']}\n"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[getattr(settings, "SUPPORT_EMAIL", "support@example.com")],
+            )
+            submitted = True
+            form = None
+    else:
+        form = OfficeEmailRequestForm()
+    return render(request, "billing/office_email_request.html", {"form": form, "submitted": submitted})

@@ -1,16 +1,18 @@
-import json
 
+import json
+import logging
 import stripe
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
 from billing.constants import PLAN_DETAILS
 from tenants.models import Tenant
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+logger = logging.getLogger("billing.webhook")
 
 
 def _webhook_secret_valid(secret: str) -> bool:
@@ -29,15 +31,17 @@ def stripe_webhook(request):
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
     webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
+
     if not _webhook_secret_valid(webhook_secret):
-        # Misconfigured webhook secret; fail clearly for visibility
+        logger.error("Stripe webhook misconfigured: invalid secret")
         return HttpResponse("Webhook not configured", status=400)
 
     try:
         event = stripe.Webhook.construct_event(
             payload=payload, sig_header=sig_header, secret=webhook_secret
         )
-    except (ValueError, stripe.error.SignatureVerificationError):
+    except (ValueError, stripe.error.SignatureVerificationError) as e:
+        logger.error(f"Stripe webhook signature verification failed: {e}")
         return HttpResponse("Invalid signature", status=400)
 
     if event["type"] == "checkout.session.completed":
@@ -47,6 +51,8 @@ def stripe_webhook(request):
         tenant_id = metadata.get("tenant_id")
         subscription_id = session.get("subscription")
         customer_id = session.get("customer")
+
+        logger.info(f"Stripe checkout.session.completed: plan={plan}, tenant_id={tenant_id}, subscription_id={subscription_id}, customer_id={customer_id}")
 
         if plan and tenant_id and plan in PLAN_DETAILS:
             try:
@@ -65,7 +71,10 @@ def stripe_webhook(request):
                             "trial_ended_at",
                         ]
                     )
+                logger.info(f"Tenant {tenant_id} upgraded to plan {plan} (subscription {subscription_id})")
             except Tenant.DoesNotExist:
-                pass
+                logger.error(f"Tenant {tenant_id} does not exist for Stripe webhook event")
+            except Exception as e:
+                logger.exception(f"Error processing Stripe webhook for tenant {tenant_id}: {e}")
 
     return HttpResponse(status=200)

@@ -44,7 +44,7 @@ from appointments.views import (
 from audit_logs.views import audit_log_list
 from billing.checkout_views import create_checkout_session, create_portal_session
 from billing.upgrade_views import upgrade_plan, upgrade_success, upgrade_cancel
-from billing.views import billing_dashboard
+from billing.views import billing_dashboard, office_email_request
 from billing.webhook_views import stripe_webhook
 from billing.patient_billing_views import (
     patient_billing,
@@ -103,6 +103,7 @@ def dashboard(request):
 
 
 urlpatterns = [
+    path("billing/office-email-request/", office_email_request, name="office_email_request"),
     path("", landing, name="landing"),
     path("dashboard/", dashboard, name="dashboard"),
     path("terms/", lambda request: render(request, "terms.html"), name="terms"),

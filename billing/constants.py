@@ -70,6 +70,7 @@ PLAN_DETAILS = {
             "Custom integrations",
             "Dedicated support",
             "SLA guarantee",
+            "Optional Office Email Setup (custom domain)",
         ],
     },
 }

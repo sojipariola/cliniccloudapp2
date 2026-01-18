@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<h1>Office Email Setup Request</h1>
+<p>Enterprise tenants can request custom domain email setup (e.g., yourclinic.com) for their organization. Please complete the form below and our support team will contact you to begin the onboarding process.</p>
+
+<h3>Onboarding Instructions</h3>
+<ol>
+    <li>Submit the request form below with your organization and domain details.</li>
+    <li>Our support team will contact you to verify your domain and discuss mailbox requirements.</li>
+    <li>We will guide you through DNS setup (MX, SPF, DKIM records) for your domain.</li>
+    <li>Once DNS is verified, we will provision mailboxes and provide access instructions.</li>
+    <li>Ongoing support is available for mailbox management and troubleshooting.</li>
+</ol>
+
+{% if submitted %}
+    <div class="alert alert-success">
+        <strong>Thank you!</strong> Your request has been received. Our team will contact you soon to begin onboarding.
+    </div>
+{% else %}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+{% endif %}
+{% endblock %}
