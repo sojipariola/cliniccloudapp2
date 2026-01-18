@@ -1,0 +1,19 @@
+<div class="patient-header" style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+  <div>
+    <img src="{{ patient.profile_picture.url|default:'/static/img/default_profile.png' }}" alt="Patient Photo" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #e5e7eb;" onerror="this.onerror=null;this.src='/static/img/default_profile.png';">
+  </div>
+  <div>
+    <h2 style="margin: 0; color: #0f4c81; font-size: 1.5rem;">{{ patient.full_name|default:patient }}</h2>
+    <div style="color: #6b7280; font-size: 1rem;">
+      {% if patient.date_of_birth %}
+        DOB: {{ patient.date_of_birth|date:"M d, Y" }}
+      {% endif %}
+      {% if patient.gender %}
+        | Gender: {{ patient.gender }}
+      {% endif %}
+      {% if patient.id %}
+        | ID: {{ patient.id }}
+      {% endif %}
+    </div>
+  </div>
+</div>
