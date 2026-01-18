@@ -315,13 +315,19 @@ function scrollToSection(sectionId) {
                  style="color:#0f4c81; text-decoration:none; font-weight:600; font-size:0.85rem;">
                 View
               </a>
-              <a href="{{ document.file.url }}" download
-                 style="color:#10b981; text-decoration:none; font-weight:600; font-size:0.85rem;">
-                Download
-              </a>
+              {% if document.file %}
+                <a href="{{ document.file.url }}" download
+                   style="color:#10b981; text-decoration:none; font-weight:600; font-size:0.85rem;">
+                  Download
+                </a>
+              {% else %}
+                <span style="color:#b91c1c; font-size:0.85rem;">No file uploaded</span>
+              {% endif %}
             </div>
           </div>
-          <p style="color:#6b7280; font-size:0.9rem;">{{ document.file.name }}</p>
+          {% if document.file %}
+            <p style="color:#6b7280; font-size:0.9rem;">{{ document.file.name }}</p>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
