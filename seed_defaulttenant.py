@@ -1,8 +1,11 @@
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+import django
+django.setup()
+
 import random
 from datetime import datetime, timedelta
 
-import django
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
