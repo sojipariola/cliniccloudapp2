@@ -105,6 +105,7 @@ def dashboard(request):
 urlpatterns = [
     path("", landing, name="landing"),
     path("dashboard/", dashboard, name="dashboard"),
+    path("terms/", lambda request: render(request, "terms.html"), name="terms"),
     # Admin dashboard - departments
     path("admin/departments/", department_overview, name="department_overview"),
     path("admin/departments/<int:clinic_id>/", department_detail, name="department_detail"),
