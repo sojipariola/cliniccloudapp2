@@ -96,13 +96,15 @@
           </a>
         </li>
         
-        <!-- Billing -->
+        <!-- Billing (Admin only) -->
+        {% if user.is_staff or user.is_superuser %}
         <li class="sidebar-item">
           <a href="/billing/" class="sidebar-link">
             <span class="sidebar-icon" aria-hidden="true">💳</span>
             <span class="sidebar-text">Billing</span>
           </a>
         </li>
+        {% endif %}
         
         <!-- FHIR API -->
         <li class="sidebar-item">
