@@ -238,6 +238,8 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "ClinicCloud API",
     "DESCRIPTION": "Healthcare SaaS Platform API",
