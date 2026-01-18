@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load get_item %}
+{% load get_clinical_item %}
 {% block title %}User Activity Analytics{% endblock %}
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -71,7 +71,7 @@
         <tbody>
           {% for activity in user_activity %}
           <tr>
-            <td>{{ users|get_item:activity.user_id|default:"Unknown" }}</td>
+            <td>{{ users|get_clinical_item:activity.user_id|default:"Unknown" }}</td>
             <td><strong>{{ activity.count }}</strong></td>
           </tr>
           {% empty %}
